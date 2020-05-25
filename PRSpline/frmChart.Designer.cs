@@ -28,34 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.hScrollBar1 = new System.Windows.Forms.HScrollBar();
-            this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
             this.SuspendLayout();
             // 
             // chart1
             // 
+            this.chart1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.chart1.BackColor = System.Drawing.Color.DimGray;
-            chartArea1.AxisY.Interval = 6D;
-            chartArea1.BackColor = System.Drawing.Color.Silver;
-            chartArea1.CursorX.IsUserEnabled = true;
-            chartArea1.CursorX.LineWidth = 2;
-            chartArea1.CursorY.AutoScroll = false;
-            chartArea1.Name = "ChartArea1";
-            chartArea1.ShadowColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.chart1.ChartAreas.Add(chartArea1);
             legend1.Name = "Legend1";
             this.chart1.Legends.Add(legend1);
             this.chart1.Location = new System.Drawing.Point(16, 3);
             this.chart1.Name = "chart1";
-            this.chart1.Size = new System.Drawing.Size(1300, 430);
+            this.chart1.Size = new System.Drawing.Size(1300, 544);
             this.chart1.TabIndex = 0;
             this.chart1.Text = "chart1";
             this.chart1.AnnotationPositionChanged += new System.EventHandler(this.chart1_AnnotationPositionChanged_1);
@@ -63,25 +53,13 @@
             // 
             // hScrollBar1
             // 
+            this.hScrollBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.hScrollBar1.Location = new System.Drawing.Point(16, 550);
             this.hScrollBar1.Name = "hScrollBar1";
             this.hScrollBar1.Size = new System.Drawing.Size(1303, 17);
             this.hScrollBar1.TabIndex = 1;
             this.hScrollBar1.ValueChanged += new System.EventHandler(this.hScrollBar_ValueChange);
-            // 
-            // chart2
-            // 
-            this.chart2.BackColor = System.Drawing.Color.DimGray;
-            chartArea2.BackColor = System.Drawing.Color.Silver;
-            chartArea2.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.chart2.Legends.Add(legend2);
-            this.chart2.Location = new System.Drawing.Point(16, 441);
-            this.chart2.Name = "chart2";
-            this.chart2.Size = new System.Drawing.Size(1300, 94);
-            this.chart2.TabIndex = 2;
-            this.chart2.Text = "chart2";
             // 
             // saveFileDialog
             // 
@@ -91,8 +69,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
             this.CausesValidation = false;
-            this.Controls.Add(this.chart2);
             this.Controls.Add(this.hScrollBar1);
             this.Controls.Add(this.chart1);
             this.DoubleBuffered = true;
@@ -102,7 +80,6 @@
             this.Size = new System.Drawing.Size(1350, 580);
             this.Load += new System.EventHandler(this.frmChart_Load);
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chart2)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -111,7 +88,6 @@
 
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private System.Windows.Forms.HScrollBar hScrollBar1;
-        private System.Windows.Forms.DataVisualization.Charting.Chart chart2;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
     }
 }

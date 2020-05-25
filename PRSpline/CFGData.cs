@@ -25,7 +25,7 @@ namespace PRSpline
             public int No;
             public string Name;
             public string value1;
-            public string value2;
+            public string Unit;
             public string value3;
             public decimal value4;
             public decimal value5;

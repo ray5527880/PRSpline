@@ -74,19 +74,15 @@ namespace PRSpline
             cbxPS.Items.Add("Per Unit");
 
             Clear_Information();
-
-            GetAllRARFileName();
         }
 
         private void set_Form()
         {
-            //this.BackColor = Color.LightSlateGray;
-            //this.groupBox2.Paint += groupBox_Paint;
-            //this.groupBox3.Paint += groupBox_Paint;
             this.groupBox4.Paint += groupBox_Paint;
         }
         private void set_ButtonImage()
         {
+           //this.MaximizeBox
             ImageList Iimage = new ImageList();
             string strpath = "./res/";
             Iimage.Images.Add(Image.FromFile(strpath + "download.png"));
@@ -103,9 +99,6 @@ namespace PRSpline
             btnDownloading.Image = Image.FromFile(strpath + "download1.png");
             btnFileOpen.Image = Image.FromFile(strpath + "openfile.png");
             btnSetup.Image = Image.FromFile(strpath + "setup_SP.png");
-            //btnDownloading.Image = Iimage.Images[0];
-            
-            //btnDownloading.Image.
         }
         /// <summary>
         /// set groupBox line and string color
@@ -124,24 +117,6 @@ namespace PRSpline
             e.Graphics.DrawLine(Pens.White, 1, vSize.Height / 2, 1, gBox.Height - 2);
             e.Graphics.DrawLine(Pens.White, 1, gBox.Height - 2, gBox.Width - 2, gBox.Height - 2);
             e.Graphics.DrawLine(Pens.White, gBox.Width - 2, vSize.Height / 2, gBox.Width - 2, gBox.Height - 2);
-        }
-
-        private void GetAllRARFileName() 
-        {
-            string folderName = "./downloadFile";
-            foreach (string fname in System.IO.Directory.GetFileSystemEntries(folderName))
-            {
-                if (fname.IndexOf(".zip") > 0 || fname.IndexOf(".rar") > 0)
-                {
-                    PRData mPRData = new PRData();
-                    mPRData.FullName = fname.Substring(folderName.Length + 1, fname.Length - folderName.Length - 1);
-                    string[] arrString = (fname.Substring(folderName.Length + 1, fname.Length - folderName.Length - 5)).Split('_');
-                    mPRData.Date = arrString[0];
-                    mPRData.Time = arrString[1];
-                    mPRData.Name = arrString[2];
-                    arrPRData.Add(mPRData);
-                }
-            }
         }
         /// <summary>
         /// 設定comboBoxItem
@@ -215,7 +190,10 @@ namespace PRSpline
             {
                 ((Button)sender).BackColor = Color.LightSteelBlue;
             }
-            frmChartline.Chart1_Enable(((Button)sender).TabIndex,pnlAnagol);
+            if (((Button)sender).Text.IndexOf("FFT") > 0)
+                frmChartline.Chart1_Enable(((Button)sender).TabIndex + mCFGData.D_Amount, pnlAnagol);
+            else
+                frmChartline.Chart1_Enable(((Button)sender).TabIndex, pnlAnagol);
         }
         private void NewButton_D_Click(object sender, EventArgs e)
         {
@@ -241,49 +219,6 @@ namespace PRSpline
             if (panel1.Controls.Count > 0)
                 frmChartline.char1_XAxisLess();
         }
-
-        //private void btnEnter_Click(object sender, EventArgs e)
-        //{
-        //    foreach (PRData str in arrPRData)
-        //    {
-        //        if (str.FullName.IndexOf(cbxTime.SelectedItem.ToString()) != -1)
-        //        {
-        //            mCompressWinRAR.UnCompressRar("./CompressFile/", "./downloadFile/", str.FullName);
-        //            m_LoadDataFile.DisplayValues_CFG("./downloadFile/CompressFile/" + (str.FullName).Substring(0, str.FullName.Length - 3)+"cfg", ref mCFGData);
-        //            Set_Information(mCFGData);
-        //            SetPSData(mCFGData);
-                        
-        //            m_LoadDataFile.DisplayValues_DAT("./downloadFile/CompressFile/" + (str.FullName).Substring(0, str.FullName.Length - 3) + "dat", ref mDATData, mCFGData.TotalAmount);
-
-        //            ClearButton();
-        //            for (int i = 0; i < mCFGData.A_Amount; i++)
-        //            {
-        //                AddNewButton(mCFGData.arrAnalogyData[i].Name, i,0);
-        //            }
-        //            for (int i = 0; i < mCFGData.D_Amount; i++)
-        //            {
-        //                AddNewButton(mCFGData.arrDigitalData[i].Name, i, 1);
-        //            }
-        //            if (mCFGData.arrAnalogyData[0].PrimaryOrSecondary == "P")
-        //            {
-        //                cbxPS.SelectedIndex = 0;                      
-        //            }
-        //            else if (mCFGData.arrAnalogyData[0].PrimaryOrSecondary == "S")
-        //            {
-        //                cbxPS.SelectedIndex = 1;                       
-        //            }
-        //            else
-        //            {
-        //                MessageBox.Show("");
-        //                break;
-        //            }
-                   
-        //            break;
-        //        }
-        //    }
-        //    setEnable(true);
-        //}
-
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (System.IO.Directory.Exists("./downloadFile/CompressFile"))
@@ -383,6 +318,9 @@ namespace PRSpline
                 frmChartline = new frmChart(mCFGData, mDATData, mFFTData, _Mode);
                 panel1.Controls.Add(frmChartline);
                 frmChartline.CheakButtonEnable(pnlAnagol);
+                
+                frmChartline.CheakButtonEnable(pnlDigital);
+                sizeChanged();
             })); 
         }
         private void SetPSData(CFGData _CFGData)
@@ -535,7 +473,8 @@ namespace PRSpline
                 else if (mCFGData.arrAnalogyData[0].PrimaryOrSecondary == "S")
                 {
                     cbxPS.SelectedIndex = 1;
-                }
+                } 
+                sizeChanged();
                 
             }
             catch (ApplicationException message)
@@ -638,6 +577,23 @@ namespace PRSpline
                     index++;
                 }
             }
+        }
+
+        private void frmMain_SizeChanged(object sender, EventArgs e)
+        {
+            sizeChanged();
+        }
+        private void sizeChanged()
+        {
+            if (this.Width < 1481)
+                this.Width = 1481;
+            if (this.Height < 767)
+                this.Height = 767;
+            if (frmChartline != null)
+            {
+                this.panel1.Size = new System.Drawing.Size(this.Size.Width - 170, this.Size.Height - 150);
+                frmChartline.Form_SizeChanged(this.panel1.Size.Width + 29, this.panel1.Size.Height - 30);
+            }     
         }
     }
 }

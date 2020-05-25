@@ -4,15 +4,40 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Net;
+using System.Reflection;
 
-namespace PRSpline
+namespace BF_FW
 {
-    class FTPDownload
+    public class FTPDownload
     {
+        public bool CheckConnection(string path, string user, string pwd)
+        {
+            FtpWebRequest request;
+            try
+            {
+                request = (FtpWebRequest)FtpWebRequest.Create(new Uri("ftp://" + path + "/ftp/records/"));
+                request.Method = WebRequestMethods.Ftp.ListDirectory;
+                request.KeepAlive = true;
+                request.Credentials = new NetworkCredential(user, pwd);
+                var response = request.GetResponse();
+                response.Close();
+            }
+            catch (WebException ex)
+            {                
+                return false;
+            }
+            finally
+            {
+                request = null;
+            }
+
+            return true;
+        }
+
         public string[] GetFTPFileName(string path, string user, string pwd)
         {
             List<string> strList = new List<string>();
-            FtpWebRequest f = (FtpWebRequest)WebRequest.Create(new Uri(path + "records/"));
+            FtpWebRequest f = (FtpWebRequest)WebRequest.Create(new Uri("ftp://" + path + "/ftp/records/"));
             f.Method = WebRequestMethods.Ftp.ListDirectory;
             f.UseBinary = true;
             f.AuthenticationLevel = System.Net.Security.AuthenticationLevel.MutualAuthRequested;
@@ -30,7 +55,6 @@ namespace PRSpline
                         int stringindexof=str.IndexOf("/");
                         
                         str = str.Substring((stringindexof + 1), (stringlength - stringindexof));
-                        //str = str.Substring(str.IndexOf("/") + 1, str.Length - str.IndexOf("/"));
                     }
                     strList.Add(str);
                     str = sReader.ReadLine();
@@ -46,7 +70,7 @@ namespace PRSpline
             return outstr;
         }
         // 下載從FTP(下載檔案名稱)
-        public void FTP_Download(string fileName, string Path, string User, string Pwd)
+        public void FTP_Download(string filePath, string fileName, string Path, string User, string Pwd)
         {
             //連接+指定檔案
             //ftp://++/ftp/
@@ -60,7 +84,7 @@ namespace PRSpline
 
                 Stream responseStream = responseFileDownload.GetResponseStream();
                 //下載
-                FileStream writeStream = new FileStream(EditXml.strDownloadPath + fileName, FileMode.Create);
+                FileStream writeStream = new FileStream(filePath, FileMode.Create);
 
                 int Length = 2048;
                 Byte[] buffer = new Byte[Length];
@@ -76,38 +100,32 @@ namespace PRSpline
                 requestFileDownload = null;
                 responseFileDownload = null;
             }
-            catch { }
+            catch (Exception ex)
+            {
+                string FunctionName = MethodBase.GetCurrentMethod().ReflectedType.Name + "." + MethodBase.GetCurrentMethod().Name;
 
-
-
+                Logger.MakeLogger(FunctionName, ex);
+            }
         }
-        // 上傳從FTP(上傳檔案名稱)
-        //public void FTP_Updata(string fileName)
-        //{
 
-        //    FtpWebRequest requestFTPUploader = (FtpWebRequest)WebRequest.Create(EditXml.strFTPHost + "/" + fileName);
-        //    requestFTPUploader.Credentials = new NetworkCredential(EditXml.strFTPUser, EditXml.strFTPPwd);
-        //    requestFTPUploader.Method = WebRequestMethods.Ftp.UploadFile;
+        public void FTP_Delete(string fileName, string Path, string User, string Pwd)
+        {
+            //連接+指定檔案
+            //ftp://++/ftp/
+            FtpWebRequest requestFilDelete = (FtpWebRequest)WebRequest.Create("ftp://" + Path + "/ftp/records/" + fileName);
+            //登入
+            requestFilDelete.Credentials = new NetworkCredential(User, Pwd);
+            requestFilDelete.Method = WebRequestMethods.Ftp.DeleteFile;
+            try
+            {
+                FtpWebResponse responseFileDownload = (FtpWebResponse)requestFilDelete.GetResponse();
+            }
+            catch (Exception ex)
+            {
+                string FunctionName = MethodBase.GetCurrentMethod().ReflectedType.Name + "." + MethodBase.GetCurrentMethod().Name;
 
-        //    FileInfo fileInfo = new FileInfo(EditXml.strDownloadPath + fileName);
-        //    FileStream fileStream = fileInfo.OpenRead();
-
-        //    int bufferLength = 2048;
-        //    byte[] buffer = new byte[bufferLength];
-
-        //    Stream uploadStream = requestFTPUploader.GetRequestStream();
-        //    int contentLength = fileStream.Read(buffer, 0, bufferLength);
-
-        //    while (contentLength != 0)
-        //    {
-        //        uploadStream.Write(buffer, 0, contentLength);
-        //        contentLength = fileStream.Read(buffer, 0, bufferLength);
-        //    }
-
-        //    uploadStream.Close();
-        //    fileStream.Close();
-
-        //    requestFTPUploader = null;
-        //}
+                Logger.MakeLogger(FunctionName, ex);
+            }
+        }       
     }
 }

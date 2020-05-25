@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 
-namespace PRSpline
+namespace AutoDownloading
 {
     class EditXml
     {
@@ -15,6 +15,7 @@ namespace PRSpline
             public string strUser;
             public string strPwd;
         }
+
         public static string strDownloadPath;
 
         public static string strXmlFile;
@@ -26,8 +27,8 @@ namespace PRSpline
         public  EditXml()
         {
             strXmlFile = this.GetType().Assembly.Location;
-            strXmlFile = strXmlFile.Replace(".exe", ".xml");
-            strDownloadPath = strXmlFile.Replace("PRSpline.xml", @"downloadFile\"); 
+            strXmlFile = strXmlFile.Replace("AutoDownloading.exe", "PRSpline.xml");
+            strDownloadPath = strXmlFile.Replace("PRSpline.xml", @"downloadFile\");
             mFTPData = new List<FTPData>();
         }
         public void GetXmlData()
@@ -50,7 +51,7 @@ namespace PRSpline
                 mFTPData.Add(_FTPData);
             }
         }
-        public static string SaveXml()
+        public static string SaveXml(string DownloadPath)
         {
             string reString = string.Empty;
             try
@@ -64,11 +65,8 @@ namespace PRSpline
                 XmlElement company = xmlDoc.CreateElement("root");
                 xmlDoc.AppendChild(company);
                 //建立子節點
-                XmlElement department = xmlDoc.CreateElement("period");
-                XmlElement department1 = xmlDoc.CreateElement("min");
-                
-                department1.InnerText = m_nTimes.ToString();
-                department.AppendChild(department1);
+                XmlElement department = xmlDoc.CreateElement("downloadpath");
+                department.InnerText = DownloadPath;
                 //加入至company節點底下
                 company.AppendChild(department);
 

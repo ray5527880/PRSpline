@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.btnXZoomIn = new System.Windows.Forms.Button();
             this.btnXZoomOut = new System.Windows.Forms.Button();
             this.btnYZoomIn = new System.Windows.Forms.Button();
@@ -158,6 +159,8 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox4.Controls.Add(this.labTriggerTime);
             this.groupBox4.Controls.Add(this.labStartTime);
             this.groupBox4.Controls.Add(this.label18);
@@ -440,12 +443,13 @@
             this.Font = new System.Drawing.Font("新細明體", 9.75F);
             this.ForeColor = System.Drawing.SystemColors.HighlightText;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.MaximizeBox = false;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "PRSpline";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.SizeChanged += new System.EventHandler(this.frmMain_SizeChanged);
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -481,7 +485,6 @@
         private System.Windows.Forms.Button btnReZoom;
         private System.Windows.Forms.Button btnRemove;
         private System.Windows.Forms.Button btnVector;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox cbxPS;
         private System.Windows.Forms.Button btnFileOpen;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
@@ -491,6 +494,7 @@
         private System.Windows.Forms.GroupBox groupBox2;
         public System.Windows.Forms.Panel pnlAnagol;
         public System.Windows.Forms.Panel pnlDigital;
+        private System.Windows.Forms.Label label4;
     }
 }
 

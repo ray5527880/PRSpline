@@ -28,9 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.label1 = new System.Windows.Forms.Label();
-            this.txtPath = new System.Windows.Forms.TextBox();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSetup));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btnDel = new System.Windows.Forms.Button();
             this.btnApp = new System.Windows.Forms.Button();
@@ -44,32 +43,12 @@
             this.txtName = new System.Windows.Forms.TextBox();
             this.txtIP = new System.Windows.Forms.TextBox();
             this.btnSave = new System.Windows.Forms.Button();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DGVSetup)).BeginInit();
             this.SuspendLayout();
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 18);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(93, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "FTP下載位置：";
-            // 
-            // txtPath
-            // 
-            this.txtPath.Location = new System.Drawing.Point(111, 15);
-            this.txtPath.Name = "txtPath";
-            this.txtPath.Size = new System.Drawing.Size(392, 23);
-            this.txtPath.TabIndex = 10;
-            // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.label7);
-            this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.btnDel);
             this.groupBox1.Controls.Add(this.btnApp);
             this.groupBox1.Controls.Add(this.DGVSetup);
@@ -82,7 +61,7 @@
             this.groupBox1.Controls.Add(this.txtName);
             this.groupBox1.Controls.Add(this.txtIP);
             this.groupBox1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.groupBox1.Location = new System.Drawing.Point(15, 44);
+            this.groupBox1.Location = new System.Drawing.Point(19, 12);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(617, 345);
             this.groupBox1.TabIndex = 11;
@@ -116,8 +95,8 @@
             this.DGVSetup.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DGVSetup.Location = new System.Drawing.Point(15, 90);
             this.DGVSetup.Name = "DGVSetup";
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
-            this.DGVSetup.RowsDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Black;
+            this.DGVSetup.RowsDefaultCellStyle = dataGridViewCellStyle1;
             this.DGVSetup.RowTemplate.Height = 24;
             this.DGVSetup.Size = new System.Drawing.Size(586, 213);
             this.DGVSetup.TabIndex = 9;
@@ -139,9 +118,9 @@
             this.label2.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.label2.Location = new System.Drawing.Point(13, 63);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(81, 13);
+            this.label2.Size = new System.Drawing.Size(57, 13);
             this.label2.TabIndex = 0;
-            this.label2.Text = "FTP IP位址：";
+            this.label2.Text = "設備IP：";
             // 
             // txtPwd
             // 
@@ -186,15 +165,15 @@
             // 
             // txtIP
             // 
-            this.txtIP.Location = new System.Drawing.Point(132, 58);
+            this.txtIP.Location = new System.Drawing.Point(100, 58);
             this.txtIP.Name = "txtIP";
-            this.txtIP.Size = new System.Drawing.Size(104, 23);
+            this.txtIP.Size = new System.Drawing.Size(206, 23);
             this.txtIP.TabIndex = 6;
             // 
             // btnSave
             // 
             this.btnSave.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnSave.Location = new System.Drawing.Point(557, 396);
+            this.btnSave.Location = new System.Drawing.Point(561, 364);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 12;
@@ -202,38 +181,19 @@
             this.btnSave.UseVisualStyleBackColor = false;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(242, 63);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(64, 13);
-            this.label6.TabIndex = 12;
-            this.label6.Text = "/ftp/records/";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(97, 63);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(29, 13);
-            this.label7.TabIndex = 13;
-            this.label7.Text = "ftp://";
-            // 
             // frmSetup
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gray;
-            this.ClientSize = new System.Drawing.Size(648, 427);
+            this.ClientSize = new System.Drawing.Size(648, 402);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.txtPath);
-            this.Controls.Add(this.label1);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("新細明體", 9.75F);
             this.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "frmSetup";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -243,14 +203,10 @@
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DGVSetup)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox txtPath;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button btnDel;
         private System.Windows.Forms.Button btnApp;
@@ -264,7 +220,5 @@
         private System.Windows.Forms.TextBox txtName;
         private System.Windows.Forms.TextBox txtIP;
         private System.Windows.Forms.Button btnSave;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label6;
     }
 }

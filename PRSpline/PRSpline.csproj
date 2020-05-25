@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -10,8 +10,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PRSpline</RootNamespace>
     <AssemblyName>PRSpline</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -23,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -32,6 +34,10 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>cb0cz-w4zhd-001.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -94,8 +100,9 @@
     <Compile Include="frmVector.Designer.cs">
       <DependentUpon>frmVector.cs</DependentUpon>
     </Compile>
-    <Compile Include="FTPDownload.cs" />
     <Compile Include="LoadDataFile.cs" />
+    <Compile Include="Logger.cs" />
+    <Compile Include="MouseEvent.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -137,6 +144,7 @@
     <EmbeddedResource Include="Vector.resx">
       <DependentUpon>Vector.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -154,6 +162,7 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="cb0cz-w4zhd-001.ico" />
     <Content Include="libfftw3-3.dll" />
     <Content Include="libfftw3f-3.dll" />
   </ItemGroup>
@@ -161,6 +170,10 @@
     <ProjectReference Include="..\..\FFTWSharp-master\FFTWSharp\FFTWSharp.csproj">
       <Project>{BEA875B8-E28A-49C5-8E7E-6512DA65F7E1}</Project>
       <Name>FFTWSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FW_Setup\FW_Setup.csproj">
+      <Project>{bf37eb15-8f40-48b6-b116-709cf6b2b927}</Project>
+      <Name>FW_Setup</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

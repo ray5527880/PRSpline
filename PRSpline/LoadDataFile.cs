@@ -62,8 +62,8 @@ namespace PRSpline
                                 m_CFGData.arrAnalogyData[ACount].No = Convert.ToInt32(value[0]);
                                 m_CFGData.arrAnalogyData[ACount].Name = value[1];
                                 m_CFGData.arrAnalogyData[ACount].value1 = value[2];
-                                m_CFGData.arrAnalogyData[ACount].value2 = value[3];
-                                m_CFGData.arrAnalogyData[ACount].value3 = value[4];
+                                m_CFGData.arrAnalogyData[ACount].value3 = value[3];
+                                m_CFGData.arrAnalogyData[ACount].Unit = value[4];
                                 m_CFGData.arrAnalogyData[ACount].Zoom = Convert.ToDecimal(value[5]);
                                 m_CFGData.arrAnalogyData[ACount].value4 = Convert.ToDecimal(value[6]);
                                 m_CFGData.arrAnalogyData[ACount].value5 = Convert.ToDecimal(value[7]);

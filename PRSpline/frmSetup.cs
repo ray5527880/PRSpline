@@ -37,10 +37,9 @@ namespace PRSpline
             DGVSetup.ReadOnly = true;
             DGVSetup.Rows.Clear();
             UpdataView();
-            txtPath.Text = EditXml.strDownloadPath;
         }
         private void UpdataView()
-        {
+        {            
             DGVSetup.Rows.Clear();
             int count = 0;
             m_nCount = EditXml.mFTPData.Count;
@@ -110,7 +109,7 @@ namespace PRSpline
 
         private void btnSave_Click(object sender, EventArgs e)
         {       
-            string _Message= EditXml.SaveXml(txtPath.Text);
+            string _Message= EditXml.SaveXml();
             if (_Message == string.Empty)
                 MessageBox.Show("儲存成功");
             else
