@@ -6,4 +6,12 @@
     <RootNamespace>BF_FW</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Compress_WinRAR.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GSF.COMTRADE" Version="2.3.302" />
+  </ItemGroup>
+
 </Project>

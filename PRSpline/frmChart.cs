@@ -12,12 +12,19 @@ using System.IO;
 using System.Numerics;
 
 using System.Threading.Tasks;
+using BF_FW.data;
 
 
 namespace PRSpline
 {
     public partial class frmChart : UserControl
     {
+        private struct CData
+        {
+            public decimal x;
+            public decimal y;
+        }
+
         private CFGData mCFGData;
         private DATData mDATData;
         private FFTData mFFTData;
@@ -39,7 +46,6 @@ namespace PRSpline
         private double dZoonInStratPoint_X, dZoonInStratPoint_Y;
         private double dZoonInEndPoint_X, dZoonInEndPoint_Y;
 
-        private float fTextAnnotation_YZoom = 1.1f;
         private int blockLimit = 3;
         private int blockLine = 0;
 
@@ -50,7 +56,7 @@ namespace PRSpline
         private bool bButtonEnable = false;
         private bool bpnlAEnable = false;
         private bool bLineMove = false;
-
+               
         public frmChart()
         {
             InitializeComponent();
@@ -63,16 +69,51 @@ namespace PRSpline
             mFFTData = _FFTData;
             PSMode = _PSMode;
         }
+        
+
         private void frmChart_Load(object sender, EventArgs e)
         {
             this.chart1.MouseDoubleClick += chart1_MouseDoubleClick;
             this.chart1.MouseDown += chart1_MouseDown;
             this.chart1.MouseUp += chart1_MouseUp;
+            this.chart1.Legends.Clear();
+            AddLegends();
 
             BlockGroup_Line = new List<Annotation>();
             BlockGroup_Block = new List<Annotation>();
-            this.chart1.Legends.Clear();
+           
 
+           
+            this.chart1.ChartAreas[0].Position = new ElementPosition(0, 5, 100, 73);
+            this.chart1.ChartAreas[1].Position = new ElementPosition(0, 85, 100, 13);
+            this.chart1.ChartAreas[2].Position = new ElementPosition(0, -10, 100, -10);
+
+            this.chart1.ChartAreas[0].AxisX.Title = "Time(ms)";
+
+            this.chart1.ChartAreas[0].BackColor = Color.White;
+            this.chart1.ChartAreas[1].BackColor = Color.White;
+
+            this.chart1.ChartAreas[0].AlignWithChartArea = "B";
+            this.chart1.ChartAreas[1].AlignWithChartArea = "B";
+
+            this.chart1.Series.Clear();
+
+            AddChartPoint();
+
+            this.chart1.Series.Add(new Series()
+            {
+                Legend = "B",
+                LegendText = "Base Point",
+                BorderWidth = 2,
+                ChartType = SeriesChartType.Line
+            });
+            this.chart1.Series[chart1.Series.Count - 1].ChartArea = "B";
+            chart1.Series[chart1.Series.Count - 1].Points.AddXY(1, 1);
+
+            Set_ChartStyle();
+        }
+        private void AddLegends()
+        {
             this.chart1.Legends.Add(new Legend("A")
             {
                 Docking = Docking.Top,
@@ -80,6 +121,7 @@ namespace PRSpline
                 BackColor = System.Drawing.Color.Transparent,
                 LegendStyle = LegendStyle.Row,
                 TableStyle = LegendTableStyle.Wide,
+                ForeColor = Color.White
             });
             this.chart1.Legends.Add(new Legend("D")
             {
@@ -99,20 +141,11 @@ namespace PRSpline
             this.chart1.ChartAreas.Add(new ChartArea("A"));
             this.chart1.ChartAreas.Add(new ChartArea("D"));
             this.chart1.ChartAreas.Add(new ChartArea("B"));
-            this.chart1.ChartAreas[0].Position = new ElementPosition(0, 5, 100, 73);
-            this.chart1.ChartAreas[1].Position = new ElementPosition(0, 85, 100, 13);
-            this.chart1.ChartAreas[2].Position = new ElementPosition(0, -10, 100, -10);
+        }
 
-            this.chart1.ChartAreas[0].AxisX.Title = "Time(ms)";
 
-            this.chart1.ChartAreas[0].BackColor = Color.DimGray;
-            this.chart1.ChartAreas[1].BackColor = Color.DimGray;
-
-            this.chart1.ChartAreas[0].AlignWithChartArea = "B";
-            this.chart1.ChartAreas[1].AlignWithChartArea = "B";
-
-            this.chart1.Series.Clear();
-
+        private void AddChartPoint()
+        {
             for (int i = 0; i < mCFGData.TotalAmount; i++)
             {
                 if (i < mCFGData.A_Amount)
@@ -152,9 +185,10 @@ namespace PRSpline
                 }
             }
 
-            for (int i = 0; i < mCFGData.TotalPoint; i++)
+            var data = new List<CData>();
+            for (int ii = 0; ii < mCFGData.TotalAmount; ii++)
             {
-                for (int ii = 0; ii < mCFGData.TotalAmount; ii++)
+                for (int i = 1; i < mCFGData.TotalPoint; i++)
                 {
                     if (ii < mCFGData.A_Amount)
                     {
@@ -232,22 +266,10 @@ namespace PRSpline
                     }
                 }
             }
-            this.chart1.Series.Add(new Series()
-            {
-                Legend = "B",
-                LegendText = "Base Point",
-                BorderWidth = 2,
-                ChartType = SeriesChartType.Line
-            });
-            this.chart1.Series[chart1.Series.Count - 1].ChartArea = "B";
-            chart1.Series[chart1.Series.Count - 1].Points.AddXY(1, 1);
-
-            Set_ChartStyle();
         }
-
         private void Set_ChartStyle()
         {
-            decimal flot = Math.Ceiling(mDATData.arrData[mDATData.arrData.Count - 1].Time / 1000);
+            decimal flot = Math.Ceiling(mDATData.arrData[mDATData.arrData.Length - 1].Time / 1000);
             int fLength = 0;
             while (flot > 10)
             {
@@ -296,7 +318,7 @@ namespace PRSpline
 
             AddAnnotations();
 
-            this.hScrollBar1.Maximum = Convert.ToInt32(mDATData.arrData[mDATData.arrData.Count - 1].Time / 1000);
+            this.hScrollBar1.Maximum = Convert.ToInt32(mDATData.arrData[mDATData.arrData.Length - 1].Time / 1000);
             this.hScrollBar1.Minimum = 0;
             this.hScrollBar1.LargeChange = Bar_range;
             this.hScrollBar1.Value = 0;
@@ -360,7 +382,7 @@ namespace PRSpline
             this.chart1.Annotations.Add(new VerticalLineAnnotation()
             {
                 Name = "MoveLineX",
-                LineColor = Color.White,
+                LineColor = Color.Black,
                 IsInfinitive = true,
                 AxisX = this.chart1.ChartAreas[0].AxisX,
                 LineWidth = 2
@@ -373,7 +395,7 @@ namespace PRSpline
                 AxisX = this.chart1.ChartAreas[0].AxisX,
                 LineWidth = 0,
                 AnchorY = 11,
-                // X = (triggerTime_S - startTime_S) * 1000 * 1.01f,
+                
                 Text = "Time " + ((triggerTime_S - startTime_S) * 1000).ToString() + "ms",
                 Font = new Font(Font.Name, 10, FontStyle.Bold)
             });
@@ -381,7 +403,7 @@ namespace PRSpline
             this.chart1.Annotations.Add(new HorizontalLineAnnotation()
             {
                 Name = "MoveLineY",
-                LineColor = Color.White,
+                LineColor = Color.Black,
                 IsInfinitive = true,
                 AxisY = this.chart1.ChartAreas[0].AxisY,
                 LineWidth = 2,
@@ -405,7 +427,7 @@ namespace PRSpline
             chart1.AnnotationPositionChanged += chart1_AnnotationPositionChanged;
         }
         /*------------------------ChartFuntion------------------------*/
-        #region
+        #region ChartFuntion
         public void Chart1_Enable(int index, Panel panel)
         {
             this.chart1.Series[index].Enabled = !this.chart1.Series[index].Enabled;
@@ -440,8 +462,6 @@ namespace PRSpline
                     bButtonEnable = true;
                     this.chart1.Annotations["MoveLineX"].Visible = true;
                     this.chart1.Annotations["MoveTextX"].Visible = true;
-                    //this.chart1.Annotations["MoveLineY"].Visible = true;
-                    //this.chart1.Annotations["MoveTextY"].Visible = true;
                     this.chart1.Series[chart1.Series.Count - 1].Enabled = true;
                     return;
                 }
@@ -490,22 +510,20 @@ namespace PRSpline
             {
                 this.chart1.ChartAreas[1].Visible = false;
                 this.chart1.ChartAreas[0].Position = new ElementPosition(0, 10, 100, 88);
-                fTextAnnotation_YZoom = 1.1f;
             }
             else
             {
                 this.chart1.ChartAreas[1].Visible = true;
                 this.chart1.ChartAreas[0].Position = new ElementPosition(0, 10, 100, 68);
-                fTextAnnotation_YZoom = 1.2f;
             }
         }
-        #endregion
+        #endregion 
         /*------------------------ChartEvent------------------------*/
-        #region
+        #region 
 
         #endregion
         /*------------------------MouseEvent------------------------*/
-        #region
+        #region MouseEvent
         private void chart1_MouseMove(object sender, MouseEventArgs e)
         {
             if (bMoveView)
@@ -588,7 +606,7 @@ namespace PRSpline
                     dZoonInStratPoint_Y = this.chart1.ChartAreas[0].AxisY.PixelPositionToValue(e.Y);
                     chart1.Annotations.Add(new LineAnnotation()
                     {
-                        LineColor = Color.White,
+                        LineColor = Color.Black,
                         AxisX = this.chart1.ChartAreas[0].AxisX,
                         AxisY = this.chart1.ChartAreas[0].AxisY,
                         AnchorX = this.chart1.ChartAreas[0].AxisX.PixelPositionToValue(e.X),
@@ -602,7 +620,7 @@ namespace PRSpline
                     });
                     chart1.Annotations.Add(new LineAnnotation()
                     {
-                        LineColor = Color.White,
+                        LineColor = Color.Black,
                         AxisX = this.chart1.ChartAreas[0].AxisX,
                         AxisY = this.chart1.ChartAreas[0].AxisY,
                         AnchorX = this.chart1.ChartAreas[0].AxisX.PixelPositionToValue(e.X),
@@ -610,13 +628,13 @@ namespace PRSpline
                         Width = 0,
                         Height = 0,
                         LineWidth = 3,
-                        LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dash,
+                        LineDashStyle = ChartDashStyle.Dash,
                         Name = "ZoonInLineY",
                         AllowMoving = true
                     });
                     bZoonIn = !bZoonIn;
                 }
-                if (this.Cursor != System.Windows.Forms.Cursors.Default)
+                if (this.Cursor != Cursors.Default)
                 {
                     bLineMove = true;
                 }
@@ -716,7 +734,7 @@ namespace PRSpline
                         X = this.chart1.ChartAreas[0].AxisX.PixelPositionToValue(e.X),
                         IsInfinitive = true,
                         LineWidth = 2,
-                        LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dash,
+                        LineDashStyle = ChartDashStyle.Dash,
                         Name = "BlockLine" + blockLine,
                         //AllowMoving = true
                     });
@@ -1005,7 +1023,7 @@ namespace PRSpline
             {
                 this.chart1.Annotations.Add(new TextAnnotation()
                 {
-                    ForeColor = Color.White,
+                    //ForeColor = Color.White,
                     AnchorX = 80,
                     AnchorY = 8,
                     LineWidth = 0,

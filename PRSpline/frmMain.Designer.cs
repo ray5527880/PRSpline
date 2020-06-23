@@ -63,8 +63,15 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.btnSetup = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btnExtremum = new System.Windows.Forms.Button();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.panel4 = new System.Windows.Forms.Panel();
             this.groupBox4.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.panel3.SuspendLayout();
+            this.panel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnXZoomIn
@@ -118,15 +125,18 @@
             // 
             // panel1
             // 
-            this.panel1.Location = new System.Drawing.Point(132, 152);
+            this.panel1.Location = new System.Drawing.Point(169, 109);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1331, 570);
+            this.panel1.Size = new System.Drawing.Size(1294, 613);
             this.panel1.TabIndex = 16;
             // 
             // pnlAnagol
             // 
+            this.pnlAnagol.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.pnlAnagol.AutoScroll = true;
             this.pnlAnagol.BackColor = System.Drawing.SystemColors.Desktop;
-            this.pnlAnagol.Location = new System.Drawing.Point(15, 152);
+            this.pnlAnagol.Location = new System.Drawing.Point(14, 26);
             this.pnlAnagol.Name = "pnlAnagol";
             this.pnlAnagol.Size = new System.Drawing.Size(110, 360);
             this.pnlAnagol.TabIndex = 17;
@@ -134,7 +144,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(15, 136);
+            this.label7.Location = new System.Drawing.Point(13, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(89, 13);
             this.label7.TabIndex = 25;
@@ -143,7 +153,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(15, 521);
+            this.label8.Location = new System.Drawing.Point(11, 0);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(86, 13);
             this.label8.TabIndex = 27;
@@ -151,8 +161,11 @@
             // 
             // pnlDigital
             // 
+            this.pnlDigital.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.pnlDigital.AutoScroll = true;
             this.pnlDigital.BackColor = System.Drawing.SystemColors.Desktop;
-            this.pnlDigital.Location = new System.Drawing.Point(15, 537);
+            this.pnlDigital.Location = new System.Drawing.Point(14, 16);
             this.pnlDigital.Name = "pnlDigital";
             this.pnlDigital.Size = new System.Drawing.Size(110, 185);
             this.pnlDigital.TabIndex = 26;
@@ -339,7 +352,7 @@
             // cbxPS
             // 
             this.cbxPS.FormattingEnabled = true;
-            this.cbxPS.Location = new System.Drawing.Point(615, 37);
+            this.cbxPS.Location = new System.Drawing.Point(625, 37);
             this.cbxPS.Name = "cbxPS";
             this.cbxPS.Size = new System.Drawing.Size(70, 21);
             this.cbxPS.TabIndex = 37;
@@ -354,13 +367,12 @@
             this.btnVector.Size = new System.Drawing.Size(32, 32);
             this.btnVector.TabIndex = 36;
             this.btnVector.UseVisualStyleBackColor = true;
-            this.btnVector.Visible = false;
             this.btnVector.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(492, 40);
+            this.label4.Location = new System.Drawing.Point(502, 40);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(117, 13);
             this.label4.TabIndex = 36;
@@ -406,6 +418,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.btnExtremum);
             this.groupBox2.Controls.Add(this.btnSetup);
             this.groupBox2.Controls.Add(this.btnFileOpen);
             this.groupBox2.Controls.Add(this.btnDownloading);
@@ -426,18 +439,57 @@
             this.groupBox2.TabIndex = 23;
             this.groupBox2.TabStop = false;
             // 
+            // btnExtremum
+            // 
+            this.btnExtremum.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.btnExtremum.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnExtremum.Location = new System.Drawing.Point(454, 30);
+            this.btnExtremum.Name = "btnExtremum";
+            this.btnExtremum.Size = new System.Drawing.Size(32, 32);
+            this.btnExtremum.TabIndex = 42;
+            this.btnExtremum.UseVisualStyleBackColor = true;
+            this.btnExtremum.Click += new System.EventHandler(this.btnExtremum_Click);
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.label7);
+            this.panel2.Controls.Add(this.pnlAnagol);
+            this.panel2.Location = new System.Drawing.Point(3, 3);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(137, 393);
+            this.panel2.TabIndex = 31;
+            // 
+            // panel3
+            // 
+            this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.panel3.Controls.Add(this.label8);
+            this.panel3.Controls.Add(this.pnlDigital);
+            this.panel3.Location = new System.Drawing.Point(3, 402);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(137, 205);
+            this.panel3.TabIndex = 32;
+            // 
+            // panel4
+            // 
+            this.panel4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.panel4.Controls.Add(this.panel2);
+            this.panel4.Controls.Add(this.panel3);
+            this.panel4.Location = new System.Drawing.Point(15, 113);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(148, 613);
+            this.panel4.TabIndex = 33;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.Gray;
+            this.BackColor = System.Drawing.Color.DimGray;
             this.ClientSize = new System.Drawing.Size(1475, 738);
+            this.Controls.Add(this.panel4);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox4);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.pnlDigital);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.pnlAnagol);
             this.Controls.Add(this.panel1);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("新細明體", 9.75F);
@@ -454,8 +506,12 @@
             this.groupBox4.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
+            this.panel4.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -495,6 +551,10 @@
         public System.Windows.Forms.Panel pnlAnagol;
         public System.Windows.Forms.Panel pnlDigital;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button btnExtremum;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel panel4;
     }
 }
 
