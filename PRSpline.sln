@@ -5,11 +5,9 @@ VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PRSpline", "PRSpline\PRSpline.csproj", "{DCC9CE2B-C731-4BB6-8CCF-17938324D065}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FFTWSharp", "..\FFTWSharp-master\FFTWSharp\FFTWSharp.csproj", "{BEA875B8-E28A-49C5-8E7E-6512DA65F7E1}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoDownloading", "AutoDownloading\AutoDownloading.csproj", "{138EBE57-1C3B-4DBB-84E4-41FFC7D5F541}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FW_Setup", "FW_Setup\FW_Setup.csproj", "{BF37EB15-8F40-48B6-B116-709CF6B2B927}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FW_Setup", "FW_Setup\FW_Setup.csproj", "{BF37EB15-8F40-48B6-B116-709CF6B2B927}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,16 +29,6 @@ Global
 		{DCC9CE2B-C731-4BB6-8CCF-17938324D065}.Release|Mixed Platforms.Build.0 = Release|x86
 		{DCC9CE2B-C731-4BB6-8CCF-17938324D065}.Release|x86.ActiveCfg = Release|x86
 		{DCC9CE2B-C731-4BB6-8CCF-17938324D065}.Release|x86.Build.0 = Release|x86
-		{BEA875B8-E28A-49C5-8E7E-6512DA65F7E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BEA875B8-E28A-49C5-8E7E-6512DA65F7E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BEA875B8-E28A-49C5-8E7E-6512DA65F7E1}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{BEA875B8-E28A-49C5-8E7E-6512DA65F7E1}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{BEA875B8-E28A-49C5-8E7E-6512DA65F7E1}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{BEA875B8-E28A-49C5-8E7E-6512DA65F7E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BEA875B8-E28A-49C5-8E7E-6512DA65F7E1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BEA875B8-E28A-49C5-8E7E-6512DA65F7E1}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{BEA875B8-E28A-49C5-8E7E-6512DA65F7E1}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{BEA875B8-E28A-49C5-8E7E-6512DA65F7E1}.Release|x86.ActiveCfg = Release|Any CPU
 		{138EBE57-1C3B-4DBB-84E4-41FFC7D5F541}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{138EBE57-1C3B-4DBB-84E4-41FFC7D5F541}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{138EBE57-1C3B-4DBB-84E4-41FFC7D5F541}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

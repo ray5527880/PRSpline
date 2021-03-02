@@ -22,10 +22,10 @@ namespace PRSpline
         private void UCExtremumData_Load(object sender, EventArgs e)
         {
             label1.Text = _extremum.strName;
-            label6.Text = _extremum.MaxValue.ToString();
-            label7.Text = _extremum.MaxTime.ToString();
-            label8.Text = _extremum.MinValue.ToString();
-            label9.Text = _extremum.MinTime.ToString();
+            label6.Text = _extremum.MaxValue.ToString("#0.000");
+            label7.Text = _extremum.MaxTime.ToString("#0.000") + " ms";
+            label8.Text = _extremum.MinValue.ToString("#0.000");
+            label9.Text = _extremum.MinTime.ToString("#0.000") + " ms";
         }
     }
 }

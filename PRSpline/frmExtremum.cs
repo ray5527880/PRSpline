@@ -21,11 +21,11 @@ namespace PRSpline
         }
 
         private void frmExtremum_Load(object sender, EventArgs e)
-        {   
-            for(int i = 0; i < extremums.Length; i++)
+        {
+            for (int i = 0; i < extremums.Length; i++)
             {
                 panel1.Controls.Add(new UCExtremumData(extremums[i]) { Location = new Point(10, 10 + 140 * i) });
-            }     
+            }
         }
     }
 }

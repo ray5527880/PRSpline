@@ -12,6 +12,14 @@
 
   <ItemGroup>
     <PackageReference Include="GSF.COMTRADE" Version="2.3.302" />
+    <PackageReference Include="Microsoft.Win32.Registry" Version="4.7.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="fftwlib">
+      <HintPath>..\FFTWSharp-master\FFTWSharp\bin\Debug\fftwlib.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

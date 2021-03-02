@@ -115,7 +115,7 @@
             // niCollect
             // 
             this.niCollect.Icon = ((System.Drawing.Icon)(resources.GetObject("niCollect.Icon")));
-            this.niCollect.Text = "FWDownloading";
+            this.niCollect.Text = "AutoDownloading";
             this.niCollect.Visible = true;
             this.niCollect.DoubleClick += new System.EventHandler(this.niCollect_DoubleClick);
             // 
@@ -134,6 +134,7 @@
             this.Controls.Add(this.btnClose);
             this.Font = new System.Drawing.Font("新細明體", 9.75F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "frmAutoDownloading";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;

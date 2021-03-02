@@ -11,6 +11,7 @@ using System.Threading;
 using System.IO;
 using System.Reflection;
 using System.Timers;
+using System.Threading.Tasks;
 using BF_FW;
 
 namespace AutoDownloading
@@ -19,6 +20,8 @@ namespace AutoDownloading
     {
         Thread m_Task;
 
+        //public tVSData tVSData;
+        public static string ConnectionAlarms;
         public ColorProgressBar m_PrgBar;
 
         public frmAutoDownloading()
@@ -43,14 +46,14 @@ namespace AutoDownloading
         private void Form1_Load(object sender, EventArgs e)
         {
             EditXml editXml = new EditXml();
-            editXml.GetXmlData();
 
+            editXml.GetXmlData();
             this.m_PrgBar.Maximum = 1000;
 
             this.label4.Text = string.Empty;
             this.label5.Text = string.Empty;
 
-            this.m_PrgBar.Step = 1000 / EditXml.mFTPData.Count;
+            this.m_PrgBar.Step = EditXml.mFTPData.Count != 0 ? 1000 / EditXml.mFTPData.Count : 10;
             System.Timers.Timer ThreadStart = new System.Timers.Timer(EditXml.m_nTimes * 60 * 1000);
 
             ThreadStart.Elapsed += new ElapsedEventHandler(TimerThread);
@@ -63,11 +66,18 @@ namespace AutoDownloading
         public void TimerThread(object source, ElapsedEventArgs e)
         {
             m_Task = new Thread(ThreadTask);
-            m_Task.Start(this);            
+            m_Task.Start(this);
         }
         private static void ThreadTask(Object objfrm)
         {
-            var frm =(frmAutoDownloading) objfrm;
+            EditXml editXml = new EditXml();
+
+            editXml.GetXmlData();
+            ConnectionAlarms = "server=" + EditXml.DBPath + "; database=" + EditXml.DBName + ";uid=" + EditXml.DBUser + ";pwd=" + EditXml.DBPwd;
+
+            var tVSData = new tVSData(ConnectionAlarms);
+
+            var frm = (frmAutoDownloading)objfrm;
             FTPDownload mFTP = new FTPDownload();
 
             DateTime dtNow = DateTime.Now;
@@ -77,6 +87,9 @@ namespace AutoDownloading
 
             foreach (var item in EditXml.mFTPData)
             {
+                var m_tVSIEDName = new tVSIEDName(ConnectionAlarms);
+                var VSIED_Data = m_tVSIEDName.GetData(item.strName);
+
                 if (!Directory.Exists(EditXml.strDownloadPath + item.strName + @"\"))
                     Directory.CreateDirectory(EditXml.strDownloadPath + item.strName + @"\");
                 int count = 0;
@@ -100,12 +113,77 @@ namespace AutoDownloading
                     mFTP.FTP_Download(filePaht, FTPfiles[i], item.strIP, item.strUser, item.strPwd);
                     if (File.Exists(filePaht))
                         mFTP.FTP_Delete(FTPfiles[i], item.strIP, item.strUser, item.strPwd);
-                }
+                    //if (EditXml.VoltageSag == 1)
+                    //{
+                    VoltageSagCal VolSagVal = new VoltageSagCal(filePaht, item.BaseValue);
 
+                    if (VolSagVal.VoltageSagDatas.duration != 0)
+                    {
+                        string _filePaht = string.Format(@"./downloadFile/{0}/{0}.xml", item.strName);
+                        var VSXml = new VoltageSagXml(_filePaht);
+                        VSXml.AddData(VolSagVal.VoltageSagDatas);
+
+                        if (EditXml.IsUserSQL == 1)
+                        {
+                            tVSData.VSData vSDatas = new tVSData.VSData();
+                            vSDatas.Year = VolSagVal.VoltageSagDatas.treggerDateTime.Year;
+                            vSDatas.MD = VolSagVal.VoltageSagDatas.treggerDateTime.Month * 100 + VolSagVal.VoltageSagDatas.treggerDateTime.Day;
+                            vSDatas.HM = VolSagVal.VoltageSagDatas.treggerDateTime.Hour * 100 + VolSagVal.VoltageSagDatas.treggerDateTime.Minute;
+                            vSDatas.SS = VolSagVal.VoltageSagDatas.treggerDateTime.Second;
+                            vSDatas.DUR = VolSagVal.VoltageSagDatas.duration;
+                            vSDatas.V1 = VolSagVal.VoltageSagDatas.PValue * 100;
+                            vSDatas.V2 = VolSagVal.VoltageSagDatas.QValue * 100;
+                            vSDatas.V3 = VolSagVal.VoltageSagDatas.SValue * 100;
+                            if (vSDatas.V1 < vSDatas.V2)
+                            {
+                                if (vSDatas.V1 < vSDatas.V3)
+                                    vSDatas.Down = 100 - vSDatas.V1;
+                                else
+                                    vSDatas.Down = 100 - vSDatas.V3;
+                            }
+                            else
+                            {
+                                if (vSDatas.V2 < vSDatas.V3)
+                                    vSDatas.Down = 100 - vSDatas.V2;
+                                else
+                                    vSDatas.Down = 100 - vSDatas.V3;
+                            }
+                            vSDatas.Cycle = VolSagVal.VoltageSagDatas.cycle;
+                            vSDatas.Type = GetType(100 - vSDatas.Down, vSDatas.DUR);
+
+                            if (vSDatas.V1 < 90 || vSDatas.V2 < 90 || vSDatas.V3 < 90)
+                                tVSData.AddData(vSDatas, VSIED_Data.ID);
+                        }
+                    }
+                }
                 DelegateCentre.UpdatePrgBar(frm.m_PrgBar);
             }
-            DelegateCentre.UpdateLabel((DateTime.Now- dtNow).ToString("HH:mm:ss"), frm.label5);
+            DelegateCentre.UpdateLabel((DateTime.Now - dtNow).ToString(@"mm\:ss"), frm.label5);
         }
+        public static int GetType(decimal _Value, decimal _Time)
+        {
+            int reValue = 0;
+            if (_Time < 50)
+            {
+                reValue = 1;
+            }
+            else if (_Time > 1000 * 60)
+            {
+                reValue = 4;
+            }
+            else
+            {
+                if (_Time <= 200 && _Value >= 50)
+                    reValue = 2;
+                else if (_Time <= 500 && _Value >= 70)
+                    reValue = 2;
+                else if (_Time >= 200 && _Value > 80)
+                    reValue = 2;
+
+            }
+            return reValue;
+        }
+
 
         private void btnClose_Click(object sender, EventArgs e)
         {
@@ -149,7 +227,7 @@ namespace AutoDownloading
         }
     }
     delegate void InitPrgBarCallback(ColorProgressBar Pgr);
-    delegate void UpdatePrgBarCallback( ColorProgressBar Pgr);
+    delegate void UpdatePrgBarCallback(ColorProgressBar Pgr);
     delegate void UpdateLabelCallback(string strWorkTime, Label lbl);
     delegate void SetPrgBarMaxback(ColorProgressBar Pgr);
 
@@ -169,12 +247,12 @@ namespace AutoDownloading
 
         }
 
-        public static void UpdatePrgBar( ColorProgressBar Pgr)
+        public static void UpdatePrgBar(ColorProgressBar Pgr)
         {
             if (Pgr.InvokeRequired)
             {
                 UpdatePrgBarCallback myUpdate = new UpdatePrgBarCallback(UpdatePrgBar);
-                Pgr.Invoke(myUpdate,  Pgr);
+                Pgr.Invoke(myUpdate, Pgr);
             }
             else
             {

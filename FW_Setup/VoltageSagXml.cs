@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using System.IO;
 using BF_FW.data;
 
 namespace BF_FW
@@ -12,6 +13,35 @@ namespace BF_FW
         public VoltageSagXml(string filePath)
         {
             _filePaht = filePath;
+        }
+        public bool CreateFile()
+        {
+            bool IsCreate = false;
+            //File.Create(_filePaht);
+            
+            try
+            {
+                using (XmlWriter writer = XmlWriter.Create(_filePaht))
+                {
+                    writer.WriteStartElement("root");                  
+                    writer.WriteEndElement();
+                    writer.Flush();
+                }
+                IsCreate = true;
+            }
+            catch (Exception eee) { }
+            return IsCreate;
+        }
+        public void AddData(VoltageSagData.voltageSagData data)
+        {
+            var OldData = GetXmlData();
+            var NewData = new List<VoltageSagData.voltageSagData>();
+            foreach (var item in OldData)
+            {
+                NewData.Add(item);
+            }
+            NewData.Add(data);
+            SaveXml(NewData.ToArray());
         }
         private string GetXmlString(string strNode)
         {
@@ -33,19 +63,25 @@ namespace BF_FW
 
             foreach (XmlNode item in xmlDoc.SelectNodes("root/Data"))
             {
-                var _data = new VoltageSagData.voltageSagData()
+                try
                 {
-                    treggerDateTime = Convert.ToDateTime(item.SelectSingleNode("TreggerDateTime").InnerText),
-                    duration = Convert.ToDecimal(item.SelectSingleNode("Duration").InnerText),
-                    PValue = Convert.ToDecimal(item.SelectSingleNode("PerUnitValue/P").InnerText),
-                    QValue = Convert.ToDecimal(item.SelectSingleNode("PerUnitValue/Q").InnerText),
-                    SValue = Convert.ToDecimal(item.SelectSingleNode("PerUnitValue/S").InnerText)
-                };
-                reData.Add(_data);
+                    var _data = new VoltageSagData.voltageSagData()
+                    {
+                        treggerDateTime = Convert.ToDateTime(item.SelectSingleNode("TreggerDateTime").InnerText),
+                        duration = Convert.ToDecimal(item.SelectSingleNode("Duration").InnerText),
+                        StartTime = Convert.ToDecimal(item.SelectSingleNode("StartTime").InnerText),
+                        cycle = Convert.ToDecimal(item.SelectSingleNode("Cycle").InnerText),
+                        PValue = Convert.ToDecimal(item.SelectSingleNode("PerUnitValue/P").InnerText),
+                        QValue = Convert.ToDecimal(item.SelectSingleNode("PerUnitValue/Q").InnerText),
+                        SValue = Convert.ToDecimal(item.SelectSingleNode("PerUnitValue/S").InnerText)
+                    };
+                    reData.Add(_data);
+                }
+                catch (Exception ex) { }
             }
             return reData.ToArray();
         }
-        public void  SaveXml(VoltageSagData.voltageSagData[] datas)
+        public void SaveXml(VoltageSagData.voltageSagData[] datas)
         {
             string reString = string.Empty;
             try
@@ -69,9 +105,13 @@ namespace BF_FW
                     XmlElement _Data = xmlDoc.CreateElement("Data");
 
                     XmlElement _DateTime = xmlDoc.CreateElement("TreggerDateTime");
-                    _DateTime.InnerText = item.treggerDateTime.ToString(); 
+                    _DateTime.InnerText = item.treggerDateTime.ToString();
                     XmlElement _Duration = xmlDoc.CreateElement("Duration");
-                    _Duration.InnerText = item.treggerDateTime.ToString();
+                    _Duration.InnerText = item.duration.ToString();
+                    XmlElement _StartTime = xmlDoc.CreateElement("StartTime");
+                    _StartTime.InnerText = item.StartTime.ToString();
+                    XmlElement _Cycle = xmlDoc.CreateElement("Cycle");
+                    _Cycle.InnerText = item.cycle.ToString();
 
                     XmlElement _Value = xmlDoc.CreateElement("PerUnitValue");
 
@@ -79,7 +119,7 @@ namespace BF_FW
                     _P.InnerText = item.PValue.ToString();
                     XmlElement _Q = xmlDoc.CreateElement("Q");
                     _Q.InnerText = item.QValue.ToString();
-                    XmlElement _S = xmlDoc.CreateElement("A");
+                    XmlElement _S = xmlDoc.CreateElement("S");
                     _S.InnerText = item.SValue.ToString();
 
                     _Value.AppendChild(_P);
@@ -89,6 +129,8 @@ namespace BF_FW
 
                     _Data.AppendChild(_DateTime);
                     _Data.AppendChild(_Duration);
+                    _Data.AppendChild(_StartTime);
+                    _Data.AppendChild(_Cycle);
                     _Data.AppendChild(_Value);
 
                     company.AppendChild(_Data);

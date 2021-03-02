@@ -25,14 +25,10 @@ namespace PRSpline
     {
         private static Boolean bfrmVector = true;
         private frmChart frmChartline;
-        private Compress_WinRAR mCompressWinRAR;
+        private CompressWinRAR mCompressWinRAR;
 
         private Parser mParser;
 
-
-
-        private CFGData mCFGData;
-        private DATData mDATData;
         private FFTData mFFTData;
 
         private frmVector m_frmVector;
@@ -40,6 +36,13 @@ namespace PRSpline
         int _Mode = 0;
 
         public static List<PSData> mPSData = new List<PSData>();
+
+        public List<double[]> PData;
+        public List<double[]> SData;
+        public List<double[]> PUData;
+
+        public int[] FFTIndex;
+
         public struct PSData
         {
             public decimal P;
@@ -59,9 +62,7 @@ namespace PRSpline
 
             setEnable(false);
 
-            mCompressWinRAR = new Compress_WinRAR();
-            mCFGData = new CFGData();
-            mDATData = new DATData();
+            mCompressWinRAR = new CompressWinRAR();
 
             cbxPS.Items.Add("P");
             cbxPS.Items.Add("S");
@@ -93,6 +94,8 @@ namespace PRSpline
             btnDownloading.Image = Image.FromFile(strpath + "download1.png");
             btnFileOpen.Image = Image.FromFile(strpath + "openfile.png");
             btnSetup.Image = Image.FromFile(strpath + "setup_SP.png");
+            btnVS.Image = Image.FromFile(strpath + "VS.png");
+            btnExtremum.Image = Image.FromFile(strpath + "Ex.png");
         }
         /// <summary>
         /// set groupBox line and string color
@@ -150,7 +153,7 @@ namespace PRSpline
                 ((Button)sender).BackColor = Color.LightSteelBlue;
             }
             if (((Button)sender).Text.IndexOf("FFT") > 0)
-                frmChartline.Chart1_Enable(((Button)sender).TabIndex + mCFGData.D_Amount, pnlAnagol);
+                frmChartline.Chart1_Enable(((Button)sender).TabIndex + mParser.Schema.DigitalChannels.Length, pnlAnagol);
             else
                 frmChartline.Chart1_Enable(((Button)sender).TabIndex, pnlAnagol);
         }
@@ -180,34 +183,34 @@ namespace PRSpline
         }
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (System.IO.Directory.Exists("./downloadFile/CompressFile"))
+            if (Directory.Exists("./downloadFile/CompressFile"))
             {
-                System.IO.Directory.Delete("./downloadFile/CompressFile", true);
+                Directory.Delete("./downloadFile/CompressFile", true);
             }
         }
         private void Clear_Information()
         {
-            labLocatiion.Text = "";
-            labDevice.Text = "";
-            labStartTime.Text = "";
-            labTriggerTime.Text = "";
-            labStartDate.Text = "";
-            labTriggerDate.Text = "";
+            labLocatiion.Text = string.Empty;
+            labDevice.Text = string.Empty;
+            labStartTime.Text = string.Empty;
+            labTriggerTime.Text = string.Empty;
+            labStartDate.Text = string.Empty;
+            labTriggerDate.Text = string.Empty;
         }
-        private void Set_Information(CFGData _CFGData)
+        private void Set_Information()
         {
             Clear_Information();
-            labLocatiion.Text = _CFGData.Location;
-            labDevice.Text = _CFGData.Device;
-            labStartDate.Text = _CFGData.startDate;
-            labTriggerDate.Text = _CFGData.triggerDate;
-            labStartTime.Text = _CFGData.startTime.Substring(0, _CFGData.startTime.Length - 3);
-            labTriggerTime.Text = _CFGData.triggerTime.Substring(0, _CFGData.triggerTime.Length - 3);
+            labLocatiion.Text = mParser.Schema.StationName;
+            labDevice.Text = mParser.Schema.DeviceID;
+            labStartDate.Text = mParser.Schema.StartTime.Value.ToString("yyyy/MM/dd");
+            labTriggerDate.Text = mParser.Schema.TriggerTime.Value.ToString("yyyy/MM/dd");
+            labStartTime.Text = mParser.Schema.StartTime.Value.ToString("HH:mm:ss.fff");
+            labTriggerTime.Text = mParser.Schema.TriggerTime.Value.ToString("HH:mm:ss.fff");
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            frmChartline.save_chart1(mCFGData);
+            frmChartline.save_chart1();
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -232,21 +235,7 @@ namespace PRSpline
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            //if (bfrmVector)
-            //{
-            //    m_frmVector = new frmVector();
-            //    string[] _str = new string[mCFGData.A_Amount];
-            //    for (int ii = 0; ii < mCFGData.A_Amount; ii++)
-            //    {
-            //        _str[ii] = mCFGData.arrAnalogyData[ii].Name;
-            //    }
-            //    m_frmVector.GetDeviceName(_str);
-            //    m_frmVector.Show();
-            //    bfrmVector = false;
-            //    btnVector.Enabled = false;
-            //}
-            var frm = new frmVoltageSag();
-            frm.ShowDialog();
+
         }
         public static void btnVectorClick()
         {
@@ -272,45 +261,70 @@ namespace PRSpline
             {
                 _Mode = 3;
             }
-
-            BeginInvoke(new Action(() =>
+            try
             {
-                panel1.Controls.Clear();
-                frmChartline = new frmChart(mCFGData, mDATData, mFFTData, _Mode);
-                panel1.Controls.Add(frmChartline);
-                frmChartline.CheakButtonEnable(pnlAnagol);
+                mFFTData = new FFTData();
+                var mfft = new FFTCal(FFTIndex, mParser);
+                switch (_Mode)
+                {
+                    case 1:
+                        mFFTData = mfft.GetFFTData(PData);
+                        break;
+                    case 2:
+                        mFFTData = mfft.GetFFTData(SData);
+                        break;
+                    case 3:
+                        mFFTData = mfft.GetFFTData(PUData);
+                        break;
+                }
 
-                frmChartline.CheakButtonEnable(pnlDigital);
-                sizeChanged();
-            }));
-        }
-        private void SetPSData(CFGData _CFGData)
-        {
-            mPSData.Clear();
-            for (int i = 0; i < _CFGData.A_Amount; i++)
+                BeginInvoke(new Action(() =>
+                {
+                    panel1.Controls.Clear();
+                    switch (_Mode)
+                    {
+                        case 1:
+                            frmChartline = new frmChart(mParser, PData, mFFTData);
+                            break;
+                        case 2:
+                            frmChartline = new frmChart(mParser, SData, mFFTData);
+                            break;
+                        case 3:
+                            frmChartline = new frmChart(mParser, PUData, mFFTData);
+                            break;
+                    }
+                    panel1.Controls.Add(frmChartline);
+                    foreach (var item in pnlAnagol.Controls)
+                    {
+                        if (item is Button)
+                        {
+                            ((Button)item).BackColor = Color.LightSteelBlue;
+                        }
+                    }
+                    foreach (var item in pnlDigital.Controls)
+                    {
+                        if (item is Button)
+                        {
+                            ((Button)item).BackColor = Color.LightSteelBlue;
+                        }
+                    }
+                    //frmChartline.CheakButtonEnable(pnlAnagol);
+
+                    //frmChartline.CheakButtonEnable(pnlDigital);
+                    sizeChanged();
+                }));
+            }
+            catch (Exception ex)
             {
-                PSData _PSData = new PSData();
-                if (_CFGData.arrAnalogyData[i].PrimaryOrSecondary == "P")
-                {
-                    _PSData.P = _CFGData.arrAnalogyData[i].Magnification1;
-                    _PSData.PerUnit = _CFGData.arrAnalogyData[i].Magnification1 * _CFGData.arrAnalogyData[i].Magnification1;
-                    _PSData.S = _PSData.PerUnit / _CFGData.arrAnalogyData[i].Magnification2;
-                }
-                else if (_CFGData.arrAnalogyData[i].PrimaryOrSecondary == "S")
-                {
-                    _PSData.S = _CFGData.arrAnalogyData[i].Zoom;
-                    _PSData.PerUnit = 1 / _CFGData.arrAnalogyData[i].Magnification2 * _CFGData.arrAnalogyData[i].Zoom;
-                    _PSData.P = _CFGData.arrAnalogyData[i].Magnification1 / _CFGData.arrAnalogyData[i].Magnification2 * _CFGData.arrAnalogyData[i].Zoom;
-                }
-                mPSData.Add(_PSData);
+                MessageBox.Show(ex.Message);
             }
         }
+
         private void setEnable(bool enable)
         {
             btnRemove.Enabled = enable;
             btnReZoom.Enabled = enable;
             btnScreenshot.Enabled = enable;
-            //btnVector.Enabled = enable;
             btnXZoomIn.Enabled = enable;
             btnXZoomOut.Enabled = enable;
             btnYZoomIn.Enabled = enable;
@@ -331,6 +345,16 @@ namespace PRSpline
                 (sender as Button).Enabled = true;
                 return;
             }
+            string strtext = this.openFileDialog1.FileName;
+            string strtext2 = string.Empty;
+
+            while (strtext.IndexOf(@"\") > -1)
+            {
+                strtext2 += strtext.Substring(0, strtext.IndexOf(@"\") + 1);
+                strtext = strtext.Substring(strtext.IndexOf(@"\") + 1);
+            }
+            strtext2 += @"../";
+
 
             setEnable(false);
 
@@ -339,13 +363,14 @@ namespace PRSpline
             string strFileName = string.Empty;
             string strXmlFile = this.GetType().Assembly.Location;
             string strfilePath = strXmlFile = strXmlFile.Replace("PRSpline.exe", "CompressFile\\");
-            if (strFile.IndexOf(".cfg") > 0)
+            if (strFile.IndexOf(".cfg") > 0 || strFile.IndexOf(".CFG") > 0)
             {
-                if (File.Exists(strFile.Replace(".cfg", ".dat")))
+                if (File.Exists(strFile.Replace(".cfg", ".dat")) || File.Exists(strFile.Replace(".CFG", ".DAT")))
                 {
                     Directory.CreateDirectory(strfilePath);
                     File.Copy(strFile, (strfilePath + openFileDialog1.SafeFileName), true);
                     File.Copy(strFile.Replace(".cfg", ".dat"), strfilePath + openFileDialog1.SafeFileName.Replace(".cfg", ".dat"), true);
+                    File.Copy(strFile.Replace(".CFG", ".DAT"), strfilePath + openFileDialog1.SafeFileName.Replace(".CFG", ".DAT"), true);
                 }
                 else
                 {
@@ -370,75 +395,48 @@ namespace PRSpline
 
                 foreach (var item in Directory.GetFiles(strfilePath, "*.cfg"))
                 {
-                    mCFGData = LoadDataFile.Get_CFGData(item);
+                    LoadDataFile.GetCFGData(item, ref mParser);
                     break;
                 }
-                Set_Information(mCFGData);
-                SetPSData(mCFGData);
-
-                foreach (var item in Directory.GetFiles(strfilePath, "*.dat"))
+                foreach (var item in Directory.GetFiles(strfilePath, "*.CFG"))
                 {
-                    mDATData = LoadDataFile.Get_DATData(item, mCFGData.TotalAmount);
+                    LoadDataFile.GetCFGData(item, ref mParser);
                     break;
                 }
+                PData = new List<double[]>();
+                SData = new List<double[]>();
+                PUData = new List<double[]>();
+                LoadDataFile.GetDatData(mParser, ref PData, ref SData, ref PUData);
 
-                int count = 0;
-                for (int i = 0; i < mCFGData.arrAnalogyData.Count(); i++)
-                {
-                    if (mCFGData.arrAnalogyData[i].Name.IndexOf("MEAS") < 0)
-                        count++;
-                }
-                mFFTData = new FFTData();
-                var data = new List<FFTData.fftData>();
-                for (int i = 0; i < mCFGData.TotalPoint; i++)
-                {
-                    FFTData.fftData _data = new FFTData.fftData();
-                    _data.Value = new double[count];
-                    _data.rad = new double[count];
-                    for (int ii = 0; ii < count; ii++)
-                    {
-                        Complex mComplex = new Complex();
+                Set_Information();
 
-                        mComplex = FFTW(i, ii);
-                        _data.Value[ii] = Math.Sqrt(Math.Pow(mComplex.Real, 2) + Math.Pow(mComplex.Imaginary, 2)) / (64 / 2) / Math.Sqrt(2);
-                        _data.rad[ii] = Math.Atan2(mComplex.Imaginary, mComplex.Real);
-                    }
-                    data.Add(_data);
+                List<int> _fftIndex = new List<int>();
+                for (int i = 0; i < mParser.Schema.TotalAnalogChannels; i++)
+                {
+                    if (mParser.Schema.AnalogChannels[i].Units == "V" || mParser.Schema.AnalogChannels[i].Units == "A")
+                        _fftIndex.Add(i);
                 }
-                mFFTData.arrFFTData = data.ToArray();
+                FFTIndex = _fftIndex.ToArray();
+
                 ClearButton();
-                for (int i = 0; i < mCFGData.A_Amount; i++)
+                for (int i = 0; i < mParser.Schema.TotalAnalogChannels; i++)
                 {
-                    AddNewButton(mCFGData.arrAnalogyData[i].Name, i, 0);
+                    AddNewButton(mParser.Schema.AnalogChannels[i].Name, i, 0);
                 }
-                for (int i = 0; i < mCFGData.D_Amount; i++)
+                for (int i = 0; i < mParser.Schema.TotalDigitalChannels; i++)
                 {
-                    AddNewButton(mCFGData.arrDigitalData[i].Name, i, 1);
+                    AddNewButton(mParser.Schema.DigitalChannels[i].Name, i, 1);
                 }
-                for (int i = 0; i < mCFGData.arrAnalogyData.Count(); i++)
+                for (int i = 0; i < FFTIndex.Length; i++)
                 {
-                    if (mCFGData.arrAnalogyData[i].Name.IndexOf("MEAS") < 0)
-                    {
-                        AddNewButton(mCFGData.arrAnalogyData[i].Name + "_FFT", i + mCFGData.arrAnalogyData.Count(), 0);
-                    }
+                    AddNewButton(mParser.Schema.AnalogChannels[FFTIndex[i]].Name + "_FFT", i + mParser.Schema.TotalAnalogChannels, 0);
                 }
-               
-
-
                 cbxPS.Items.Add("P");
                 cbxPS.Items.Add("S");
                 cbxPS.Items.Add("Per Unit");
 
-                if (mCFGData.arrAnalogyData[0].PrimaryOrSecondary == "P")
-                {
-                    cbxPS.SelectedIndex = 0;
-                }
-                else if (mCFGData.arrAnalogyData[0].PrimaryOrSecondary == "S")
-                {
-                    cbxPS.SelectedIndex = 1;
-                }
+                cbxPS.SelectedIndex = 1;
                 sizeChanged();
-
             }
             catch (ApplicationException message)
             {
@@ -465,37 +463,7 @@ namespace PRSpline
             var frm = new frmSetup();
             frm.ShowDialog();
         }
-        private Complex FFTW(int index_Entry, int index_Value)
-        {
-            int SIZE = Convert.ToInt32(mCFGData.SamplingPoint / mCFGData.Hz);
 
-            double[] data = new double[SIZE];
-
-            Complex[] cdata = new Complex[SIZE];
-            for (int i = 0; i < SIZE; i++)
-            {
-                if ((index_Entry < SIZE / 2 && (i < SIZE / 2 - index_Entry)) || (i + index_Entry - (SIZE / 2 - 1)) > mCFGData.TotalPoint)
-                {
-                    cdata[i] = new Complex(0, 0);
-                }
-                else
-                {
-                    cdata[i] = new Complex(Convert.ToDouble(mDATData.arrData[i + index_Entry - SIZE / 2].value[index_Value]), 0);
-                }
-            }
-            fftw_complexarray input = new fftw_complexarray(SIZE);
-            fftw_complexarray ReData = new fftw_complexarray(SIZE);
-
-            input.SetData(cdata);
-
-            fftw_plan pf = fftw_plan.dft_1d(SIZE, input, ReData, fftw_direction.Forward, fftw_flags.Estimate);
-
-            pf.Execute();
-            var data_Complex = ReData.GetData_Complex();
-
-            return data_Complex[1];
-        }
-       
         private void frmMain_SizeChanged(object sender, EventArgs e)
         {
             sizeChanged();
@@ -508,13 +476,12 @@ namespace PRSpline
                 this.Height = 767;
             if (frmChartline != null)
             {
-                this.panel1.Size = new System.Drawing.Size(this.Size.Width - 170, this.Size.Height - 150);
+                this.panel1.Size = new System.Drawing.Size(this.Size.Width - 190, this.Size.Height - 150);
                 frmChartline.Form_SizeChanged(this.panel1.Size.Width + 29, this.panel1.Size.Height - 30);
-              
             }
             this.panel4.Height = this.Height - 51 - 113;
             this.panel2.Height = this.panel4.Height / 5 * 3 - 10;
-            this.panel3.Location = new Point(3,this.panel2.Height + 10);
+            this.panel3.Location = new Point(3, this.panel2.Height + 10);
             this.panel3.Height = this.panel4.Height / 5 * 2 - 10;
             int TotleWidth = (this.groupBox4.Width - 20);
             label9.Location = new Point(10, label9.Location.Y);
@@ -531,30 +498,95 @@ namespace PRSpline
             labStartTime.Location = new Point(90 + TotleWidth / 3 * 2, labStartTime.Location.Y);
             label18.Location = new Point(10 + TotleWidth / 3 * 2, label18.Location.Y);
             labTriggerTime.Location = new Point(90 + TotleWidth / 3 * 2, labTriggerTime.Location.Y);
-
-            
         }
 
         private void btnExtremum_Click(object sender, EventArgs e)
         {
-            var x = new ExtremumData.Extremum[0];
-            decimal[] ps = new decimal[mPSData.Count()];
-            for (int i = 0; i < ps.Length; i++)
+            var data = new ExtremumData.Extremum[0];
+            switch (_Mode)
             {
-                switch (_Mode)
+                case 1:
+                    data = GetExtremum(PData);
+                    break;
+                case 2:
+                    data = GetExtremum(SData);
+                    break;
+                case 3:
+                    data = GetExtremum(PUData);
+                    break;
+            }
+            var frm = new frmExtremum(data);
+            frm.ShowDialog();
+
+        }
+        private ExtremumData.Extremum[] GetExtremum(List<double[]> Data)
+        {
+            var reData = new ExtremumData.Extremum[mParser.Schema.TotalAnalogChannels + mFFTData.arrFFTData[0].Value.Length];
+            for (int i = 0; i < mParser.Schema.TotalAnalogChannels; i++)
+            {
+                reData[i].strName = mParser.Schema.AnalogChannels[i].Name;
+            }
+            for (int i = 0; i < FFTIndex.Length; i++)
+            {
+                reData[i + mParser.Schema.TotalAnalogChannels].strName = mParser.Schema.AnalogChannels[FFTIndex[i]].Name + "_FFT";
+            }
+
+            var d = new ExtremumData.Extremum();
+
+            for (int i = 0; i < mParser.Schema.SampleRates[0].EndSample; i++)
+            {
+                if (i > mParser.Schema.SampleRates[0].Rate / mParser.Schema.NominalFrequency / 2 && i < mParser.Schema.SampleRates[0].EndSample - mParser.Schema.SampleRates[0].Rate / mParser.Schema.NominalFrequency / 2)
                 {
-                    case 1:
-                        ps[i] = mPSData[i].P;
-                        break;
-                    case 2:
-                        ps[i] = mPSData[i].S;
-                        break;
-                    case 3:
-                        ps[i] = mPSData[i].PerUnit;
-                        break;
+                    for (int j = 0; j < mParser.Schema.TotalAnalogChannels; j++)
+                    {
+                        if (reData[j].MaxValue > Data[i][j + 2])
+                        {
+                            reData[j].MaxValue = Data[i][j + 2];
+                            reData[j].MaxTime = Data[i][1];
+                        }
+                        else if (reData[j].MinValue < Data[i][j + 2])
+                        {
+                            reData[j].MinValue = Data[i][j + 2];
+                            reData[j].MinTime = Data[i][1];
+                        }
+                    }
+                    for (int j = 0; j < mFFTData.arrFFTData[i].Value.Length; j++)
+                    {
+                        if (reData[j + mParser.Schema.TotalAnalogChannels].MaxValue < mFFTData.arrFFTData[i].Value[j])
+                        {
+                            reData[j + mParser.Schema.TotalAnalogChannels].MaxValue = mFFTData.arrFFTData[i].Value[j];
+                            reData[j + mParser.Schema.TotalAnalogChannels].MaxTime = Data[i][1];
+                        }
+                    }
                 }
             }
-            var frm = new frmExtremum(ExtremumFunction.GetExtremunData(mDATData.arrData, mCFGData, ps));
+
+            for (int j = 0; j < mFFTData.arrFFTData[0].Value.Length; j++)
+            {
+                reData[j + mParser.Schema.TotalAnalogChannels].MinValue = reData[j + mParser.Schema.TotalAnalogChannels].MaxValue;
+                reData[j + mParser.Schema.TotalAnalogChannels].MinTime = reData[j + mParser.Schema.TotalAnalogChannels].MaxTime;
+            }
+
+            for (int i = 0; i < mParser.Schema.SampleRates[0].EndSample; i++)
+            {
+                if (i > mParser.Schema.SampleRates[0].Rate / mParser.Schema.NominalFrequency / 2 && i < mParser.Schema.SampleRates[0].EndSample - mParser.Schema.SampleRates[0].Rate / mParser.Schema.NominalFrequency / 2)
+                {
+                    for (int j = 0; j < mFFTData.arrFFTData[0].Value.Length; j++)
+                    {
+                        if (reData[j + mParser.Schema.TotalAnalogChannels].MinValue > mFFTData.arrFFTData[i].Value[j])
+                        {
+                            reData[j + mParser.Schema.TotalAnalogChannels].MinValue = mFFTData.arrFFTData[i].Value[j];
+                            reData[j + mParser.Schema.TotalAnalogChannels].MinTime = Data[i][1];
+                        }
+                    }
+                }
+            }
+
+            return reData.ToArray();
+        }
+        private void btnVS_Click(object sender, EventArgs e)
+        {
+            var frm = new frmVoltageSag();
             frm.ShowDialog();
         }
     }

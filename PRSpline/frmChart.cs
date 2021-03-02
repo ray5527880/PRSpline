@@ -12,8 +12,10 @@ using System.IO;
 using System.Numerics;
 
 using System.Threading.Tasks;
-using BF_FW.data;
+using System.Threading;
 
+using BF_FW.data;
+using GSF.COMTRADE;
 
 namespace PRSpline
 {
@@ -25,16 +27,19 @@ namespace PRSpline
             public decimal y;
         }
 
-        private CFGData mCFGData;
-        private DATData mDATData;
-        private FFTData mFFTData;
+        private List<double[]> mDatData;
 
+        private FFTData mFFTData;
+        private Parser mParser;
         private double _startY;
         private double _endY;
         private double Y_MinValue = 0;
         private double Y_MaxValue = 0;
         private double RE_Y_MaxValue;
         private double RE_Y_MinValue;
+
+        private double MoveLine_X, MoveLine_Y;
+
         public int Bar_range;
 
         private int bar_OriginalRange;
@@ -51,25 +56,24 @@ namespace PRSpline
 
         private List<Annotation> BlockGroup_Line;
         private List<Annotation> BlockGroup_Block;
-        private int PSMode;
 
         private bool bButtonEnable = false;
         private bool bpnlAEnable = false;
         private bool bLineMove = false;
-               
+
         public frmChart()
         {
             InitializeComponent();
         }
-        public frmChart(CFGData _CFGData, DATData _DATData, FFTData _FFTData, int _PSMode)
+        public frmChart(Parser parser, List<double[]> DatData, FFTData _FFTData)
         {
             InitializeComponent();
-            mCFGData = _CFGData;
-            mDATData = _DATData;
+
+            mDatData = DatData;
+            mParser = parser;
             mFFTData = _FFTData;
-            PSMode = _PSMode;
         }
-        
+
 
         private void frmChart_Load(object sender, EventArgs e)
         {
@@ -81,9 +85,7 @@ namespace PRSpline
 
             BlockGroup_Line = new List<Annotation>();
             BlockGroup_Block = new List<Annotation>();
-           
 
-           
             this.chart1.ChartAreas[0].Position = new ElementPosition(0, 5, 100, 73);
             this.chart1.ChartAreas[1].Position = new ElementPosition(0, 85, 100, 13);
             this.chart1.ChartAreas[2].Position = new ElementPosition(0, -10, 100, -10);
@@ -146,16 +148,16 @@ namespace PRSpline
 
         private void AddChartPoint()
         {
-            for (int i = 0; i < mCFGData.TotalAmount; i++)
+            for (int i = 0; i < mParser.Schema.TotalChannels; i++)
             {
-                if (i < mCFGData.A_Amount)
+                if (i < mParser.Schema.TotalAnalogChannels)
                 {
-                    if (mCFGData.arrAnalogyData[i].Unit == "V" || mCFGData.arrAnalogyData[i].Unit == "A")
+                    if (mParser.Schema.AnalogChannels[i].Units == "V" || mParser.Schema.AnalogChannels[i].Units == "A")
                     {
                         this.chart1.Series.Add(new Series()
                         {
                             Legend = "A",
-                            LegendText = mCFGData.arrAnalogyData[i].Name + "(" + mCFGData.arrAnalogyData[i].Unit + ")",
+                            LegendText = mParser.Schema.AnalogChannels[i].Name + "(" + mParser.Schema.AnalogChannels[i].Units + ")",
                             BorderWidth = 2,
                             ChartType = SeriesChartType.Line
                         });
@@ -165,7 +167,7 @@ namespace PRSpline
                         this.chart1.Series.Add(new Series()
                         {
                             Legend = "A",
-                            LegendText = mCFGData.arrAnalogyData[i].Name,
+                            LegendText = mParser.Schema.AnalogChannels[i].Name,
                             BorderWidth = 2,
                             ChartType = SeriesChartType.Line
                         });
@@ -177,7 +179,7 @@ namespace PRSpline
                     this.chart1.Series.Add(new Series()
                     {
                         Legend = "D",
-                        LegendText = mCFGData.arrDigitalData[i - mCFGData.A_Amount].Name,
+                        LegendText = mParser.Schema.DigitalChannels[i - mParser.Schema.TotalAnalogChannels].Name,
                         BorderWidth = 3,
                         ChartType = SeriesChartType.Line
                     });
@@ -185,91 +187,80 @@ namespace PRSpline
                 }
             }
 
+
             var data = new List<CData>();
-            for (int ii = 0; ii < mCFGData.TotalAmount; ii++)
+            try
             {
-                for (int i = 1; i < mCFGData.TotalPoint; i++)
+                for (int ii = 0; ii < mParser.Schema.TotalAnalogChannels; ii++)
                 {
-                    if (ii < mCFGData.A_Amount)
+                    for (int i = 1; i < mParser.Schema.SampleRates[0].EndSample; i++)
                     {
-                        switch (PSMode)
+                        chart1.Series[ii].Points.AddXY(mDatData[i][1], mDatData[i][ii + 2]);
+                        if (ii < mParser.Schema.TotalAnalogChannels)
                         {
-                            case 1:
-                                chart1.Series[ii].Points.AddXY(mDATData.arrData[i].Time / 1000, mDATData.arrData[i].value[ii] * frmMain.mPSData[ii].P);
-                                if (Y_MinValue >= Convert.ToDouble(mDATData.arrData[i].value[ii] * frmMain.mPSData[ii].P))
-                                    Y_MinValue = Convert.ToDouble(mDATData.arrData[i].value[ii] * frmMain.mPSData[ii].P);
-                                if (Y_MaxValue <= Convert.ToDouble(mDATData.arrData[i].value[ii] * frmMain.mPSData[ii].P))
-                                    Y_MaxValue = Convert.ToDouble(mDATData.arrData[i].value[ii] * frmMain.mPSData[ii].P);
-                                break;
-                            case 2:
-                                chart1.Series[ii].Points.AddXY(mDATData.arrData[i].Time / 1000, mDATData.arrData[i].value[ii] * frmMain.mPSData[ii].S);
-                                if (Y_MinValue > Convert.ToDouble(mDATData.arrData[i].value[ii] * frmMain.mPSData[ii].S))
-                                    Y_MinValue = Convert.ToDouble(mDATData.arrData[i].value[ii] * frmMain.mPSData[ii].S);
-                                if (Y_MaxValue < Convert.ToDouble(mDATData.arrData[i].value[ii] * frmMain.mPSData[ii].S))
-                                    Y_MaxValue = Convert.ToDouble(mDATData.arrData[i].value[ii] * frmMain.mPSData[ii].S);
-                                break;
-                            case 3:
-                                chart1.Series[ii].Points.AddXY(mDATData.arrData[i].Time / 1000, mDATData.arrData[i].value[ii] * frmMain.mPSData[ii].PerUnit);
-                                if (Y_MinValue > Convert.ToDouble(mDATData.arrData[i].value[ii] * frmMain.mPSData[ii].PerUnit))
-                                    Y_MinValue = Convert.ToDouble(mDATData.arrData[i].value[ii] * frmMain.mPSData[ii].PerUnit);
-                                if (Y_MaxValue < Convert.ToDouble(mDATData.arrData[i].value[ii] * frmMain.mPSData[ii].PerUnit))
-                                    Y_MaxValue = Convert.ToDouble(mDATData.arrData[i].value[ii] * frmMain.mPSData[ii].PerUnit);
-                                break;
+                            if (Y_MinValue >= mDatData[i][ii + 2])
+                                Y_MinValue = mDatData[i][ii + 2];
+                            if (Y_MaxValue <= mDatData[i][ii + 2])
+                                Y_MaxValue = mDatData[i][ii + 2];
                         }
                     }
-                    else
+                }
+                for (int ii = 0; ii < mParser.Schema.TotalDigitalChannels; ii++)
+                {
+                    for (int i = 1; i < mParser.Schema.SampleRates[0].EndSample; i++)
                     {
-                        chart1.Series[ii].Points.AddXY(mDATData.arrData[i].Time / 1000, mDATData.arrData[i].value[ii]);
+                        chart1.Series[ii + mParser.Schema.TotalAnalogChannels].Points.AddXY(mDatData[i][1], mDatData[i][ii + mParser.Schema.TotalAnalogChannels + 2]);
                     }
                 }
             }
-
-            for (int i = 0; i < mCFGData.arrAnalogyData.Count(); i++)
+            catch (Exception ex1)
             {
-                if (mCFGData.arrAnalogyData[i].Name.IndexOf("MEAS") < 0)
+
+            }
+            try
+            {
+                int index = 0;
+                for (int i = 0; i < mParser.Schema.TotalChannels; i++)
                 {
-                    if (mCFGData.arrAnalogyData[i].Unit == "V" || mCFGData.arrAnalogyData[i].Unit == "A")
+                    if (mParser.Schema.AnalogChannels[i].Units != "")
                     {
-                        this.chart1.Series.Add(new Series()
+                        if (mParser.Schema.AnalogChannels[i].Units == "V" || mParser.Schema.AnalogChannels[i].Units == "A")
                         {
-                            Legend = "A",
-                            LegendText = mCFGData.arrAnalogyData[i].Name + "_FFT(" + mCFGData.arrAnalogyData[i].Unit + ")",
-                            BorderWidth = 2,
-                            ChartType = SeriesChartType.Line
-                        });
-                    }
-                    else
-                    {
-                        this.chart1.Series.Add(new Series()
-                        {
-                            Legend = "A",
-                            LegendText = mCFGData.arrAnalogyData[i].Name + "_FFT",
-                            BorderWidth = 2,
-                            ChartType = SeriesChartType.Line
-                        });
-                    }
-                    this.chart1.Series[mCFGData.TotalAmount + i].ChartArea = "A";
-                    for (int ii = 0; ii < mCFGData.TotalPoint; ii++)
-                    {
-                        switch (PSMode)
-                        {
-                            case 1:
-                                chart1.Series[mCFGData.TotalAmount + i].Points.AddXY(mDATData.arrData[ii].Time / 1000, mFFTData.arrFFTData[ii].Value[i] * Convert.ToDouble(frmMain.mPSData[i].P));
-                                break;
-                            case 2:
-                                chart1.Series[mCFGData.TotalAmount + i].Points.AddXY(mDATData.arrData[ii].Time / 1000, mFFTData.arrFFTData[ii].Value[i] * Convert.ToDouble(frmMain.mPSData[i].S));
-                                break;
-                            case 3:
-                                chart1.Series[mCFGData.TotalAmount + i].Points.AddXY(mDATData.arrData[ii].Time / 1000, mFFTData.arrFFTData[ii].Value[i] * Convert.ToDouble(frmMain.mPSData[i].PerUnit));
-                                break;
+                            this.chart1.Series.Add(new Series()
+                            {
+                                Legend = "A",
+                                LegendText = mParser.Schema.AnalogChannels[i].Name + "_FFT(" + mParser.Schema.AnalogChannels[i].Units + ")",
+                                BorderWidth = 2,
+                                ChartType = SeriesChartType.Line
+                            });
                         }
+                        else
+                        {
+                            this.chart1.Series.Add(new Series()
+                            {
+                                Legend = "A",
+                                LegendText = mParser.Schema.AnalogChannels[i].Name + "_FFT",
+                                BorderWidth = 2,
+                                ChartType = SeriesChartType.Line
+                            });
+                        }
+                        this.chart1.Series[mParser.Schema.TotalChannels + i].ChartArea = "A";
+                        for (int ii = 0; ii < mParser.Schema.SampleRates[0].EndSample; ii++)
+                        {
+                            chart1.Series[mParser.Schema.TotalChannels + index].Points.AddXY(mDatData[ii][1], mFFTData.arrFFTData[ii].Value[index]);
+                        }
+                        index++;
                     }
                 }
+            }
+            catch (Exception ex1)
+            {
+
             }
         }
         private void Set_ChartStyle()
         {
-            decimal flot = Math.Ceiling(mDATData.arrData[mDATData.arrData.Length - 1].Time / 1000);
+            decimal flot = Convert.ToDecimal(Math.Ceiling(mDatData[mDatData.Count() - 1][1]));
             int fLength = 0;
             while (flot > 10)
             {
@@ -318,7 +309,7 @@ namespace PRSpline
 
             AddAnnotations();
 
-            this.hScrollBar1.Maximum = Convert.ToInt32(mDATData.arrData[mDATData.arrData.Length - 1].Time / 1000);
+            this.hScrollBar1.Maximum = Convert.ToInt32(mDatData[mDatData.Count - 1][1]);
             this.hScrollBar1.Minimum = 0;
             this.hScrollBar1.LargeChange = Bar_range;
             this.hScrollBar1.Value = 0;
@@ -345,7 +336,7 @@ namespace PRSpline
                     if (((Button)item).BackColor == Color.LightSlateGray)
                     {
                         if (((Button)item).Text.IndexOf("FFT") > 0)
-                            this.chart1.Series[((Button)item).TabIndex + mCFGData.D_Amount].Enabled = true;
+                            this.chart1.Series[((Button)item).TabIndex + mParser.Schema.TotalAnalogChannels].Enabled = true;
                         else
                             this.chart1.Series[((Button)item).TabIndex].Enabled = true;
                     }
@@ -357,12 +348,14 @@ namespace PRSpline
         {
             this.chart1.ChartAreas[0].AxisX.Interval = Bar_range / 6;
             this.chart1.ChartAreas[0].AxisX.LogarithmBase = 1000;
-            double startTime_S = Convert.ToDouble(mCFGData.startTime.Split(':')[2]);
-            double triggerTime_S = Convert.ToDouble(mCFGData.triggerTime.Split(':')[2]);
+
+            double startTime_S = Convert.ToDouble(0);
+            double triggerTime_S = TimeSpan.FromTicks(mParser.Schema.TriggerTime.Value - mParser.Schema.StartTime.Value).TotalMilliseconds;
+
             this.chart1.Annotations.Add(new VerticalLineAnnotation()
             {
                 LineColor = Color.Red,
-                X = (triggerTime_S - startTime_S) * 1000,
+                X = (triggerTime_S - startTime_S),
                 IsInfinitive = true,
                 AxisX = this.chart1.ChartAreas[0].AxisX,
                 LineWidth = 2
@@ -374,8 +367,8 @@ namespace PRSpline
                 AxisX = this.chart1.ChartAreas[0].AxisX,
                 AnchorY = 100,
                 LineWidth = 0,
-                X = (triggerTime_S - startTime_S) * 1000 * 1.01f,
-                Text = "Trigger " + ((triggerTime_S - startTime_S) * 1000).ToString() + "ms"
+                X = (triggerTime_S - startTime_S) * 1.01f,
+                Text = "Trigger " + ((triggerTime_S - startTime_S)).ToString() + "ms"
             });
 
 
@@ -395,8 +388,8 @@ namespace PRSpline
                 AxisX = this.chart1.ChartAreas[0].AxisX,
                 LineWidth = 0,
                 AnchorY = 11,
-                
-                Text = "Time " + ((triggerTime_S - startTime_S) * 1000).ToString() + "ms",
+
+                Text = "Time " + ((triggerTime_S - startTime_S)).ToString() + "ms",
                 Font = new Font(Font.Name, 10, FontStyle.Bold)
             });
 
@@ -447,7 +440,7 @@ namespace PRSpline
 
         public void Chart2_Enable(int index, Panel panel)
         {
-            this.chart1.Series[index + mCFGData.A_Amount].Enabled = !this.chart1.Series[index + mCFGData.A_Amount].Enabled;
+            this.chart1.Series[index + mParser.Schema.TotalAnalogChannels].Enabled = !this.chart1.Series[index + mParser.Schema.TotalAnalogChannels].Enabled;
 
             Chart_Enable();
             AllButtonEnable();
@@ -503,7 +496,7 @@ namespace PRSpline
             bool bEnabl = false;
             foreach (var index in chart1.Series)
             {
-                if (index.Enabled && index.ChartArea == "D")
+                if (index.Enabled && index.Legend == "D")
                     bEnabl = true;
             }
             if (!bEnabl)
@@ -543,21 +536,30 @@ namespace PRSpline
                 if (e.X <= 0 || e.X >= this.chart1.Width) return;
             }
 
+            Task.Run(() =>
+            {
+                MoveLine_X = this.chart1.ChartAreas[0].AxisX.PixelPositionToValue(e.X);
+                MoveLine_Y = this.chart1.ChartAreas[0].AxisY.PixelPositionToValue(e.Y);
+            }).Wait();
+
             BeginInvoke(new Action(() =>
                 {
-                    if (bButtonEnable && (this.chart1.ChartAreas[0].AxisX.PixelPositionToValue(e.X) > 0))
+                    if (bButtonEnable && (MoveLine_X > 0))
                     {
+                        this.chart1.Annotations["MoveLineX"].BeginPlacement();
+                        this.chart1.Annotations["MoveLineY"].BeginPlacement();
+
                         this.chart1.Annotations["MoveLineX"].Visible = true;
-                        this.chart1.Annotations["MoveLineX"].X = this.chart1.ChartAreas[0].AxisX.PixelPositionToValue(e.X);
+                        this.chart1.Annotations["MoveLineX"].X = MoveLine_X;
                         this.chart1.Annotations["MoveTextX"].Visible = true;
-                        this.chart1.Annotations["MoveTextX"].X = this.chart1.ChartAreas[0].AxisX.PixelPositionToValue(e.X);
-                        ((TextAnnotation)(this.chart1.Annotations["MoveTextX"])).Text = "Time=" + Math.Round(this.chart1.ChartAreas[0].AxisX.PixelPositionToValue(e.X), 1).ToString() + "ms";
+                        this.chart1.Annotations["MoveTextX"].X = MoveLine_X;
+                        ((TextAnnotation)(this.chart1.Annotations["MoveTextX"])).Text = "Time=" + Math.Round(MoveLine_X, 1).ToString() + "ms";
 
 
-                        this.chart1.Annotations["MoveLineY"].Y = this.chart1.ChartAreas[0].AxisY.PixelPositionToValue(e.Y);
+                        this.chart1.Annotations["MoveLineY"].Y = MoveLine_Y;
 
                         this.chart1.Annotations["MoveTextY"].Y = this.chart1.Annotations["MoveLineY"].Y * 1.01f;
-                        ((TextAnnotation)(this.chart1.Annotations["MoveTextY"])).Text = "I=" + Math.Round(this.chart1.ChartAreas[0].AxisY.PixelPositionToValue(e.Y), 2).ToString();
+                        ((TextAnnotation)(this.chart1.Annotations["MoveTextY"])).Text = "I=" + Math.Round(MoveLine_Y, 2).ToString();
 
                         if (!bpnlAEnable)
                         {
@@ -569,29 +571,32 @@ namespace PRSpline
                             this.chart1.Annotations["MoveLineY"].Visible = true;
                             this.chart1.Annotations["MoveTextY"].Visible = true;
                         }
+
+                        this.chart1.Annotations["MoveLineX"].EndPlacement();
+                        this.chart1.Annotations["MoveLineY"].EndPlacement();
                     }
                 }));
             if (bZoonIn)
             {
-                this.chart1.Annotations["ZoonInLineX"].Width = this.chart1.ChartAreas[0].AxisX.ValueToPosition(this.chart1.ChartAreas[0].AxisX.PixelPositionToValue(e.X)) - dZoonInStratPixs_X;
-                this.chart1.Annotations["ZoonInLineY"].Height = this.chart1.ChartAreas[0].AxisY.ValueToPosition(this.chart1.ChartAreas[0].AxisY.PixelPositionToValue(e.Y)) - dZoonInStratPixs_Y;
+                this.chart1.Annotations["ZoonInLineX"].Width = this.chart1.ChartAreas[0].AxisX.ValueToPosition(MoveLine_X) - dZoonInStratPixs_X;
+                this.chart1.Annotations["ZoonInLineY"].Height = this.chart1.ChartAreas[0].AxisY.ValueToPosition(MoveLine_Y) - dZoonInStratPixs_Y;
                 bMoveCheck = true;
             }
         }
-        private void Mouse_MoveIn(object sender, EventArgs e)
-        {
-            bMoveView = false;
-            this.Cursor = System.Windows.Forms.Cursors.Cross;
-        }
-        private void Mouse_MoveOut(object sender, EventArgs e)
-        {
-            this.Cursor = System.Windows.Forms.Cursors.Default;
-            this.chart1.Annotations["MoveLineX"].Visible = false;
-            this.chart1.Annotations["MoveTextX"].Visible = false;
+        //private void Mouse_MoveIn(object sender, EventArgs e)
+        //{
+        //    bMoveView = false;
+        //    this.Cursor = System.Windows.Forms.Cursors.Cross;
+        //}
+        //private void Mouse_MoveOut(object sender, EventArgs e)
+        //{
+        //    this.Cursor = System.Windows.Forms.Cursors.Default;
+        //    this.chart1.Annotations["MoveLineX"].Visible = false;
+        //    this.chart1.Annotations["MoveTextX"].Visible = false;
 
-            this.chart1.Annotations["MoveLineY"].Visible = false;
-            this.chart1.Annotations["MoveTextY"].Visible = false;
-        }
+        //    this.chart1.Annotations["MoveLineY"].Visible = false;
+        //    this.chart1.Annotations["MoveTextY"].Visible = false;
+        //}
         private void chart1_MouseDown(object sender, MouseEventArgs e)
         {
             this._startY = this.chart1.ChartAreas[0].AxisY.PixelPositionToValue(e.Y);
@@ -1008,29 +1013,29 @@ namespace PRSpline
             }
         }
 
-        public void save_chart1(CFGData _CFGData)
+        public void save_chart1()
         {
             var chartImgFormats = Enum.GetNames(typeof(ChartImageFormat));
             string strFilter = string.Empty;
-            foreach (string format in chartImgFormats)
-            {
-                strFilter += format + "(*." + format + ")|*." + format + "|";
-            }
-            strFilter += "All files (*.*)|*.*";
-            saveFileDialog.Filter = strFilter;
+            //foreach (string format in chartImgFormats)
+            //{
+            //    strFilter += format + "(*." + format + ")|*." + format + "|";
+            //}
+            //strFilter += "All files (*.*)|*.*";
+            //saveFileDialog.Filter = strFilter;
             saveFileDialog.ShowDialog();
             if (saveFileDialog.CheckPathExists && !string.IsNullOrEmpty(saveFileDialog.FileName))
             {
                 this.chart1.Annotations.Add(new TextAnnotation()
                 {
-                    //ForeColor = Color.White,
                     AnchorX = 80,
                     AnchorY = 8,
                     LineWidth = 0,
-                    Text = "Location：" + _CFGData.Location + "  StartDate：" + _CFGData.startDate + "   StartTime：" + _CFGData.startTime.Substring(0, _CFGData.startTime.Length - 3) + "\n\n Device：" + _CFGData.Device + "   TriggerDate：" + _CFGData.triggerDate + "   TriggerTime：" + _CFGData.triggerTime.Substring(0, _CFGData.triggerTime.Length - 3),
-                    Name = "Information"
+                    Text = "Location：" + mParser.Schema.StationName + "  StartDate：" + mParser.Schema.StartTime.Value.ToString("yyyy/MM/dd") + "   StartTime：" + mParser.Schema.StartTime.Value.ToString("HH:mm:ss.fff") + "\n\n Device：" + mParser.Schema.DeviceID + "   TriggerDate：" + mParser.Schema.TriggerTime.Value.ToString("yyyy/MM/dd") + "   TriggerTime：" + mParser.Schema.TriggerTime.Value.ToString("HH:mm:ss.fff"),
+                    Name = "Information",
+                    ForeColor=Color.White
                 });
-
+                //var x = (ChartImageFormat)Enum.Parse(typeof(ChartImageFormat), saveFileDialog.DefaultExt);
                 chart1.SaveImage(saveFileDialog.FileName, ChartImageFormat.Jpeg);
 
                 this.chart1.Annotations.Remove(this.chart1.Annotations["Information"]);
@@ -1068,9 +1073,9 @@ namespace PRSpline
                     ForeColor = Color.Yellow,
                     AxisX = this.chart1.ChartAreas[0].AxisX,
                     LineWidth = 0,
-                    AnchorY = 12,
+                    AnchorY = 11,
                     X = Convert.ToDouble(Math.Round(arr_XValue[i + 1] + arr_XValue[i]) / 2),
-                    Text = "dt=" + (Math.Round(arr_XValue[i + 1] + arr_XValue[i]) / 2).ToString()
+                    Text = "dt=" + (Math.Round(arr_XValue[i + 1] - arr_XValue[i])).ToString() + " ms"
                 });
                 BlockGroup_Block.Add(chart1.Annotations["BlockText" + i]);
             }
@@ -1112,10 +1117,7 @@ namespace PRSpline
 
         private void chart1_AnnotationPositionChanged_1(object sender, EventArgs e)
         {
-            //if (sender.GetType() == typeof(System.Windows.Forms.DataVisualization.Charting.VerticalLineAnnotation))
-            //{
-            //    MessageBox.Show(((VerticalLineAnnotation)sender).Name.ToString());
-            //}
+          
         }
     }
 }

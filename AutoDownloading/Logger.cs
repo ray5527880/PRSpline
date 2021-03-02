@@ -78,7 +78,7 @@ namespace AutoDownloading
         {
             var filename = "datacollect_" + DateTime.Now.ToString("yyyyMMdd");
             var filepath = this.GetType().Assembly.Location;
-            this.DirectoryPath = filepath.Replace("PRSpline.exe", @"\log");           
+            this.DirectoryPath = filepath.Replace("AutoDownloading.exe", @"\log");           
             filepath = DirectoryPath + @"\" + filename + ".txt";
 
             this.FilePath = filepath;

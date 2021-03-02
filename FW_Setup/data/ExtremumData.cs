@@ -10,10 +10,10 @@ namespace BF_FW.data
         public struct Extremum
         {
             public string strName;
-            public decimal MaxValue;
-            public decimal MinValue;
-            public decimal MaxTime;
-            public decimal MinTime;
+            public double MaxValue;
+            public double MinValue;
+            public double MaxTime;
+            public double MinTime;
         }
     }
 }

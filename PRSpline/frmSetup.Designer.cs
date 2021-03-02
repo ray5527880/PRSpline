@@ -42,13 +42,16 @@
             this.label4 = new System.Windows.Forms.Label();
             this.txtName = new System.Windows.Forms.TextBox();
             this.txtIP = new System.Windows.Forms.TextBox();
-            this.btnSave = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtBaseValue = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DGVSetup)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.txtBaseValue);
             this.groupBox1.Controls.Add(this.btnDel);
             this.groupBox1.Controls.Add(this.btnApp);
             this.groupBox1.Controls.Add(this.DGVSetup);
@@ -93,12 +96,12 @@
             // DGVSetup
             // 
             this.DGVSetup.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DGVSetup.Location = new System.Drawing.Point(15, 90);
+            this.DGVSetup.Location = new System.Drawing.Point(15, 120);
             this.DGVSetup.Name = "DGVSetup";
             dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Black;
             this.DGVSetup.RowsDefaultCellStyle = dataGridViewCellStyle1;
             this.DGVSetup.RowTemplate.Height = 24;
-            this.DGVSetup.Size = new System.Drawing.Size(586, 213);
+            this.DGVSetup.Size = new System.Drawing.Size(586, 183);
             this.DGVSetup.TabIndex = 9;
             this.DGVSetup.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGVSetup_CellClick);
             // 
@@ -170,24 +173,29 @@
             this.txtIP.Size = new System.Drawing.Size(206, 23);
             this.txtIP.TabIndex = 6;
             // 
-            // btnSave
+            // label1
             // 
-            this.btnSave.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.btnSave.Location = new System.Drawing.Point(561, 364);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(75, 23);
-            this.btnSave.TabIndex = 12;
-            this.btnSave.Text = "儲存";
-            this.btnSave.UseVisualStyleBackColor = false;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.label1.Location = new System.Drawing.Point(13, 94);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(72, 13);
+            this.label1.TabIndex = 12;
+            this.label1.Text = "基準電壓：";
+            // 
+            // txtBaseValue
+            // 
+            this.txtBaseValue.Location = new System.Drawing.Point(100, 89);
+            this.txtBaseValue.Name = "txtBaseValue";
+            this.txtBaseValue.Size = new System.Drawing.Size(206, 23);
+            this.txtBaseValue.TabIndex = 13;
             // 
             // frmSetup
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gray;
-            this.ClientSize = new System.Drawing.Size(648, 402);
-            this.Controls.Add(this.btnSave);
+            this.ClientSize = new System.Drawing.Size(648, 369);
             this.Controls.Add(this.groupBox1);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("新細明體", 9.75F);
@@ -219,6 +227,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtName;
         private System.Windows.Forms.TextBox txtIP;
-        private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txtBaseValue;
     }
 }

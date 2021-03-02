@@ -11,6 +11,8 @@ namespace BF_FW.data
         {
             public DateTime treggerDateTime;
             public decimal duration;
+            public decimal StartTime;
+            public decimal cycle;
             public decimal PValue;
             public decimal QValue;
             public decimal SValue;

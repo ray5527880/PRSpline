@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -15,7 +16,24 @@ namespace PRSpline
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new frmMain());
+            Process[] myProcesses = Process.GetProcessesByName("PRSpline");
+            if (!(myProcesses.Length > 1))
+            {
+                Application.Run(new frmMain());
+            }
+            else
+            {
+
+                Process pCurrentProcess = Process.GetCurrentProcess();
+
+                for (int ii = 0; ii < myProcesses.Length; ii++)
+                {
+                    if (myProcesses[ii].Id != pCurrentProcess.Id)
+                        myProcesses[ii].Kill();
+                }
+
+                Application.Run(new frmMain());
+            }
         }
     }
 }
