@@ -41,6 +41,12 @@ namespace PRSpline
         public List<double[]> SData;
         public List<double[]> PUData;
 
+        public List<double[]> PData_2;
+        public List<double[]> SData_2;
+        public List<double[]> PUData_2;
+        public List<double[]> PData_3;
+        public List<double[]> SData_3;
+        public List<double[]> PUData_3;
         public int[] FFTIndex;
 
         public struct PSData
@@ -61,6 +67,9 @@ namespace PRSpline
             set_ButtonImage();
 
             setEnable(false);
+
+            btnSecond.Enabled = false;
+            cbxitem.Enabled = false;
 
             mCompressWinRAR = new CompressWinRAR();
 
@@ -89,7 +98,7 @@ namespace PRSpline
             btnReZoom.Image = Image.FromFile(strpath + "Zoon.png");
             btnScreenshot.Image = Image.FromFile(strpath + "Screenshot.png");
             btnRemove.Image = Image.FromFile(strpath + "Remove.png");
-            btnVector.Image = Image.FromFile(strpath + "Vector.png");
+            btnSecond.Image = Image.FromFile(strpath + "Vector.png");
 
             btnDownloading.Image = Image.FromFile(strpath + "download1.png");
             btnFileOpen.Image = Image.FromFile(strpath + "openfile.png");
@@ -235,8 +244,14 @@ namespace PRSpline
 
         private void button1_Click_1(object sender, EventArgs e)
         {
+            cbxitem.Enabled = true;
+            if (PData_2.Count == 0)
+            {
 
+            }
         }
+
+
         public static void btnVectorClick()
         {
             bfrmVector = !bfrmVector;
@@ -263,34 +278,19 @@ namespace PRSpline
             }
             try
             {
-                mFFTData = new FFTData();
-                var mfft = new FFTCal(FFTIndex, mParser);
-                switch (_Mode)
-                {
-                    case 1:
-                        mFFTData = mfft.GetFFTData(PData);
-                        break;
-                    case 2:
-                        mFFTData = mfft.GetFFTData(SData);
-                        break;
-                    case 3:
-                        mFFTData = mfft.GetFFTData(PUData);
-                        break;
-                }
-
                 BeginInvoke(new Action(() =>
                 {
                     panel1.Controls.Clear();
                     switch (_Mode)
                     {
                         case 1:
-                            frmChartline = new frmChart(mParser, PData, mFFTData);
+                            frmChartline = new frmChart(mParser, PData);
                             break;
                         case 2:
-                            frmChartline = new frmChart(mParser, SData, mFFTData);
+                            frmChartline = new frmChart(mParser, SData);
                             break;
                         case 3:
-                            frmChartline = new frmChart(mParser, PUData, mFFTData);
+                            frmChartline = new frmChart(mParser, PUData);
                             break;
                     }
                     panel1.Controls.Add(frmChartline);
@@ -308,9 +308,7 @@ namespace PRSpline
                             ((Button)item).BackColor = Color.LightSteelBlue;
                         }
                     }
-                    //frmChartline.CheakButtonEnable(pnlAnagol);
-
-                    //frmChartline.CheakButtonEnable(pnlDigital);
+                 
                     sizeChanged();
                 }));
             }
@@ -406,7 +404,20 @@ namespace PRSpline
                 PData = new List<double[]>();
                 SData = new List<double[]>();
                 PUData = new List<double[]>();
-                LoadDataFile.GetDatData(mParser, ref PData, ref SData, ref PUData);
+
+                PData_2 = new List<double[]>();
+                SData_2 = new List<double[]>();
+                PUData_2 = new List<double[]>();
+
+                PData_3 = new List<double[]>();
+                SData_3 = new List<double[]>();
+                PUData_3 = new List<double[]>();
+
+                var _PData = new List<double[]>();
+                var _SData = new List<double[]>();
+                var _PUData = new List<double[]>();
+
+                LoadDataFile.GetDatData(mParser, ref _PData, ref _SData, ref _PUData);
 
                 Set_Information();
 
@@ -431,12 +442,20 @@ namespace PRSpline
                 {
                     AddNewButton(mParser.Schema.AnalogChannels[FFTIndex[i]].Name + "_FFT", i + mParser.Schema.TotalAnalogChannels, 0);
                 }
+                PData = GetAllData((List<double[]>)_PData);
+                SData = GetAllData((List<double[]>)_SData);
+                PUData = GetAllData((List<double[]>)_PUData);
+
+
                 cbxPS.Items.Add("P");
                 cbxPS.Items.Add("S");
                 cbxPS.Items.Add("Per Unit");
 
                 cbxPS.SelectedIndex = 1;
                 sizeChanged();
+
+                btnSecond.Enabled = true;
+                cbxitem.Enabled = false;
             }
             catch (ApplicationException message)
             {
@@ -447,6 +466,35 @@ namespace PRSpline
                 setEnable(true);
             }
         }
+
+        private List<double[]> GetAllData(List<double[]> datas)
+        {
+            var value = new List<double[]>();
+            mFFTData = new FFTData();
+            var mfft = new FFTCal(FFTIndex, mParser);
+
+            mFFTData = mfft.GetFFTData(datas);
+            for (int i = 0; i < datas.Count; i++)
+            {
+                var _double = new List<double>();
+                foreach (var item in datas[i])
+                {
+                    _double.Add(item);
+                }
+                //if (mFFTData.arrFFTData.Length > i)
+                //{
+                foreach (var item in mFFTData.arrFFTData[i].Value)
+                {
+                    _double.Add(item);
+                }
+                //}
+                value.Add(_double.ToArray());
+            }
+
+
+            return value;
+        }
+
 
         private void btnDownloading_Click(object sender, EventArgs e)
         {

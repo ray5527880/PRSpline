@@ -21,15 +21,9 @@ namespace PRSpline
 {
     public partial class frmChart : UserControl
     {
-        private struct CData
-        {
-            public decimal x;
-            public decimal y;
-        }
-
         private List<double[]> mDatData;
 
-        private FFTData mFFTData;
+        //private FFTData mFFTData;
         private Parser mParser;
         private double _startY;
         private double _endY;
@@ -65,13 +59,13 @@ namespace PRSpline
         {
             InitializeComponent();
         }
-        public frmChart(Parser parser, List<double[]> DatData, FFTData _FFTData)
+        public frmChart(Parser parser, List<double[]> DatData/*, FFTData _FFTData*/)
         {
             InitializeComponent();
 
             mDatData = DatData;
             mParser = parser;
-            mFFTData = _FFTData;
+            //mFFTData = _FFTData;
         }
 
 
@@ -90,13 +84,16 @@ namespace PRSpline
             this.chart1.ChartAreas[1].Position = new ElementPosition(0, 85, 100, 13);
             this.chart1.ChartAreas[2].Position = new ElementPosition(0, -10, 100, -10);
 
+
             this.chart1.ChartAreas[0].AxisX.Title = "Time(ms)";
 
             this.chart1.ChartAreas[0].BackColor = Color.White;
             this.chart1.ChartAreas[1].BackColor = Color.White;
 
+
             this.chart1.ChartAreas[0].AlignWithChartArea = "B";
             this.chart1.ChartAreas[1].AlignWithChartArea = "B";
+
 
             this.chart1.Series.Clear();
 
@@ -144,8 +141,39 @@ namespace PRSpline
             this.chart1.ChartAreas.Add(new ChartArea("D"));
             this.chart1.ChartAreas.Add(new ChartArea("B"));
         }
+        public void AddSecondFile(List<double> datas, int SecondNo)
+        {
+            this.chart1.ChartAreas[3].Position = new ElementPosition(0, 85, 100, 13);
+            this.chart1.ChartAreas[4].Position = new ElementPosition(0, 85, 100, 13);
 
+            this.chart1.ChartAreas[3].BackColor = Color.White;
+            this.chart1.ChartAreas[4].BackColor = Color.White;
 
+            this.chart1.ChartAreas[3].AlignWithChartArea = "B";
+            this.chart1.ChartAreas[4].AlignWithChartArea = "B";
+
+            this.chart1.ChartAreas[3].Visible = false;
+            this.chart1.ChartAreas[4].Visible = false;
+
+            this.chart1.ChartAreas[1].Visible = false;
+            AddSecondLegends(SecondNo);
+
+        }
+        private void AddSecondLegends(int SecondNo)
+        {
+
+            string LegendName = "A_" + SecondNo;
+            this.chart1.Legends.Add(new Legend(LegendName)
+            {
+                Docking = Docking.Top,
+                Alignment = StringAlignment.Center,
+                BackColor = System.Drawing.Color.Transparent,
+                LegendStyle = LegendStyle.Row,
+                TableStyle = LegendTableStyle.Wide,
+                ForeColor = Color.White
+            });
+
+        }
         private void AddChartPoint()
         {
             for (int i = 0; i < mParser.Schema.TotalChannels; i++)
@@ -186,77 +214,59 @@ namespace PRSpline
                     this.chart1.Series[i].ChartArea = "D";
                 }
             }
+            int index = 0;
+            for (int i = 0; i < mParser.Schema.TotalAnalogChannels; i++)
+            {
+               
+                if (mParser.Schema.AnalogChannels[i].Units != "")
+                {
+                    if (mParser.Schema.AnalogChannels[i].Units == "V" || mParser.Schema.AnalogChannels[i].Units == "A")
+                    {
+                        this.chart1.Series.Add(new Series()
+                        {
+                            Legend = "A",
+                            LegendText = mParser.Schema.AnalogChannels[i].Name + "_FFT(" + mParser.Schema.AnalogChannels[i].Units + ")",
+                            BorderWidth = 2,
+                            ChartType = SeriesChartType.Line
+                        });
+                    }
+                    else
+                    {
+                        this.chart1.Series.Add(new Series()
+                        {
+                            Legend = "A",
+                            LegendText = mParser.Schema.AnalogChannels[i].Name + "_FFT",
+                            BorderWidth = 2,
+                            ChartType = SeriesChartType.Line
+                        });
+                    }
+                    this.chart1.Series[mParser.Schema.TotalChannels + index].ChartArea = "A";
+                    index ++;
+                }
+            }
 
-
-            var data = new List<CData>();
             try
             {
-                for (int ii = 0; ii < mParser.Schema.TotalAnalogChannels; ii++)
+                for (int i = 0; i < mParser.Schema.SampleRates[0].EndSample; i++)
                 {
-                    for (int i = 1; i < mParser.Schema.SampleRates[0].EndSample; i++)
+                    for (int j = 2; j < mDatData[i].Length; j++)
                     {
-                        chart1.Series[ii].Points.AddXY(mDatData[i][1], mDatData[i][ii + 2]);
-                        if (ii < mParser.Schema.TotalAnalogChannels)
+                        chart1.Series[j - 2].Points.AddXY(mDatData[i][1], mDatData[i][j]);
+                        if (j < mParser.Schema.TotalAnalogChannels)
                         {
-                            if (Y_MinValue >= mDatData[i][ii + 2])
-                                Y_MinValue = mDatData[i][ii + 2];
-                            if (Y_MaxValue <= mDatData[i][ii + 2])
-                                Y_MaxValue = mDatData[i][ii + 2];
+                            if (Y_MinValue >= mDatData[i][j])
+                                Y_MinValue = mDatData[i][j];
+                            if (Y_MaxValue <= mDatData[i][j])
+                                Y_MaxValue = mDatData[i][j];
                         }
-                    }
-                }
-                for (int ii = 0; ii < mParser.Schema.TotalDigitalChannels; ii++)
-                {
-                    for (int i = 1; i < mParser.Schema.SampleRates[0].EndSample; i++)
-                    {
-                        chart1.Series[ii + mParser.Schema.TotalAnalogChannels].Points.AddXY(mDatData[i][1], mDatData[i][ii + mParser.Schema.TotalAnalogChannels + 2]);
                     }
                 }
             }
             catch (Exception ex1)
             {
 
-            }
-            try
-            {
-                int index = 0;
-                for (int i = 0; i < mParser.Schema.TotalChannels; i++)
-                {
-                    if (mParser.Schema.AnalogChannels[i].Units != "")
-                    {
-                        if (mParser.Schema.AnalogChannels[i].Units == "V" || mParser.Schema.AnalogChannels[i].Units == "A")
-                        {
-                            this.chart1.Series.Add(new Series()
-                            {
-                                Legend = "A",
-                                LegendText = mParser.Schema.AnalogChannels[i].Name + "_FFT(" + mParser.Schema.AnalogChannels[i].Units + ")",
-                                BorderWidth = 2,
-                                ChartType = SeriesChartType.Line
-                            });
-                        }
-                        else
-                        {
-                            this.chart1.Series.Add(new Series()
-                            {
-                                Legend = "A",
-                                LegendText = mParser.Schema.AnalogChannels[i].Name + "_FFT",
-                                BorderWidth = 2,
-                                ChartType = SeriesChartType.Line
-                            });
-                        }
-                        this.chart1.Series[mParser.Schema.TotalChannels + i].ChartArea = "A";
-                        for (int ii = 0; ii < mParser.Schema.SampleRates[0].EndSample; ii++)
-                        {
-                            chart1.Series[mParser.Schema.TotalChannels + index].Points.AddXY(mDatData[ii][1], mFFTData.arrFFTData[ii].Value[index]);
-                        }
-                        index++;
-                    }
-                }
-            }
-            catch (Exception ex1)
-            {
-
-            }
+            }           
+            
         }
         private void Set_ChartStyle()
         {
@@ -1033,7 +1043,7 @@ namespace PRSpline
                     LineWidth = 0,
                     Text = "Location：" + mParser.Schema.StationName + "  StartDate：" + mParser.Schema.StartTime.Value.ToString("yyyy/MM/dd") + "   StartTime：" + mParser.Schema.StartTime.Value.ToString("HH:mm:ss.fff") + "\n\n Device：" + mParser.Schema.DeviceID + "   TriggerDate：" + mParser.Schema.TriggerTime.Value.ToString("yyyy/MM/dd") + "   TriggerTime：" + mParser.Schema.TriggerTime.Value.ToString("HH:mm:ss.fff"),
                     Name = "Information",
-                    ForeColor=Color.White
+                    ForeColor = Color.White
                 });
                 //var x = (ChartImageFormat)Enum.Parse(typeof(ChartImageFormat), saveFileDialog.DefaultExt);
                 chart1.SaveImage(saveFileDialog.FileName, ChartImageFormat.Jpeg);
@@ -1117,7 +1127,7 @@ namespace PRSpline
 
         private void chart1_AnnotationPositionChanged_1(object sender, EventArgs e)
         {
-          
+
         }
     }
 }

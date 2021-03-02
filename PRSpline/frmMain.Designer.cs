@@ -56,18 +56,19 @@
             this.btnDownloading = new System.Windows.Forms.Button();
             this.btnFileOpen = new System.Windows.Forms.Button();
             this.cbxPS = new System.Windows.Forms.ComboBox();
-            this.btnVector = new System.Windows.Forms.Button();
+            this.btnSecond = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.btnRemove = new System.Windows.Forms.Button();
             this.label11 = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.btnSetup = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btnVS = new System.Windows.Forms.Button();
             this.btnExtremum = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.btnVS = new System.Windows.Forms.Button();
+            this.cbxitem = new System.Windows.Forms.ComboBox();
             this.groupBox4.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -77,10 +78,10 @@
             // 
             // btnXZoomIn
             // 
-            this.btnXZoomIn.BackColor = System.Drawing.Color.Transparent;
+            this.btnXZoomIn.BackColor = System.Drawing.Color.DimGray;
             this.btnXZoomIn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.btnXZoomIn.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnXZoomIn.Location = new System.Drawing.Point(237, 32);
+            this.btnXZoomIn.Location = new System.Drawing.Point(291, 32);
             this.btnXZoomIn.Name = "btnXZoomIn";
             this.btnXZoomIn.Size = new System.Drawing.Size(32, 32);
             this.btnXZoomIn.TabIndex = 12;
@@ -89,10 +90,10 @@
             // 
             // btnXZoomOut
             // 
-            this.btnXZoomOut.BackColor = System.Drawing.Color.Transparent;
+            this.btnXZoomOut.BackColor = System.Drawing.Color.DimGray;
             this.btnXZoomOut.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.btnXZoomOut.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnXZoomOut.Location = new System.Drawing.Point(275, 32);
+            this.btnXZoomOut.Location = new System.Drawing.Point(329, 32);
             this.btnXZoomOut.Name = "btnXZoomOut";
             this.btnXZoomOut.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.btnXZoomOut.Size = new System.Drawing.Size(32, 32);
@@ -102,10 +103,10 @@
             // 
             // btnYZoomIn
             // 
-            this.btnYZoomIn.BackColor = System.Drawing.Color.Transparent;
+            this.btnYZoomIn.BackColor = System.Drawing.Color.DimGray;
             this.btnYZoomIn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.btnYZoomIn.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnYZoomIn.Location = new System.Drawing.Point(351, 32);
+            this.btnYZoomIn.Location = new System.Drawing.Point(405, 32);
             this.btnYZoomIn.Name = "btnYZoomIn";
             this.btnYZoomIn.Size = new System.Drawing.Size(32, 32);
             this.btnYZoomIn.TabIndex = 14;
@@ -114,10 +115,10 @@
             // 
             // btnYZoomOut
             // 
-            this.btnYZoomOut.BackColor = System.Drawing.Color.Transparent;
+            this.btnYZoomOut.BackColor = System.Drawing.Color.DimGray;
             this.btnYZoomOut.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.btnYZoomOut.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnYZoomOut.Location = new System.Drawing.Point(389, 32);
+            this.btnYZoomOut.Location = new System.Drawing.Point(443, 32);
             this.btnYZoomOut.Name = "btnYZoomOut";
             this.btnYZoomOut.Size = new System.Drawing.Size(32, 32);
             this.btnYZoomOut.TabIndex = 15;
@@ -140,9 +141,9 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.pnlAnagol.AutoScroll = true;
             this.pnlAnagol.BackColor = System.Drawing.SystemColors.Desktop;
-            this.pnlAnagol.Location = new System.Drawing.Point(14, 26);
+            this.pnlAnagol.Location = new System.Drawing.Point(14, 16);
             this.pnlAnagol.Name = "pnlAnagol";
-            this.pnlAnagol.Size = new System.Drawing.Size(110, 360);
+            this.pnlAnagol.Size = new System.Drawing.Size(110, 333);
             this.pnlAnagol.TabIndex = 17;
             // 
             // label7
@@ -171,7 +172,7 @@
             this.pnlDigital.BackColor = System.Drawing.SystemColors.Desktop;
             this.pnlDigital.Location = new System.Drawing.Point(14, 16);
             this.pnlDigital.Name = "pnlDigital";
-            this.pnlDigital.Size = new System.Drawing.Size(110, 185);
+            this.pnlDigital.Size = new System.Drawing.Size(110, 189);
             this.pnlDigital.TabIndex = 26;
             // 
             // groupBox4
@@ -307,10 +308,10 @@
             // 
             // btnScreenshot
             // 
-            this.btnScreenshot.BackColor = System.Drawing.Color.Transparent;
+            this.btnScreenshot.BackColor = System.Drawing.Color.DimGray;
             this.btnScreenshot.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnScreenshot.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.btnScreenshot.Location = new System.Drawing.Point(427, 32);
+            this.btnScreenshot.Location = new System.Drawing.Point(481, 32);
             this.btnScreenshot.Name = "btnScreenshot";
             this.btnScreenshot.Size = new System.Drawing.Size(32, 32);
             this.btnScreenshot.TabIndex = 31;
@@ -319,10 +320,10 @@
             // 
             // btnReZoom
             // 
-            this.btnReZoom.BackColor = System.Drawing.Color.Transparent;
+            this.btnReZoom.BackColor = System.Drawing.Color.DimGray;
             this.btnReZoom.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.btnReZoom.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnReZoom.Location = new System.Drawing.Point(313, 32);
+            this.btnReZoom.Location = new System.Drawing.Point(367, 32);
             this.btnReZoom.Name = "btnReZoom";
             this.btnReZoom.Size = new System.Drawing.Size(32, 32);
             this.btnReZoom.TabIndex = 32;
@@ -331,10 +332,10 @@
             // 
             // btnDownloading
             // 
-            this.btnDownloading.BackColor = System.Drawing.Color.Transparent;
+            this.btnDownloading.BackColor = System.Drawing.Color.DimGray;
             this.btnDownloading.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.btnDownloading.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnDownloading.Location = new System.Drawing.Point(67, 26);
+            this.btnDownloading.Location = new System.Drawing.Point(121, 26);
             this.btnDownloading.Name = "btnDownloading";
             this.btnDownloading.Size = new System.Drawing.Size(44, 44);
             this.btnDownloading.TabIndex = 39;
@@ -343,7 +344,7 @@
             // 
             // btnFileOpen
             // 
-            this.btnFileOpen.BackColor = System.Drawing.Color.Transparent;
+            this.btnFileOpen.BackColor = System.Drawing.Color.DimGray;
             this.btnFileOpen.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.btnFileOpen.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnFileOpen.Location = new System.Drawing.Point(17, 26);
@@ -356,28 +357,28 @@
             // cbxPS
             // 
             this.cbxPS.FormattingEnabled = true;
-            this.cbxPS.Location = new System.Drawing.Point(675, 37);
+            this.cbxPS.Location = new System.Drawing.Point(729, 37);
             this.cbxPS.Name = "cbxPS";
             this.cbxPS.Size = new System.Drawing.Size(70, 21);
             this.cbxPS.TabIndex = 37;
             this.cbxPS.SelectedIndexChanged += new System.EventHandler(this.cbxPS_SelectedIndexChanged);
             // 
-            // btnVector
+            // btnSecond
             // 
-            this.btnVector.FlatAppearance.BorderSize = 0;
-            this.btnVector.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnVector.Location = new System.Drawing.Point(770, 30);
-            this.btnVector.Name = "btnVector";
-            this.btnVector.Size = new System.Drawing.Size(32, 32);
-            this.btnVector.TabIndex = 36;
-            this.btnVector.UseVisualStyleBackColor = true;
-            this.btnVector.Visible = false;
-            this.btnVector.Click += new System.EventHandler(this.button1_Click_1);
+            this.btnSecond.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.btnSecond.FlatAppearance.BorderSize = 0;
+            this.btnSecond.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnSecond.Location = new System.Drawing.Point(69, 26);
+            this.btnSecond.Name = "btnSecond";
+            this.btnSecond.Size = new System.Drawing.Size(44, 44);
+            this.btnSecond.TabIndex = 36;
+            this.btnSecond.UseVisualStyleBackColor = false;
+            this.btnSecond.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(543, 40);
+            this.label4.Location = new System.Drawing.Point(597, 40);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(117, 13);
             this.label4.TabIndex = 36;
@@ -385,9 +386,9 @@
             // 
             // btnRemove
             // 
-            this.btnRemove.BackColor = System.Drawing.Color.Transparent;
+            this.btnRemove.BackColor = System.Drawing.Color.DimGray;
             this.btnRemove.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnRemove.Location = new System.Drawing.Point(467, 32);
+            this.btnRemove.Location = new System.Drawing.Point(521, 32);
             this.btnRemove.Name = "btnRemove";
             this.btnRemove.Size = new System.Drawing.Size(32, 32);
             this.btnRemove.TabIndex = 33;
@@ -399,7 +400,7 @@
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("新細明體", 48F);
             this.label11.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label11.Location = new System.Drawing.Point(206, 15);
+            this.label11.Location = new System.Drawing.Point(260, 15);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(40, 64);
             this.label11.TabIndex = 40;
@@ -411,10 +412,10 @@
             // 
             // btnSetup
             // 
-            this.btnSetup.BackColor = System.Drawing.Color.Transparent;
+            this.btnSetup.BackColor = System.Drawing.Color.DimGray;
             this.btnSetup.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.btnSetup.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnSetup.Location = new System.Drawing.Point(117, 26);
+            this.btnSetup.Location = new System.Drawing.Point(171, 26);
             this.btnSetup.Name = "btnSetup";
             this.btnSetup.Size = new System.Drawing.Size(44, 44);
             this.btnSetup.TabIndex = 41;
@@ -427,11 +428,11 @@
             this.groupBox2.Controls.Add(this.btnExtremum);
             this.groupBox2.Controls.Add(this.btnSetup);
             this.groupBox2.Controls.Add(this.btnFileOpen);
+            this.groupBox2.Controls.Add(this.btnSecond);
             this.groupBox2.Controls.Add(this.btnDownloading);
             this.groupBox2.Controls.Add(this.btnReZoom);
             this.groupBox2.Controls.Add(this.cbxPS);
             this.groupBox2.Controls.Add(this.btnYZoomIn);
-            this.groupBox2.Controls.Add(this.btnVector);
             this.groupBox2.Controls.Add(this.btnXZoomOut);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.btnYZoomOut);
@@ -445,11 +446,22 @@
             this.groupBox2.TabIndex = 23;
             this.groupBox2.TabStop = false;
             // 
+            // btnVS
+            // 
+            this.btnVS.BackColor = System.Drawing.Color.DimGray;
+            this.btnVS.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnVS.Location = new System.Drawing.Point(221, 26);
+            this.btnVS.Name = "btnVS";
+            this.btnVS.Size = new System.Drawing.Size(44, 44);
+            this.btnVS.TabIndex = 43;
+            this.btnVS.UseVisualStyleBackColor = false;
+            this.btnVS.Click += new System.EventHandler(this.btnVS_Click);
+            // 
             // btnExtremum
             // 
-            this.btnExtremum.BackColor = System.Drawing.Color.Transparent;
+            this.btnExtremum.BackColor = System.Drawing.Color.DimGray;
             this.btnExtremum.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnExtremum.Location = new System.Drawing.Point(505, 32);
+            this.btnExtremum.Location = new System.Drawing.Point(559, 32);
             this.btnExtremum.Name = "btnExtremum";
             this.btnExtremum.Size = new System.Drawing.Size(32, 32);
             this.btnExtremum.TabIndex = 42;
@@ -460,9 +472,9 @@
             // 
             this.panel2.Controls.Add(this.label7);
             this.panel2.Controls.Add(this.pnlAnagol);
-            this.panel2.Location = new System.Drawing.Point(3, 3);
+            this.panel2.Location = new System.Drawing.Point(3, 40);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(137, 393);
+            this.panel2.Size = new System.Drawing.Size(137, 356);
             this.panel2.TabIndex = 31;
             // 
             // panel3
@@ -473,30 +485,28 @@
             this.panel3.Controls.Add(this.pnlDigital);
             this.panel3.Location = new System.Drawing.Point(3, 402);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(137, 205);
+            this.panel3.Size = new System.Drawing.Size(137, 209);
             this.panel3.TabIndex = 32;
             // 
             // panel4
             // 
             this.panel4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.panel4.Controls.Add(this.cbxitem);
             this.panel4.Controls.Add(this.panel2);
             this.panel4.Controls.Add(this.panel3);
-            this.panel4.Location = new System.Drawing.Point(15, 113);
+            this.panel4.Location = new System.Drawing.Point(15, 109);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(148, 613);
+            this.panel4.Size = new System.Drawing.Size(148, 617);
             this.panel4.TabIndex = 33;
             // 
-            // btnVS
+            // cbxitem
             // 
-            this.btnVS.BackColor = System.Drawing.Color.Transparent;
-            this.btnVS.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnVS.Location = new System.Drawing.Point(167, 26);
-            this.btnVS.Name = "btnVS";
-            this.btnVS.Size = new System.Drawing.Size(44, 44);
-            this.btnVS.TabIndex = 43;
-            this.btnVS.UseVisualStyleBackColor = false;
-            this.btnVS.Click += new System.EventHandler(this.btnVS_Click);
+            this.cbxitem.FormattingEnabled = true;
+            this.cbxitem.Location = new System.Drawing.Point(19, 13);
+            this.cbxitem.Name = "cbxitem";
+            this.cbxitem.Size = new System.Drawing.Size(108, 21);
+            this.cbxitem.TabIndex = 33;
             // 
             // frmMain
             // 
@@ -557,7 +567,7 @@
         private System.Windows.Forms.Button btnScreenshot;
         private System.Windows.Forms.Button btnReZoom;
         private System.Windows.Forms.Button btnRemove;
-        private System.Windows.Forms.Button btnVector;
+        private System.Windows.Forms.Button btnSecond;
         private System.Windows.Forms.ComboBox cbxPS;
         private System.Windows.Forms.Button btnFileOpen;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
@@ -573,6 +583,7 @@
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Button btnVS;
+        private System.Windows.Forms.ComboBox cbxitem;
     }
 }
 
