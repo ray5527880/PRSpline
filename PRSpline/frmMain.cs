@@ -23,6 +23,19 @@ namespace PRSpline
 {
     public partial class frmMain : Form
     {
+        private enum SelectFile
+        {
+            File_1 = 1,
+            File_2 = 2,
+            FIle_3 = 3
+        };
+
+        private DateTime StartDateTime;
+
+        private List<string> ButtonName_1 = new List<string>();
+        private List<string> ButtonName_2 = new List<string>();
+        private List<string> ButtonName_3 = new List<string>();
+        private List<string> ButtonName_D = new List<string>();
         private static Boolean bfrmVector = true;
         private frmChart frmChartline;
         private CompressWinRAR mCompressWinRAR;
@@ -242,15 +255,6 @@ namespace PRSpline
             frmChartline.ClearBlock();
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
-        {
-            cbxitem.Enabled = true;
-            if (PData_2.Count == 0)
-            {
-
-            }
-        }
-
 
         public static void btnVectorClick()
         {
@@ -308,7 +312,7 @@ namespace PRSpline
                             ((Button)item).BackColor = Color.LightSteelBlue;
                         }
                     }
-                 
+
                     sizeChanged();
                 }));
             }
@@ -333,145 +337,78 @@ namespace PRSpline
 
         private void btnFileOpen_Click(object sender, EventArgs e)
         {
-            if (Directory.Exists("./CompressFile"))
-            {
-                Directory.Delete("./CompressFile", true);
-            }
-
             if (this.openFileDialog1.ShowDialog() != DialogResult.OK)
             {
                 (sender as Button).Enabled = true;
                 return;
             }
-            string strtext = this.openFileDialog1.FileName;
-            string strtext2 = string.Empty;
 
-            while (strtext.IndexOf(@"\") > -1)
-            {
-                strtext2 += strtext.Substring(0, strtext.IndexOf(@"\") + 1);
-                strtext = strtext.Substring(strtext.IndexOf(@"\") + 1);
-            }
-            strtext2 += @"../";
+            PData = new List<double[]>();
+            SData = new List<double[]>();
+            PUData = new List<double[]>();
 
+            PData_2 = new List<double[]>();
+            SData_2 = new List<double[]>();
+            PUData_2 = new List<double[]>();
 
+            PData_3 = new List<double[]>();
+            SData_3 = new List<double[]>();
+            PUData_3 = new List<double[]>();
+
+            LoadFile(SelectFile.File_1);
+           
+            StartDateTime = mParser.Schema.StartTime.Value;
             setEnable(false);
+            cbxPS.Items.Clear();
+            Set_Information();
+            ClearButton();
 
-            string strFile = this.openFileDialog1.FileName;
-            string strRarPath = string.Empty;
-            string strFileName = string.Empty;
-            string strXmlFile = this.GetType().Assembly.Location;
-            string strfilePath = strXmlFile = strXmlFile.Replace("PRSpline.exe", "CompressFile\\");
-            if (strFile.IndexOf(".cfg") > 0 || strFile.IndexOf(".CFG") > 0)
+            setEnable(true);
+            sizeChanged();
+            for (int i = 0; i < ButtonName_1.Count + ButtonName_D.Count; i++)
             {
-                if (File.Exists(strFile.Replace(".cfg", ".dat")) || File.Exists(strFile.Replace(".CFG", ".DAT")))
-                {
-                    Directory.CreateDirectory(strfilePath);
-                    File.Copy(strFile, (strfilePath + openFileDialog1.SafeFileName), true);
-                    File.Copy(strFile.Replace(".cfg", ".dat"), strfilePath + openFileDialog1.SafeFileName.Replace(".cfg", ".dat"), true);
-                    File.Copy(strFile.Replace(".CFG", ".DAT"), strfilePath + openFileDialog1.SafeFileName.Replace(".CFG", ".DAT"), true);
-                }
+                if (i < mParser.Schema.TotalAnalogChannels)
+                    AddNewButton(ButtonName_1[i], i, 0);
+                else if (i < mParser.Schema.TotalChannels)
+                    AddNewButton(ButtonName_D[i - mParser.Schema.TotalAnalogChannels], i - mParser.Schema.TotalAnalogChannels, 1);
                 else
-                {
-                    MessageBox.Show("無dat檔");
-                    return;
-                }
-            }
-            else
-            {
-                while (strFile.IndexOf(@"\") > -1)
-                {
-                    strRarPath += strFile.Substring(0, strFile.IndexOf(@"\") + 1);
-                    strFile = strFile.Substring(strFile.IndexOf(@"\") + 1);
-                }
-
-                mCompressWinRAR.UnCompressRar(strfilePath, strRarPath, strFile);
+                    AddNewButton(ButtonName_1[i - mParser.Schema.TotalDigitalChannels], i - mParser.Schema.TotalDigitalChannels, 0);
             }
 
-            try
-            {
-                cbxPS.Items.Clear();
+            cbxPS.Items.Add("P");
+            cbxPS.Items.Add("S");
+            cbxPS.Items.Add("Per Unit");
 
-                foreach (var item in Directory.GetFiles(strfilePath, "*.cfg"))
-                {
-                    LoadDataFile.GetCFGData(item, ref mParser);
-                    break;
-                }
-                foreach (var item in Directory.GetFiles(strfilePath, "*.CFG"))
-                {
-                    LoadDataFile.GetCFGData(item, ref mParser);
-                    break;
-                }
-                PData = new List<double[]>();
-                SData = new List<double[]>();
-                PUData = new List<double[]>();
-
-                PData_2 = new List<double[]>();
-                SData_2 = new List<double[]>();
-                PUData_2 = new List<double[]>();
-
-                PData_3 = new List<double[]>();
-                SData_3 = new List<double[]>();
-                PUData_3 = new List<double[]>();
-
-                var _PData = new List<double[]>();
-                var _SData = new List<double[]>();
-                var _PUData = new List<double[]>();
-
-                LoadDataFile.GetDatData(mParser, ref _PData, ref _SData, ref _PUData);
-
-                Set_Information();
-
-                List<int> _fftIndex = new List<int>();
-                for (int i = 0; i < mParser.Schema.TotalAnalogChannels; i++)
-                {
-                    if (mParser.Schema.AnalogChannels[i].Units == "V" || mParser.Schema.AnalogChannels[i].Units == "A")
-                        _fftIndex.Add(i);
-                }
-                FFTIndex = _fftIndex.ToArray();
-
-                ClearButton();
-                for (int i = 0; i < mParser.Schema.TotalAnalogChannels; i++)
-                {
-                    AddNewButton(mParser.Schema.AnalogChannels[i].Name, i, 0);
-                }
-                for (int i = 0; i < mParser.Schema.TotalDigitalChannels; i++)
-                {
-                    AddNewButton(mParser.Schema.DigitalChannels[i].Name, i, 1);
-                }
-                for (int i = 0; i < FFTIndex.Length; i++)
-                {
-                    AddNewButton(mParser.Schema.AnalogChannels[FFTIndex[i]].Name + "_FFT", i + mParser.Schema.TotalAnalogChannels, 0);
-                }
-                PData = GetAllData((List<double[]>)_PData);
-                SData = GetAllData((List<double[]>)_SData);
-                PUData = GetAllData((List<double[]>)_PUData);
+            cbxPS.SelectedIndex = 1;
+           
 
 
-                cbxPS.Items.Add("P");
-                cbxPS.Items.Add("S");
-                cbxPS.Items.Add("Per Unit");
+            //    List<int> _fftIndex = new List<int>();
+            //    for (int i = 0; i < mParser.Schema.TotalAnalogChannels; i++)
+            //    {
+            //        if (mParser.Schema.AnalogChannels[i].Units == "V" || mParser.Schema.AnalogChannels[i].Units == "A")
+            //            _fftIndex.Add(i);
+            //    }
+            //    FFTIndex = _fftIndex.ToArray();
 
-                cbxPS.SelectedIndex = 1;
-                sizeChanged();
+            //    btnSecond.Enabled = true;
+            //    cbxitem.Enabled = false;
+            //}
+            //catch (ApplicationException message)
+            //{
+            //    MessageBox.Show(String.Format("{0}: {1}", strFile, message.Message));
+            //}
+            //finally
+            //{
 
-                btnSecond.Enabled = true;
-                cbxitem.Enabled = false;
-            }
-            catch (ApplicationException message)
-            {
-                MessageBox.Show(String.Format("{0}: {1}", strFile, message.Message));
-            }
-            finally
-            {
-                setEnable(true);
-            }
+            //}
         }
 
-        private List<double[]> GetAllData(List<double[]> datas)
+        private List<double[]> GetAllData(List<double[]> datas, Parser parser)
         {
             var value = new List<double[]>();
             mFFTData = new FFTData();
-            var mfft = new FFTCal(FFTIndex, mParser);
+            var mfft = new FFTCal(FFTIndex, parser);
 
             mFFTData = mfft.GetFFTData(datas);
             for (int i = 0; i < datas.Count; i++)
@@ -481,13 +418,12 @@ namespace PRSpline
                 {
                     _double.Add(item);
                 }
-                //if (mFFTData.arrFFTData.Length > i)
-                //{
+
                 foreach (var item in mFFTData.arrFFTData[i].Value)
                 {
                     _double.Add(item);
                 }
-                //}
+
                 value.Add(_double.ToArray());
             }
 
@@ -529,9 +465,11 @@ namespace PRSpline
             }
             this.panel4.Height = this.Height - 51 - 113;
             this.panel2.Height = this.panel4.Height / 5 * 3 - 10;
-            this.panel3.Location = new Point(3, this.panel2.Height + 10);
+            this.panel3.Location = new Point(3, this.panel2.Height + 40);
             this.panel3.Height = this.panel4.Height / 5 * 2 - 10;
             int TotleWidth = (this.groupBox4.Width - 20);
+
+
             label9.Location = new Point(10, label9.Location.Y);
             labLocatiion.Location = new Point(80, labLocatiion.Location.Y);
             label10.Location = new Point(10, label10.Location.Y);
@@ -637,5 +575,280 @@ namespace PRSpline
             var frm = new frmVoltageSag();
             frm.ShowDialog();
         }
+
+        private void btnSecond_Click(object sender, EventArgs e)
+        {
+            cbxitem.Enabled = true;
+
+            if (PData_2.Count == 0)
+            {
+                if (Directory.Exists("./CompressFile"))
+                {
+                    Directory.Delete("./CompressFile", true);
+                }
+
+                if (this.openFileDialog1.ShowDialog() != DialogResult.OK)
+                {
+                    (sender as Button).Enabled = true;
+                    return;
+                }
+                string strtext = this.openFileDialog1.FileName;
+                string strtext2 = string.Empty;
+
+                while (strtext.IndexOf(@"\") > -1)
+                {
+                    strtext2 += strtext.Substring(0, strtext.IndexOf(@"\") + 1);
+                    strtext = strtext.Substring(strtext.IndexOf(@"\") + 1);
+                }
+                strtext2 += @"../";
+
+
+                setEnable(false);
+
+                string strFile = this.openFileDialog1.FileName;
+                string strRarPath = string.Empty;
+                string strFileName = string.Empty;
+                string strXmlFile = this.GetType().Assembly.Location;
+                string strfilePath = strXmlFile = strXmlFile.Replace("PRSpline.exe", "CompressFile\\");
+                if (strFile.IndexOf(".cfg") > 0 || strFile.IndexOf(".CFG") > 0)
+                {
+                    if (File.Exists(strFile.Replace(".cfg", ".dat")) || File.Exists(strFile.Replace(".CFG", ".DAT")))
+                    {
+                        Directory.CreateDirectory(strfilePath);
+                        File.Copy(strFile, (strfilePath + openFileDialog1.SafeFileName), true);
+                        File.Copy(strFile.Replace(".cfg", ".dat"), strfilePath + openFileDialog1.SafeFileName.Replace(".cfg", ".dat"), true);
+                        File.Copy(strFile.Replace(".CFG", ".DAT"), strfilePath + openFileDialog1.SafeFileName.Replace(".CFG", ".DAT"), true);
+                    }
+                    else
+                    {
+                        MessageBox.Show("無dat檔");
+                        return;
+                    }
+                }
+                else
+                {
+                    while (strFile.IndexOf(@"\") > -1)
+                    {
+                        strRarPath += strFile.Substring(0, strFile.IndexOf(@"\") + 1);
+                        strFile = strFile.Substring(strFile.IndexOf(@"\") + 1);
+                    }
+
+                    mCompressWinRAR.UnCompressRar(strfilePath, strRarPath, strFile);
+                }
+                var _mPartser = new Parser();
+                try
+                {
+                    foreach (var item in Directory.GetFiles(strfilePath, "*.cfg"))
+                    {
+                        LoadDataFile.GetCFGData(item, ref _mPartser);
+                        break;
+                    }
+                    foreach (var item in Directory.GetFiles(strfilePath, "*.CFG"))
+                    {
+                        LoadDataFile.GetCFGData(item, ref _mPartser);
+                        break;
+                    }
+
+                    if ((DateTime)_mPartser.Schema.StartTime.Value < StartDateTime || (DateTime)_mPartser.Schema.StartTime.Value < StartDateTime.AddSeconds(60))
+                    {
+                        MessageBox.Show("副檔時間錯誤");
+                    }
+
+
+                    var _PData = new List<double[]>();
+                    var _SData = new List<double[]>();
+                    var _PUData = new List<double[]>();
+
+                    LoadDataFile.GetDatData(mParser, ref _PData, ref _SData, ref _PUData);
+
+                    Set_Information();
+
+                    List<int> _fftIndex = new List<int>();
+                    for (int i = 0; i < mParser.Schema.TotalAnalogChannels; i++)
+                    {
+                        if (mParser.Schema.AnalogChannels[i].Units == "V" || mParser.Schema.AnalogChannels[i].Units == "A")
+                            _fftIndex.Add(i);
+                    }
+                    FFTIndex = _fftIndex.ToArray();
+
+                    ClearButton();
+                    for (int i = 0; i < mParser.Schema.TotalAnalogChannels; i++)
+                    {
+                        AddNewButton(mParser.Schema.AnalogChannels[i].Name, i, 0);
+                    }
+                    for (int i = 0; i < mParser.Schema.TotalDigitalChannels; i++)
+                    {
+                        AddNewButton(mParser.Schema.DigitalChannels[i].Name, i, 1);
+                    }
+                    for (int i = 0; i < FFTIndex.Length; i++)
+                    {
+                        AddNewButton(mParser.Schema.AnalogChannels[FFTIndex[i]].Name + "_FFT", i + mParser.Schema.TotalAnalogChannels, 0);
+                    }
+                    //PData_2 = GetAllData((List<double[]>)_PData);
+                    //SData_2 = GetAllData((List<double[]>)_SData);
+                    //PUData_2 = GetAllData((List<double[]>)_PUData);
+
+                    sizeChanged();
+
+                    btnSecond.Enabled = true;
+                    cbxitem.Enabled = false;
+                }
+                catch (ApplicationException message)
+                {
+                    MessageBox.Show(String.Format("{0}: {1}", strFile, message.Message));
+                }
+                finally
+                {
+
+                }
+            }
+        }
+
+        private void AddButton()
+        {
+
+        }
+
+        private void LoadFile(SelectFile selectFile)
+        {
+            if (Directory.Exists("./CompressFile"))
+            {
+                Directory.Delete("./CompressFile", true);
+            }
+
+            string strtext = this.openFileDialog1.FileName;
+            string strtext2 = string.Empty;
+
+            while (strtext.IndexOf(@"\") > -1)
+            {
+                strtext2 += strtext.Substring(0, strtext.IndexOf(@"\") + 1);
+                strtext = strtext.Substring(strtext.IndexOf(@"\") + 1);
+            }
+            strtext2 += @"../";
+
+            string strFile = this.openFileDialog1.FileName;
+            string strRarPath = string.Empty;
+            string strFileName = string.Empty;
+            string strXmlFile = this.GetType().Assembly.Location;
+            string strfilePath = strXmlFile = strXmlFile.Replace("PRSpline.exe", "CompressFile\\");
+            if (strFile.IndexOf(".cfg") > 0 || strFile.IndexOf(".CFG") > 0)
+            {
+                if (File.Exists(strFile.Replace(".cfg", ".dat")) || File.Exists(strFile.Replace(".CFG", ".DAT")))
+                {
+                    Directory.CreateDirectory(strfilePath);
+                    File.Copy(strFile, (strfilePath + openFileDialog1.SafeFileName), true);
+                    File.Copy(strFile.Replace(".cfg", ".dat"), strfilePath + openFileDialog1.SafeFileName.Replace(".cfg", ".dat"), true);
+                    File.Copy(strFile.Replace(".CFG", ".DAT"), strfilePath + openFileDialog1.SafeFileName.Replace(".CFG", ".DAT"), true);
+                }
+                else
+                {
+                    MessageBox.Show("無dat檔");
+                    return;
+                }
+            }
+            else
+            {
+                while (strFile.IndexOf(@"\") > -1)
+                {
+                    strRarPath += strFile.Substring(0, strFile.IndexOf(@"\") + 1);
+                    strFile = strFile.Substring(strFile.IndexOf(@"\") + 1);
+                }
+
+                mCompressWinRAR.UnCompressRar(strfilePath, strRarPath, strFile);
+            }
+            var _mParser = new Parser();
+            try
+            {
+                foreach (var item in Directory.GetFiles(strfilePath, "*.cfg"))
+                {
+                    LoadDataFile.GetCFGData(item, ref _mParser);
+                    break;
+                }
+                foreach (var item in Directory.GetFiles(strfilePath, "*.CFG"))
+                {
+                    LoadDataFile.GetCFGData(item, ref _mParser);
+                    break;
+                }
+
+                if (selectFile != SelectFile.File_1)
+                {
+                    if ((DateTime)_mParser.Schema.StartTime.Value < StartDateTime || (DateTime)_mParser.Schema.StartTime.Value < StartDateTime.AddSeconds(60))
+                    {
+                        MessageBox.Show("副檔時間錯誤");
+                    }
+                }
+
+                var _PData = new List<double[]>();
+                var _SData = new List<double[]>();
+                var _PUData = new List<double[]>();
+
+                LoadDataFile.GetDatData(_mParser, ref _PData, ref _SData, ref _PUData);
+
+
+                List<int> _fftIndex = new List<int>();
+                for (int i = 0; i < _mParser.Schema.TotalAnalogChannels; i++)
+                {
+                    if (_mParser.Schema.AnalogChannels[i].Units == "V" || _mParser.Schema.AnalogChannels[i].Units == "A")
+                        _fftIndex.Add(i);
+                }
+
+                FFTIndex = _fftIndex.ToArray();
+
+                //ClearButton();
+                for (int i = 0; i < _mParser.Schema.TotalAnalogChannels; i++)
+                {
+                    switch (selectFile)
+                    {
+                        case SelectFile.File_1:
+                            ButtonName_1.Add(_mParser.Schema.AnalogChannels[i].Name);
+                            break;
+                        case SelectFile.File_2:
+                            ButtonName_2.Add(_mParser.Schema.AnalogChannels[FFTIndex[i]].Name);
+                            break;
+                        case SelectFile.FIle_3:
+                            ButtonName_3.Add(_mParser.Schema.AnalogChannels[FFTIndex[i]].Name);
+                            break;
+                    }
+
+                }
+                if (selectFile == SelectFile.File_1)
+                {
+                    for (int i = 0; i < _mParser.Schema.TotalDigitalChannels; i++)
+                    {
+                        ButtonName_D.Add(_mParser.Schema.DigitalChannels[i].Name);
+                    }
+                }
+                for (int i = 0; i < FFTIndex.Length; i++)
+                {
+                    switch (selectFile)
+                    {
+                        case SelectFile.File_1:
+                            ButtonName_1.Add(_mParser.Schema.AnalogChannels[FFTIndex[i]].Name + "_FFT");
+                            break;
+                        case SelectFile.File_2:
+                            ButtonName_2.Add(_mParser.Schema.AnalogChannels[FFTIndex[i]].Name + "_FFT");
+                            break;
+                        case SelectFile.FIle_3:
+                            ButtonName_3.Add(_mParser.Schema.AnalogChannels[FFTIndex[i]].Name + "_FFT");
+                            break;
+                    }
+                }
+                PData = GetAllData((List<double[]>)_PData, _mParser);
+                SData = GetAllData((List<double[]>)_SData, _mParser);
+                PUData = GetAllData((List<double[]>)_PUData, _mParser);
+
+                mParser = _mParser;
+            }
+            catch (ApplicationException message)
+            {
+                MessageBox.Show(String.Format("{0}: {1}", strFile, message.Message));
+            }
+            finally
+            {
+
+            }
+        }
+
+
     }
 }

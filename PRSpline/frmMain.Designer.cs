@@ -373,7 +373,7 @@
             this.btnSecond.Size = new System.Drawing.Size(44, 44);
             this.btnSecond.TabIndex = 36;
             this.btnSecond.UseVisualStyleBackColor = false;
-            this.btnSecond.Click += new System.EventHandler(this.button1_Click_1);
+            this.btnSecond.Click += new System.EventHandler(this.btnSecond_Click);
             // 
             // label4
             // 
