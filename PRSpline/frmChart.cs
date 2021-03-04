@@ -21,6 +21,15 @@ namespace PRSpline
 {
     public partial class frmChart : UserControl
     {
+        public enum ChartNo
+        {
+            Main=1,
+            Second_1=2,
+            Second_2=3
+        }
+
+
+        private int[] FileChannelCount = new int[3];
         private List<double[]> mDatData;
 
         //private FFTData mFFTData;
@@ -65,6 +74,7 @@ namespace PRSpline
 
             mDatData = DatData;
             mParser = parser;
+            FileChannelCount[0] = DatData[0].Count()- 2;
             //mFFTData = _FFTData;
         }
 
@@ -79,21 +89,18 @@ namespace PRSpline
 
             BlockGroup_Line = new List<Annotation>();
             BlockGroup_Block = new List<Annotation>();
-
+            //this.chart1.ChartAreas.
             this.chart1.ChartAreas[0].Position = new ElementPosition(0, 5, 100, 73);
             this.chart1.ChartAreas[1].Position = new ElementPosition(0, 85, 100, 13);
             this.chart1.ChartAreas[2].Position = new ElementPosition(0, -10, 100, -10);
-
-
+           
             this.chart1.ChartAreas[0].AxisX.Title = "Time(ms)";
 
             this.chart1.ChartAreas[0].BackColor = Color.White;
             this.chart1.ChartAreas[1].BackColor = Color.White;
 
-
             this.chart1.ChartAreas[0].AlignWithChartArea = "B";
             this.chart1.ChartAreas[1].AlignWithChartArea = "B";
-
 
             this.chart1.Series.Clear();
 
@@ -140,9 +147,14 @@ namespace PRSpline
             this.chart1.ChartAreas.Add(new ChartArea("A"));
             this.chart1.ChartAreas.Add(new ChartArea("D"));
             this.chart1.ChartAreas.Add(new ChartArea("B"));
+            this.chart1.ChartAreas.Add(new ChartArea("A_2"));
+            this.chart1.ChartAreas.Add(new ChartArea("A_3"));
+            this.chart1.ChartAreas[3].Visible = false;
+            this.chart1.ChartAreas[4].Visible = false;
         }
-        public void AddSecondFile(List<double> datas, int SecondNo)
+        public void AddSecondFile(List<double[]> datas, int SecondNo, List<string> ButtonName)
         {
+            FileChannelCount[SecondNo - 1] = datas[0].Length - 2;
             this.chart1.ChartAreas[3].Position = new ElementPosition(0, 85, 100, 13);
             this.chart1.ChartAreas[4].Position = new ElementPosition(0, 85, 100, 13);
 
@@ -157,11 +169,11 @@ namespace PRSpline
 
             this.chart1.ChartAreas[1].Visible = false;
             AddSecondLegends(SecondNo);
+            AddSecondChartPoint(datas, ButtonName);
 
         }
         private void AddSecondLegends(int SecondNo)
         {
-
             string LegendName = "A_" + SecondNo;
             this.chart1.Legends.Add(new Legend(LegendName)
             {
@@ -174,6 +186,120 @@ namespace PRSpline
             });
 
         }
+       
+        private void AddSecondChartPoint(List<double[]> datas, List<string> ButtonName)
+        {
+            
+            for(int i=0;i<datas[0].Length-2;i++)
+            {
+                if (mParser.Schema.AnalogChannels[i].Units == "V" || mParser.Schema.AnalogChannels[i].Units == "A")
+                {
+                    this.chart1.Series.Add(new Series()
+                    {
+                        Legend = "A",
+                        LegendText = mParser.Schema.AnalogChannels[i].Name + "(" + mParser.Schema.AnalogChannels[i].Units + ")",
+                        BorderWidth = 2,
+                        ChartType = SeriesChartType.Line
+                    });
+                }
+                else
+                {
+                    this.chart1.Series.Add(new Series()
+                    {
+                        Legend = "A",
+                        LegendText = mParser.Schema.AnalogChannels[i].Name,
+                        BorderWidth = 2,
+                        ChartType = SeriesChartType.Line
+                    });
+                }
+                this.chart1.Series[i].ChartArea = "A";
+            }
+            for (int i = 0; i < mParser.Schema.TotalChannels; i++)
+            {
+                if (i < mParser.Schema.TotalAnalogChannels)
+                {
+                    if (mParser.Schema.AnalogChannels[i].Units == "V" || mParser.Schema.AnalogChannels[i].Units == "A")
+                    {
+                        this.chart1.Series.Add(new Series()
+                        {
+                            Legend = "A",
+                            LegendText = mParser.Schema.AnalogChannels[i].Name + "(" + mParser.Schema.AnalogChannels[i].Units + ")",
+                            BorderWidth = 2,
+                            ChartType = SeriesChartType.Line
+                        });
+                    }
+                    else
+                    {
+                        this.chart1.Series.Add(new Series()
+                        {
+                            Legend = "A",
+                            LegendText = mParser.Schema.AnalogChannels[i].Name,
+                            BorderWidth = 2,
+                            ChartType = SeriesChartType.Line
+                        });
+                    }
+                    this.chart1.Series[i].ChartArea = "A";
+                }
+                else
+                {
+                    this.chart1.Series.Add(new Series()
+                    {
+                        Legend = "D",
+                        LegendText = mParser.Schema.DigitalChannels[i - mParser.Schema.TotalAnalogChannels].Name,
+                        BorderWidth = 3,
+                        ChartType = SeriesChartType.Line
+                    });
+                    this.chart1.Series[i].ChartArea = "D";
+                }
+            }
+            int index = 0;
+            for (int i = 0; i < mParser.Schema.TotalAnalogChannels; i++)
+            {
+
+                if (mParser.Schema.AnalogChannels[i].Units != "")
+                {
+                    if (mParser.Schema.AnalogChannels[i].Units == "V" || mParser.Schema.AnalogChannels[i].Units == "A")
+                    {
+                        this.chart1.Series.Add(new Series()
+                        {
+                            Legend = "A",
+                            LegendText = mParser.Schema.AnalogChannels[i].Name + "_FFT(" + mParser.Schema.AnalogChannels[i].Units + ")",
+                            BorderWidth = 2,
+                            ChartType = SeriesChartType.Line
+                        });
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                    this.chart1.Series[mParser.Schema.TotalChannels + index].ChartArea = "A";
+                    index++;
+                }
+            }
+
+            try
+            {
+                for (int i = 0; i < mParser.Schema.SampleRates[0].EndSample; i++)
+                {
+                    for (int j = 2; j < mDatData[i].Length; j++)
+                    {
+                        chart1.Series[j - 2].Points.AddXY(mDatData[i][1], mDatData[i][j]);
+                        if (j < mParser.Schema.TotalAnalogChannels)
+                        {
+                            if (Y_MinValue >= mDatData[i][j])
+                                Y_MinValue = mDatData[i][j];
+                            if (Y_MaxValue <= mDatData[i][j])
+                                Y_MaxValue = mDatData[i][j];
+                        }
+                    }
+                }
+            }
+            catch (Exception ex1)
+            {
+
+            }
+        }
+        
         private void AddChartPoint()
         {
             for (int i = 0; i < mParser.Schema.TotalChannels; i++)
@@ -232,13 +358,7 @@ namespace PRSpline
                     }
                     else
                     {
-                        this.chart1.Series.Add(new Series()
-                        {
-                            Legend = "A",
-                            LegendText = mParser.Schema.AnalogChannels[i].Name + "_FFT",
-                            BorderWidth = 2,
-                            ChartType = SeriesChartType.Line
-                        });
+                        continue;                   
                     }
                     this.chart1.Series[mParser.Schema.TotalChannels + index].ChartArea = "A";
                     index ++;
@@ -431,24 +551,24 @@ namespace PRSpline
         }
         /*------------------------ChartFuntion------------------------*/
         #region ChartFuntion
-        public void Chart1_Enable(int index, Panel panel)
+        public void Chart1_Enable(int index/*, Panel panel*/,string ButtonName)
         {
             this.chart1.Series[index].Enabled = !this.chart1.Series[index].Enabled;
             Chart_AnnotationsLineEnable(this.chart1);
             AllButtonEnable();
 
             bpnlAEnable = false;
-            foreach (var item in panel.Controls)
-            {
-                if (item is Button)
-                {
-                    if (((Button)item).BackColor == Color.LightSlateGray)
-                        bpnlAEnable = true;
-                }
-            }
+            //foreach (var item in panel.Controls)
+            //{
+            //    if (item is Button)
+            //    {
+            //        if (((Button)item).BackColor == Color.LightSlateGray)
+            //            bpnlAEnable = true;
+            //    }
+            //}
         }
 
-        public void Chart2_Enable(int index, Panel panel)
+        public void Chart2_Enable(int index/*, Panel panel*/, string ButtonName)
         {
             this.chart1.Series[index + mParser.Schema.TotalAnalogChannels].Enabled = !this.chart1.Series[index + mParser.Schema.TotalAnalogChannels].Enabled;
 

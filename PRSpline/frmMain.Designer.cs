@@ -507,6 +507,7 @@
             this.cbxitem.Name = "cbxitem";
             this.cbxitem.Size = new System.Drawing.Size(108, 21);
             this.cbxitem.TabIndex = 33;
+            this.cbxitem.SelectedIndexChanged += new System.EventHandler(this.cbxitem_SelectedIndexChanged);
             // 
             // frmMain
             // 
