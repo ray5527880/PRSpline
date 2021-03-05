@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.hScrollBar1 = new System.Windows.Forms.HScrollBar();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
@@ -42,11 +42,11 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.chart1.BackColor = System.Drawing.Color.DimGray;
             this.chart1.BorderlineColor = System.Drawing.SystemColors.HighlightText;
-            legend2.Name = "Legend1";
-            this.chart1.Legends.Add(legend2);
+            legend1.Name = "Legend1";
+            this.chart1.Legends.Add(legend1);
             this.chart1.Location = new System.Drawing.Point(16, 3);
             this.chart1.Name = "chart1";
-            this.chart1.Size = new System.Drawing.Size(1300, 544);
+            this.chart1.Size = new System.Drawing.Size(1296, 540);
             this.chart1.TabIndex = 0;
             this.chart1.Text = "chart1";
             this.chart1.AnnotationPositionChanged += new System.EventHandler(this.chart1_AnnotationPositionChanged_1);
@@ -56,9 +56,9 @@
             // 
             this.hScrollBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.hScrollBar1.Location = new System.Drawing.Point(16, 550);
+            this.hScrollBar1.Location = new System.Drawing.Point(16, 552);
             this.hScrollBar1.Name = "hScrollBar1";
-            this.hScrollBar1.Size = new System.Drawing.Size(1303, 17);
+            this.hScrollBar1.Size = new System.Drawing.Size(1299, 17);
             this.hScrollBar1.TabIndex = 1;
             this.hScrollBar1.ValueChanged += new System.EventHandler(this.hScrollBar_ValueChange);
             // 
@@ -72,6 +72,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
+            this.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.CausesValidation = false;
             this.Controls.Add(this.hScrollBar1);
             this.Controls.Add(this.chart1);
@@ -79,7 +80,7 @@
             this.Font = new System.Drawing.Font("新細明體", 9.75F);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "frmChart";
-            this.Size = new System.Drawing.Size(1350, 580);
+            this.Size = new System.Drawing.Size(1346, 576);
             this.Load += new System.EventHandler(this.frmChart_Load);
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.ResumeLayout(false);

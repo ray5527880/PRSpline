@@ -468,7 +468,7 @@ namespace PRSpline
             btnExtremum.Enabled = enable;
             cbxPS.Enabled = enable;
         }
-        private List<double[]> GetAllData(List<double[]> datas, Parser parser)
+        private List<double[]> GetAllData(List<double[]> datas, Parser parser,SelectFile selectFiles)
         {
             List<int> _fftIndex = new List<int>();
             for (int i = 0; i < parser.Schema.TotalAnalogChannels; i++)
@@ -486,9 +486,16 @@ namespace PRSpline
             for (int i = 0; i < datas.Count; i++)
             {
                 var _double = new List<double>();
+                int index = 0;
                 foreach (var item in datas[i])
                 {
+                    if (selectFiles != SelectFile.File_1)
+                    {
+                        if (index == parser.Schema.TotalAnalogChannels + 2)
+                            break;
+                    }
                     _double.Add(item);
+                    index++;
                 }
 
                 foreach (var item in mFFTData.arrFFTData[i].Value)
@@ -523,7 +530,6 @@ namespace PRSpline
             this.panel3.Location = new Point(3, this.panel2.Height + 40);
             this.panel3.Height = this.panel4.Height / 5 * 2 - 10;
             int TotleWidth = (this.groupBox4.Width - 20);
-
 
             label9.Location = new Point(10, label9.Location.Y);
             labLocatiion.Location = new Point(80, labLocatiion.Location.Y);
@@ -621,7 +627,7 @@ namespace PRSpline
             {
                 if (!LoadFile(SelectFile.File_2)) return;
 
-                frmChartline.AddSecondFile(PData_2, 2, ButtonName_2);
+                //frmChartline.AddSecondFile(PData_2, 2, ButtonName_2);
             }
             else if (ButtonName_3.Count == 0) 
             {
@@ -763,15 +769,14 @@ namespace PRSpline
                 switch (selectFile)
                 {
                     case SelectFile.File_1:
-                        PData = GetAllData(_PData, _mParser);
-                        SData = GetAllData(_SData, _mParser);
-                        PUData = GetAllData(_PUData, _mParser);                        
+                        PData = GetAllData(_PData, _mParser, selectFile);
+                        SData = GetAllData(_SData, _mParser, selectFile);
+                        PUData = GetAllData(_PUData, _mParser, selectFile);                        
                         break;
                     case SelectFile.File_2:
-                        PData_2 = GetAllData(_PData, _mParser);
-                        SData_2 = GetAllData(_SData, _mParser);
-                        PUData_2 = GetAllData(_PUData, _mParser);
-
+                        PData_2 = GetAllData(_PData, _mParser, selectFile);
+                        SData_2 = GetAllData(_SData, _mParser, selectFile);
+                        PUData_2 = GetAllData(_PUData, _mParser, selectFile);
 
                         var AddTimeValueTotel = ((DateTime)(_mParser.Schema.StartTime.Value - mParser.Schema.StartTime.Value));
                         var AddTimeValue = AddTimeValueTotel.Second * 1000 + AddTimeValueTotel.Millisecond;
@@ -788,11 +793,13 @@ namespace PRSpline
                         {
                             item[1] += AddTimeValue;
                         }
+
+                        frmChartline.AddSecondFile(PData_2, 2, _mParser);
                         break;
                     case SelectFile.File_3:
-                        PData_3 = GetAllData(_PData, _mParser);
-                        SData_3 = GetAllData(_SData, _mParser);
-                        PUData_3 = GetAllData(_PUData, _mParser);
+                        PData_3 = GetAllData(_PData, _mParser, selectFile);
+                        SData_3 = GetAllData(_SData, _mParser, selectFile);
+                        PUData_3 = GetAllData(_PUData, _mParser, selectFile);
                        
                         break;
                 }
