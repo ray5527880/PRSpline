@@ -168,9 +168,9 @@ namespace PRSpline
         }
         private void NewButton_A_Click(object sender, EventArgs e)
         {
-            int baseValue = 0;
-            if (selectFileValue == SelectFile.File_2) baseValue = ButtonName_1.Count + ButtonName_D.Count+1;
-            if (selectFileValue == SelectFile.File_3) baseValue = ButtonName_1.Count + ButtonName_D.Count + ButtonName_2.Count+1;
+            int baseValue = ButtonName_D.Count ;
+            if (selectFileValue == SelectFile.File_2) baseValue = ButtonName_1.Count + ButtonName_D.Count ;
+            if (selectFileValue == SelectFile.File_3) baseValue = ButtonName_1.Count + ButtonName_D.Count + ButtonName_2.Count + 1;
 
             if (((Button)sender).BackColor == Color.LightSteelBlue)
             {
@@ -180,7 +180,7 @@ namespace PRSpline
             {
                 ((Button)sender).BackColor = Color.LightSteelBlue;
             }
-            if (((Button)sender).Text.IndexOf("FFT") > 0&& selectFileValue == SelectFile.File_1)
+            if (((Button)sender).Text.IndexOf("FFT") > 0 && selectFileValue == SelectFile.File_1)
             {
                 frmChartline.Chart1_Enable(((Button)sender).TabIndex + mParser.Schema.DigitalChannels.Length,/* pnlAnagol,*/ ((Button)sender).Text);
             }
@@ -197,11 +197,11 @@ namespace PRSpline
             {
                 ((Button)sender).BackColor = Color.LightSteelBlue;
             }
-            
+
             frmChartline.Chart2_Enable(((Button)sender).TabIndex, /*pnlDigital,*/ ((Button)sender).Text);
         }
 
-       
+
         private void Clear_Information()
         {
             labLocatiion.Text = string.Empty;
@@ -222,7 +222,7 @@ namespace PRSpline
             labTriggerTime.Text = mParser.Schema.TriggerTime.Value.ToString("HH:mm:ss.fff");
         }
 
-        
+
 
 
         public static void btnVectorClick()
@@ -304,7 +304,7 @@ namespace PRSpline
             {
                 MessageBox.Show(String.Format("{0}: {1}", this.openFileDialog1.FileName, ex.Message));
             }
-            
+
             StartDateTime = mParser.Schema.StartTime.Value;
             setEnable(false);
             cbxPS.Items.Clear();
@@ -365,15 +365,15 @@ namespace PRSpline
         private void cbxitem_SelectedIndexChanged(object sender, EventArgs e)
         {
             pnlAnagol.Controls.Clear();
-            
+
             switch (cbxitem.SelectedIndex)
             {
-                case 0:                   
+                case 0:
                     for (int i = 0; i < ButtonName_1.Count; i++)
                     {
                         AddNewButton(ButtonName_1[i], i, 0);
                     }
-                    for(int i = 0; i < ButtonName_D.Count; i++)
+                    for (int i = 0; i < ButtonName_D.Count; i++)
                     {
                         AddNewButton(ButtonName_D[i], i, 1);
                         selectFileValue = SelectFile.File_1;
@@ -382,7 +382,7 @@ namespace PRSpline
                 case 1:
                     for (int i = 0; i < ButtonName_2.Count; i++)
                     {
-                        AddNewButton(ButtonName_2[i], i, 0);                       
+                        AddNewButton(ButtonName_2[i], i, 0);
                     }
                     selectFileValue = SelectFile.File_2;
                     break;
@@ -468,7 +468,7 @@ namespace PRSpline
             btnExtremum.Enabled = enable;
             cbxPS.Enabled = enable;
         }
-        private List<double[]> GetAllData(List<double[]> datas, Parser parser,SelectFile selectFiles)
+        private List<double[]> GetAllData(List<double[]> datas, Parser parser, SelectFile selectFiles)
         {
             List<int> _fftIndex = new List<int>();
             for (int i = 0; i < parser.Schema.TotalAnalogChannels; i++)
@@ -629,9 +629,9 @@ namespace PRSpline
 
                 //frmChartline.AddSecondFile(PData_2, 2, ButtonName_2);
             }
-            else if (ButtonName_3.Count == 0) 
+            else if (ButtonName_3.Count == 0)
             {
-                if (!LoadFile(SelectFile.File_3)) return; 
+                if (!LoadFile(SelectFile.File_3)) return;
             }
             else return;
 
@@ -640,10 +640,10 @@ namespace PRSpline
             cbxitem.Enabled = true;
             pnlDigital.Enabled = false;
         }
-              
+
         private bool LoadFile(SelectFile selectFile)
         {
-            bool IsSuccess = false; 
+            bool IsSuccess = false;
             if (Directory.Exists("./CompressFile"))
             {
                 Directory.Delete("./CompressFile", true);
@@ -727,7 +727,18 @@ namespace PRSpline
                 }
 
                 FFTIndex = _fftIndex.ToArray();
-
+                switch (selectFile)
+                {
+                    case SelectFile.File_1:
+                        ButtonName_1.Clear();
+                        break;
+                    case SelectFile.File_2:
+                        ButtonName_2.Clear();
+                        break;
+                    case SelectFile.File_3:
+                        ButtonName_3.Clear();
+                        break;
+                }
                 for (int i = 0; i < _mParser.Schema.TotalAnalogChannels; i++)
                 {
                     switch (selectFile)
@@ -745,10 +756,12 @@ namespace PRSpline
                 }
                 if (selectFile == SelectFile.File_1)
                 {
+                    ButtonName_D.Clear();
                     for (int i = 0; i < _mParser.Schema.TotalDigitalChannels; i++)
                     {
                         ButtonName_D.Add(_mParser.Schema.DigitalChannels[i].Name);
                     }
+
                 }
                 for (int i = 0; i < FFTIndex.Length; i++)
                 {
@@ -771,7 +784,7 @@ namespace PRSpline
                     case SelectFile.File_1:
                         PData = GetAllData(_PData, _mParser, selectFile);
                         SData = GetAllData(_SData, _mParser, selectFile);
-                        PUData = GetAllData(_PUData, _mParser, selectFile);                        
+                        PUData = GetAllData(_PUData, _mParser, selectFile);
                         break;
                     case SelectFile.File_2:
                         PData_2 = GetAllData(_PData, _mParser, selectFile);
@@ -800,7 +813,7 @@ namespace PRSpline
                         PData_3 = GetAllData(_PData, _mParser, selectFile);
                         SData_3 = GetAllData(_SData, _mParser, selectFile);
                         PUData_3 = GetAllData(_PUData, _mParser, selectFile);
-                       
+
                         break;
                 }
                 if (ButtonName_1.Count > 0) cbxitem.Items.Add("主檔");
@@ -808,7 +821,7 @@ namespace PRSpline
                 if (ButtonName_3.Count > 0) cbxitem.Items.Add("副檔2");
                 cbxitem.SelectedIndex = 0;
                 mParser = _mParser;
-                
+
             }
             catch (ApplicationException message)
             {
