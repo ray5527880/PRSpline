@@ -40,11 +40,13 @@ namespace PRSpline
         private frmChart frmChartline;
         private CompressWinRAR mCompressWinRAR;
 
-        private Parser mParser;
+        private Parser mParser_1;
+        private Parser mParser_2;
+        private Parser mParser_3;
 
         private FFTData mFFTData;
 
-        private frmVector m_frmVector;
+        //private frmVector m_frmVector;
 
         int _Mode = 0;
 
@@ -52,16 +54,18 @@ namespace PRSpline
 
         public static List<PSData> mPSData = new List<PSData>();
 
-        public List<double[]> PData;
-        public List<double[]> SData;
-        public List<double[]> PUData;
+        public List<double[]> PData_1;
+        public List<double[]> SData_1;
+        public List<double[]> PUData_1;
 
         public List<double[]> PData_2;
         public List<double[]> SData_2;
         public List<double[]> PUData_2;
+
         public List<double[]> PData_3;
         public List<double[]> SData_3;
         public List<double[]> PUData_3;
+
         public int[] FFTIndex;
 
         public struct PSData
@@ -182,7 +186,7 @@ namespace PRSpline
             }
             if (((Button)sender).Text.IndexOf("FFT") > 0 && selectFileValue == SelectFile.File_1)
             {
-                frmChartline.Chart1_Enable(((Button)sender).TabIndex + mParser.Schema.DigitalChannels.Length,/* pnlAnagol,*/ ((Button)sender).Text);
+                frmChartline.Chart1_Enable(((Button)sender).TabIndex + mParser_1.Schema.DigitalChannels.Length,/* pnlAnagol,*/ ((Button)sender).Text);
             }
             else
                 frmChartline.Chart1_Enable(((Button)sender).TabIndex + baseValue,/* pnlAnagol,*/ ((Button)sender).Text);
@@ -214,16 +218,13 @@ namespace PRSpline
         private void Set_Information()
         {
             Clear_Information();
-            labLocatiion.Text = mParser.Schema.StationName;
-            labDevice.Text = mParser.Schema.DeviceID;
-            labStartDate.Text = mParser.Schema.StartTime.Value.ToString("yyyy/MM/dd");
-            labTriggerDate.Text = mParser.Schema.TriggerTime.Value.ToString("yyyy/MM/dd");
-            labStartTime.Text = mParser.Schema.StartTime.Value.ToString("HH:mm:ss.fff");
-            labTriggerTime.Text = mParser.Schema.TriggerTime.Value.ToString("HH:mm:ss.fff");
+            labLocatiion.Text = mParser_1.Schema.StationName;
+            labDevice.Text = mParser_1.Schema.DeviceID;
+            labStartDate.Text = mParser_1.Schema.StartTime.Value.ToString("yyyy/MM/dd");
+            labTriggerDate.Text = mParser_1.Schema.TriggerTime.Value.ToString("yyyy/MM/dd");
+            labStartTime.Text = mParser_1.Schema.StartTime.Value.ToString("HH:mm:ss.fff");
+            labTriggerTime.Text = mParser_1.Schema.TriggerTime.Value.ToString("HH:mm:ss.fff");
         }
-
-
-
 
         public static void btnVectorClick()
         {
@@ -285,9 +286,9 @@ namespace PRSpline
                 return;
             }
 
-            PData = new List<double[]>();
-            SData = new List<double[]>();
-            PUData = new List<double[]>();
+            PData_1 = new List<double[]>();
+            SData_1 = new List<double[]>();
+            PUData_1 = new List<double[]>();
 
             PData_2 = new List<double[]>();
             SData_2 = new List<double[]>();
@@ -305,7 +306,7 @@ namespace PRSpline
                 MessageBox.Show(String.Format("{0}: {1}", this.openFileDialog1.FileName, ex.Message));
             }
 
-            StartDateTime = mParser.Schema.StartTime.Value;
+            StartDateTime = mParser_1.Schema.StartTime.Value;
             setEnable(false);
             cbxPS.Items.Clear();
             Set_Information();
@@ -315,12 +316,12 @@ namespace PRSpline
             sizeChanged();
             for (int i = 0; i < ButtonName_1.Count + ButtonName_D.Count; i++)
             {
-                if (i < mParser.Schema.TotalAnalogChannels)
+                if (i < mParser_1.Schema.TotalAnalogChannels)
                     AddNewButton(ButtonName_1[i], i, 0);
-                else if (i < mParser.Schema.TotalChannels)
-                    AddNewButton(ButtonName_D[i - mParser.Schema.TotalAnalogChannels], i - mParser.Schema.TotalAnalogChannels, 1);
+                else if (i < mParser_1.Schema.TotalChannels)
+                    AddNewButton(ButtonName_D[i - mParser_1.Schema.TotalAnalogChannels], i - mParser_1.Schema.TotalAnalogChannels, 1);
                 else
-                    AddNewButton(ButtonName_1[i - mParser.Schema.TotalDigitalChannels], i - mParser.Schema.TotalDigitalChannels, 0);
+                    AddNewButton(ButtonName_1[i - mParser_1.Schema.TotalDigitalChannels], i - mParser_1.Schema.TotalDigitalChannels, 0);
             }
 
             cbxPS.Items.Add("P");
@@ -349,13 +350,13 @@ namespace PRSpline
             switch (_Mode)
             {
                 case 1:
-                    data = GetExtremum(PData);
+                    data = GetExtremum(PData_1);
                     break;
                 case 2:
-                    data = GetExtremum(SData);
+                    data = GetExtremum(SData_1);
                     break;
                 case 3:
-                    data = GetExtremum(PUData);
+                    data = GetExtremum(PUData_1);
                     break;
             }
             var frm = new frmExtremum(data);
@@ -422,13 +423,13 @@ namespace PRSpline
                     switch (_Mode)
                     {
                         case 1:
-                            frmChartline = new frmChart(mParser, PData);
-                            break;
+                            frmChartline = new frmChart(mParser_1, PData_1);                            
+                                break;
                         case 2:
-                            frmChartline = new frmChart(mParser, SData);
+                            frmChartline = new frmChart(mParser_1, SData_1);
                             break;
                         case 3:
-                            frmChartline = new frmChart(mParser, PUData);
+                            frmChartline = new frmChart(mParser_1, PUData_1);
                             break;
                     }
                     panel1.Controls.Add(frmChartline);
@@ -476,13 +477,16 @@ namespace PRSpline
                 if (parser.Schema.AnalogChannels[i].Units == "V" || parser.Schema.AnalogChannels[i].Units == "A")
                     _fftIndex.Add(i);
             }
-            FFTIndex = _fftIndex.ToArray();
+            //FFTIndex = _fftIndex.ToArray();
 
             var value = new List<double[]>();
-            mFFTData = new FFTData();
+            var _mFFTData = new FFTData();
             var mfft = new FFTCal(_fftIndex.ToArray(), parser);
 
-            mFFTData = mfft.GetFFTData(datas);
+            _mFFTData = mfft.GetFFTData(datas);
+
+            if (selectFiles == SelectFile.File_1) mFFTData = _mFFTData;
+
             for (int i = 0; i < datas.Count; i++)
             {
                 var _double = new List<double>();
@@ -548,23 +552,23 @@ namespace PRSpline
         }
         private ExtremumData.Extremum[] GetExtremum(List<double[]> Data)
         {
-            var reData = new ExtremumData.Extremum[mParser.Schema.TotalAnalogChannels + mFFTData.arrFFTData[0].Value.Length];
-            for (int i = 0; i < mParser.Schema.TotalAnalogChannels; i++)
+            var reData = new ExtremumData.Extremum[mParser_1.Schema.TotalAnalogChannels + mFFTData.arrFFTData[0].Value.Length];
+            for (int i = 0; i < mParser_1.Schema.TotalAnalogChannels; i++)
             {
-                reData[i].strName = mParser.Schema.AnalogChannels[i].Name;
+                reData[i].strName = mParser_1.Schema.AnalogChannels[i].Name;
             }
             for (int i = 0; i < FFTIndex.Length; i++)
             {
-                reData[i + mParser.Schema.TotalAnalogChannels].strName = mParser.Schema.AnalogChannels[FFTIndex[i]].Name + "_FFT";
+                reData[i + mParser_1.Schema.TotalAnalogChannels].strName = mParser_1.Schema.AnalogChannels[FFTIndex[i]].Name + "_FFT";
             }
 
             var d = new ExtremumData.Extremum();
 
-            for (int i = 0; i < mParser.Schema.SampleRates[0].EndSample; i++)
+            for (int i = 0; i < mParser_1.Schema.SampleRates[0].EndSample; i++)
             {
-                if (i > mParser.Schema.SampleRates[0].Rate / mParser.Schema.NominalFrequency / 2 && i < mParser.Schema.SampleRates[0].EndSample - mParser.Schema.SampleRates[0].Rate / mParser.Schema.NominalFrequency / 2)
+                if (i > mParser_1.Schema.SampleRates[0].Rate / mParser_1.Schema.NominalFrequency / 2 && i < mParser_1.Schema.SampleRates[0].EndSample - mParser_1.Schema.SampleRates[0].Rate / mParser_1.Schema.NominalFrequency / 2)
                 {
-                    for (int j = 0; j < mParser.Schema.TotalAnalogChannels; j++)
+                    for (int j = 0; j < mParser_1.Schema.TotalAnalogChannels; j++)
                     {
                         if (reData[j].MaxValue > Data[i][j + 2])
                         {
@@ -579,10 +583,10 @@ namespace PRSpline
                     }
                     for (int j = 0; j < mFFTData.arrFFTData[i].Value.Length; j++)
                     {
-                        if (reData[j + mParser.Schema.TotalAnalogChannels].MaxValue < mFFTData.arrFFTData[i].Value[j])
+                        if (reData[j + mParser_1.Schema.TotalAnalogChannels].MaxValue < mFFTData.arrFFTData[i].Value[j])
                         {
-                            reData[j + mParser.Schema.TotalAnalogChannels].MaxValue = mFFTData.arrFFTData[i].Value[j];
-                            reData[j + mParser.Schema.TotalAnalogChannels].MaxTime = Data[i][1];
+                            reData[j + mParser_1.Schema.TotalAnalogChannels].MaxValue = mFFTData.arrFFTData[i].Value[j];
+                            reData[j + mParser_1.Schema.TotalAnalogChannels].MaxTime = Data[i][1];
                         }
                     }
                 }
@@ -590,20 +594,20 @@ namespace PRSpline
 
             for (int j = 0; j < mFFTData.arrFFTData[0].Value.Length; j++)
             {
-                reData[j + mParser.Schema.TotalAnalogChannels].MinValue = reData[j + mParser.Schema.TotalAnalogChannels].MaxValue;
-                reData[j + mParser.Schema.TotalAnalogChannels].MinTime = reData[j + mParser.Schema.TotalAnalogChannels].MaxTime;
+                reData[j + mParser_1.Schema.TotalAnalogChannels].MinValue = reData[j + mParser_1.Schema.TotalAnalogChannels].MaxValue;
+                reData[j + mParser_1.Schema.TotalAnalogChannels].MinTime = reData[j + mParser_1.Schema.TotalAnalogChannels].MaxTime;
             }
 
-            for (int i = 0; i < mParser.Schema.SampleRates[0].EndSample; i++)
+            for (int i = 0; i < mParser_1.Schema.SampleRates[0].EndSample; i++)
             {
-                if (i > mParser.Schema.SampleRates[0].Rate / mParser.Schema.NominalFrequency / 2 && i < mParser.Schema.SampleRates[0].EndSample - mParser.Schema.SampleRates[0].Rate / mParser.Schema.NominalFrequency / 2)
+                if (i > mParser_1.Schema.SampleRates[0].Rate / mParser_1.Schema.NominalFrequency / 2 && i < mParser_1.Schema.SampleRates[0].EndSample - mParser_1.Schema.SampleRates[0].Rate / mParser_1.Schema.NominalFrequency / 2)
                 {
                     for (int j = 0; j < mFFTData.arrFFTData[0].Value.Length; j++)
                     {
-                        if (reData[j + mParser.Schema.TotalAnalogChannels].MinValue > mFFTData.arrFFTData[i].Value[j])
+                        if (reData[j + mParser_1.Schema.TotalAnalogChannels].MinValue > mFFTData.arrFFTData[i].Value[j])
                         {
-                            reData[j + mParser.Schema.TotalAnalogChannels].MinValue = mFFTData.arrFFTData[i].Value[j];
-                            reData[j + mParser.Schema.TotalAnalogChannels].MinTime = Data[i][1];
+                            reData[j + mParser_1.Schema.TotalAnalogChannels].MinValue = mFFTData.arrFFTData[i].Value[j];
+                            reData[j + mParser_1.Schema.TotalAnalogChannels].MinTime = Data[i][1];
                         }
                     }
                 }
@@ -718,7 +722,6 @@ namespace PRSpline
 
                 LoadDataFile.GetDatData(_mParser, ref _PData, ref _SData, ref _PUData);
 
-
                 List<int> _fftIndex = new List<int>();
                 for (int i = 0; i < _mParser.Schema.TotalAnalogChannels; i++)
                 {
@@ -726,11 +729,14 @@ namespace PRSpline
                         _fftIndex.Add(i);
                 }
 
-                FFTIndex = _fftIndex.ToArray();
+                
                 switch (selectFile)
                 {
                     case SelectFile.File_1:
                         ButtonName_1.Clear();
+                        ButtonName_2.Clear();
+                        ButtonName_3.Clear();
+                        FFTIndex = _fftIndex.ToArray();
                         break;
                     case SelectFile.File_2:
                         ButtonName_2.Clear();
@@ -782,16 +788,17 @@ namespace PRSpline
                 switch (selectFile)
                 {
                     case SelectFile.File_1:
-                        PData = GetAllData(_PData, _mParser, selectFile);
-                        SData = GetAllData(_SData, _mParser, selectFile);
-                        PUData = GetAllData(_PUData, _mParser, selectFile);
+                        PData_1 = GetAllData(_PData, _mParser, selectFile);
+                        SData_1 = GetAllData(_SData, _mParser, selectFile);
+                        PUData_1 = GetAllData(_PUData, _mParser, selectFile);
+                        mParser_1 = _mParser;
                         break;
                     case SelectFile.File_2:
                         PData_2 = GetAllData(_PData, _mParser, selectFile);
                         SData_2 = GetAllData(_SData, _mParser, selectFile);
                         PUData_2 = GetAllData(_PUData, _mParser, selectFile);
 
-                        var AddTimeValueTotel = ((DateTime)(_mParser.Schema.StartTime.Value - mParser.Schema.StartTime.Value));
+                        var AddTimeValueTotel = ((DateTime)(_mParser.Schema.StartTime.Value - mParser_1.Schema.StartTime.Value));
                         var AddTimeValue = AddTimeValueTotel.Second * 1000 + AddTimeValueTotel.Millisecond;
                         foreach (var item in PData_2)
                         {
@@ -806,21 +813,33 @@ namespace PRSpline
                         {
                             item[1] += AddTimeValue;
                         }
-
-                        frmChartline.AddSecondFile(PData_2, 2, _mParser);
+                        switch (_Mode)
+                        {
+                            case 1:
+                                frmChartline.AddSecondFile(PData_2, 2, _mParser);
+                                break;
+                            case 2:
+                                frmChartline.AddSecondFile(SData_2, 2, _mParser);
+                                break;
+                            case 3:
+                                frmChartline.AddSecondFile(PUData_2, 2, _mParser);
+                                break;
+                        }
+                       
+                        mParser_2 = _mParser;
                         break;
                     case SelectFile.File_3:
                         PData_3 = GetAllData(_PData, _mParser, selectFile);
                         SData_3 = GetAllData(_SData, _mParser, selectFile);
                         PUData_3 = GetAllData(_PUData, _mParser, selectFile);
-
+                        mParser_3 = _mParser;
                         break;
                 }
                 if (ButtonName_1.Count > 0) cbxitem.Items.Add("主檔");
                 if (ButtonName_2.Count > 0) cbxitem.Items.Add("副檔1");
                 if (ButtonName_3.Count > 0) cbxitem.Items.Add("副檔2");
                 cbxitem.SelectedIndex = 0;
-                mParser = _mParser;
+                
 
             }
             catch (ApplicationException message)

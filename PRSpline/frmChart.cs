@@ -176,7 +176,7 @@ namespace PRSpline
                 Legend = "B",
                 LegendText = "Base Point",
                 BorderWidth = 2,
-                ChartType = SeriesChartType.Line
+                ChartType = SeriesChartType.FastLine
             });
             foreach (var item in mParser.Schema.DigitalChannels)
             {
@@ -185,7 +185,7 @@ namespace PRSpline
                     Legend = "D",
                     LegendText = item.Name,
                     BorderWidth = 3,
-                    ChartType = SeriesChartType.Line,
+                    ChartType = SeriesChartType.FastLine,
                     ChartArea = "D"
                 });
             }
@@ -197,7 +197,7 @@ namespace PRSpline
                     Legend = "A",
                     LegendText = LegendText,
                     BorderWidth = 2,
-                    ChartType = SeriesChartType.Line,
+                    ChartType = SeriesChartType.FastLine,
                     ChartArea = "A"
                 });
             }
@@ -211,7 +211,7 @@ namespace PRSpline
                         Legend = "A",
                         LegendText = item.Name + "_FFT(" + item.Units + ")",
                         BorderWidth = 2,
-                        ChartType = SeriesChartType.Line,
+                        ChartType = SeriesChartType.FastLine,
                         ChartArea = "A"
                     });
                 }
@@ -244,22 +244,6 @@ namespace PRSpline
                     }
                 }
 
-
-                //for (int i = 0; i < mParser.Schema.SampleRates[0].EndSample; i++)
-                //{
-
-                //    for (int j = 2; j < mDatData[i].Length; j++)
-                //    {
-                //        chart1.Series[j].Points.AddXY(mDatData[i][1], mDatData[i][j]);
-                //        if (j < mParser.Schema.TotalAnalogChannels)
-                //        {
-                //            if (Y_MinValue >= mDatData[i][j])
-                //                Y_MinValue = mDatData[i][j];
-                //            if (Y_MaxValue <= mDatData[i][j])
-                //                Y_MaxValue = mDatData[i][j];
-                //        }
-                //    }
-                //}
             }
             catch (Exception ex1)
             {
@@ -284,7 +268,7 @@ namespace PRSpline
                     Legend = LegendName,
                     LegendText = LegendText,
                     BorderWidth = 2,
-                    ChartType = SeriesChartType.Line,
+                    ChartType = SeriesChartType.FastLine,
                     ChartArea = LegendName
                 });
             }
@@ -297,7 +281,7 @@ namespace PRSpline
                         Legend = "A",
                         LegendText = FFTItem.Name + "_FFT(" + FFTItem.Units + ")",
                         BorderWidth = 2,
-                        ChartType = SeriesChartType.Line,
+                        ChartType = SeriesChartType.FastLine,
                         ChartArea = LegendName
                     });
                 }
@@ -331,14 +315,6 @@ namespace PRSpline
         }
         #endregion
 
-
-
-        public void AddFile()
-        {
-
-        }
-
-
         public void AddSecondFile(List<double[]> datas, int SecondNo, Parser _mParser)
         {
             FileChannelCount[SecondNo - 1] = datas[0].Length - 2;
@@ -358,18 +334,34 @@ namespace PRSpline
             //AddSecondLegends(SecondNo);
             AddSecondSeries(SecondNo, _mParser);
             AddSecondChartPoint(datas, _mParser, SecondNo);
-            SetSecondStyle();
+            SetSecondStyle(SecondNo);
         }
 
 
 
-        private void SetSecondStyle()
+        private void SetSecondStyle(int SecondNo)
         {
             bar_OriginalRange = 60000;
-            Bar_range = 60000;
+            //Bar_range = 60000;
 
             this.hScrollBar1.Maximum = 60000;
             this.hScrollBar1.Minimum = 0;
+            this.hScrollBar1.LargeChange = Bar_range;
+            
+            this.chart1.ChartAreas[SecondNo + 1].AxisY.Maximum = this.chart1.ChartAreas[2].AxisY.Maximum;
+            this.chart1.ChartAreas[SecondNo + 1].AxisY.Minimum = this.chart1.ChartAreas[2].AxisY.Minimum;
+
+            this.chart1.ChartAreas[SecondNo + 1].AxisX.Interval = this.chart1.ChartAreas[2].AxisX.Interval;
+            this.chart1.ChartAreas[SecondNo + 1].AxisY.Interval = this.chart1.ChartAreas[2].AxisY.Interval;
+
+            this.chart1.ChartAreas[SecondNo + 1].AxisX.Maximum = this.chart1.ChartAreas[2].AxisX.Maximum;
+            this.chart1.ChartAreas[SecondNo + 1].AxisX.Minimum = this.chart1.ChartAreas[2].AxisX.Minimum;
+
+
+
+            Chart_Enable();
+            Chart_AnnotationsLineEnable(this.chart1);
+            //this.chart1.Palette = ChartColorPalette.Fire;
         }
 
 
@@ -638,22 +630,26 @@ namespace PRSpline
             }
             if (SecondEnable_1)
             {
-                this.chart1.ChartAreas[3].Visible = true;
-                this.chart1.ChartAreas[4].Visible = false;
+                this.chart1.ChartAreas[3].Visible = true;                
 
                 this.chart1.ChartAreas[2].Position = new ElementPosition(0, 10, 100, 40);
                 this.chart1.ChartAreas[3].Position = new ElementPosition(0, 55, 100, 40);
-
+            }
+            else
+            {
+                this.chart1.ChartAreas[3].Visible = false;                
             }
             if (SecondEnable_2)
-            {
-                this.chart1.ChartAreas[3].Visible = true;
+            {                
                 this.chart1.ChartAreas[4].Visible = true;
 
                 this.chart1.ChartAreas[2].Position = new ElementPosition(0, 10, 100, 25);
                 this.chart1.ChartAreas[3].Position = new ElementPosition(0, 40, 100, 25);
                 this.chart1.ChartAreas[4].Position = new ElementPosition(0, 70, 100, 25);
-
+            }
+            else
+            {
+                this.chart1.ChartAreas[4].Visible = false;
             }
         }
         #endregion 
@@ -663,6 +659,9 @@ namespace PRSpline
         #endregion
         /*------------------------MouseEvent------------------------*/
         #region MouseEvent
+
+        
+
         private void chart1_MouseMove(object sender, MouseEventArgs e)
         {
             if (bMoveView)
@@ -872,15 +871,20 @@ namespace PRSpline
                 this.chart1.ChartAreas[2].AxisY.Minimum -= this.chart1.ChartAreas[2].AxisY.Interval;
             }
         }
+        private void chart_AnnotationsMoveIn(object sender,MouseEventArgs e)
+        {
+
+
+        }
 
         private void chart1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-
+            
             if (!bMoveView && e.Button == MouseButtons.Left && bButtonEnable)
             {
                 if (blockLimit >= blockLine - 1)
                 {
-                    chart1.Annotations.Add(new VerticalLineAnnotation()
+                    var _line = new VerticalLineAnnotation()
                     {
                         LineColor = Color.Yellow,
                         AxisX = this.chart1.ChartAreas[2].AxisX,
@@ -889,9 +893,27 @@ namespace PRSpline
                         LineWidth = 2,
                         LineDashStyle = ChartDashStyle.Dash,
                         Name = "BlockLine" + blockLine,
+
                         //AllowMoving = true
+                    };
+                    
+
+                    chart1.Annotations.Add(new VerticalLineAnnotation()
+                    {
+                        LineColor = Color.Yellow,
+                        AxisX = this.chart1.ChartAreas[2].AxisX,
+                        X = this.chart1.ChartAreas[2].AxisX.PixelPositionToValue(e.X),
+                        IsInfinitive = true,
+                        LineWidth = 2,
+                        LineDashStyle = ChartDashStyle.Dash,
+                        Name = "BlockLine" + blockLine,                       
+                        AllowMoving=true,
+
+                        
                     });
+                    //chart1.UpdateAnnotations += dddddd;
                     BlockGroup_Line.Add(chart1.Annotations["BlockLine" + blockLine]);
+                    //chart1.anno
                     blockLine++;
                 }
                 if (blockLine > 1)
@@ -900,7 +922,11 @@ namespace PRSpline
                 }
             }
         }
-
+        private void dddddd(object sender, EventArgs annotationPositionChanged)
+        {
+            var dddd = 10;
+            MessageBox.Show("123");
+        }
         #endregion
 
 
@@ -1209,7 +1235,8 @@ namespace PRSpline
                     LineWidth = 0,
                     Text = "Location：" + mParser.Schema.StationName + "  StartDate：" + mParser.Schema.StartTime.Value.ToString("yyyy/MM/dd") + "   StartTime：" + mParser.Schema.StartTime.Value.ToString("HH:mm:ss.fff") + "\n\n Device：" + mParser.Schema.DeviceID + "   TriggerDate：" + mParser.Schema.TriggerTime.Value.ToString("yyyy/MM/dd") + "   TriggerTime：" + mParser.Schema.TriggerTime.Value.ToString("HH:mm:ss.fff"),
                     Name = "Information",
-                    ForeColor = Color.White
+                    ForeColor = Color.White,
+                    
                 });
                 //var x = (ChartImageFormat)Enum.Parse(typeof(ChartImageFormat), saveFileDialog.DefaultExt);
                 chart1.SaveImage(saveFileDialog.FileName, ChartImageFormat.Jpeg);
@@ -1256,6 +1283,8 @@ namespace PRSpline
                 BlockGroup_Block.Add(chart1.Annotations["BlockText" + i]);
             }
         }
+
+
         public void ClearBlock()
         {
             for (int i = 0; i < BlockGroup_Block.Count; i++)

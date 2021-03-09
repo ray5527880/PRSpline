@@ -131,9 +131,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel1.Location = new System.Drawing.Point(169, 109);
+            this.panel1.Location = new System.Drawing.Point(152, 109);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1277, 613);
+            this.panel1.Size = new System.Drawing.Size(1294, 613);
             this.panel1.TabIndex = 16;
             // 
             // pnlAnagol
@@ -142,7 +142,7 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.pnlAnagol.AutoScroll = true;
             this.pnlAnagol.BackColor = System.Drawing.SystemColors.Desktop;
-            this.pnlAnagol.Location = new System.Drawing.Point(14, 16);
+            this.pnlAnagol.Location = new System.Drawing.Point(6, 16);
             this.pnlAnagol.Name = "pnlAnagol";
             this.pnlAnagol.Size = new System.Drawing.Size(110, 333);
             this.pnlAnagol.TabIndex = 17;
@@ -171,7 +171,7 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.pnlDigital.AutoScroll = true;
             this.pnlDigital.BackColor = System.Drawing.SystemColors.Desktop;
-            this.pnlDigital.Location = new System.Drawing.Point(14, 16);
+            this.pnlDigital.Location = new System.Drawing.Point(6, 16);
             this.pnlDigital.Name = "pnlDigital";
             this.pnlDigital.Size = new System.Drawing.Size(110, 189);
             this.pnlDigital.TabIndex = 26;
@@ -475,7 +475,7 @@
             this.panel2.Controls.Add(this.pnlAnagol);
             this.panel2.Location = new System.Drawing.Point(3, 40);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(137, 356);
+            this.panel2.Size = new System.Drawing.Size(124, 356);
             this.panel2.TabIndex = 31;
             // 
             // panel3
@@ -486,7 +486,7 @@
             this.panel3.Controls.Add(this.pnlDigital);
             this.panel3.Location = new System.Drawing.Point(3, 402);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(137, 209);
+            this.panel3.Size = new System.Drawing.Size(124, 209);
             this.panel3.TabIndex = 32;
             // 
             // panel4
@@ -498,13 +498,13 @@
             this.panel4.Controls.Add(this.panel3);
             this.panel4.Location = new System.Drawing.Point(15, 109);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(148, 617);
+            this.panel4.Size = new System.Drawing.Size(131, 617);
             this.panel4.TabIndex = 33;
             // 
             // cbxitem
             // 
             this.cbxitem.FormattingEnabled = true;
-            this.cbxitem.Location = new System.Drawing.Point(19, 13);
+            this.cbxitem.Location = new System.Drawing.Point(11, 13);
             this.cbxitem.Name = "cbxitem";
             this.cbxitem.Size = new System.Drawing.Size(108, 21);
             this.cbxitem.TabIndex = 33;
