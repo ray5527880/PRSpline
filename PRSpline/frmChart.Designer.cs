@@ -32,6 +32,8 @@
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.hScrollBar1 = new System.Windows.Forms.HScrollBar();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.btnNonal = new System.Windows.Forms.Button();
+            this.btnMoveLine = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -44,9 +46,9 @@
             this.chart1.BorderlineColor = System.Drawing.SystemColors.HighlightText;
             legend1.Name = "Legend1";
             this.chart1.Legends.Add(legend1);
-            this.chart1.Location = new System.Drawing.Point(16, 3);
+            this.chart1.Location = new System.Drawing.Point(16, 5);
             this.chart1.Name = "chart1";
-            this.chart1.Size = new System.Drawing.Size(1296, 540);
+            this.chart1.Size = new System.Drawing.Size(1296, 561);
             this.chart1.TabIndex = 0;
             this.chart1.Text = "chart1";
             this.chart1.AnnotationPositionChanged += new System.EventHandler(this.chart1_AnnotationPositionChanged_1);
@@ -56,7 +58,7 @@
             // 
             this.hScrollBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.hScrollBar1.Location = new System.Drawing.Point(16, 552);
+            this.hScrollBar1.Location = new System.Drawing.Point(16, 575);
             this.hScrollBar1.Name = "hScrollBar1";
             this.hScrollBar1.Size = new System.Drawing.Size(1299, 17);
             this.hScrollBar1.TabIndex = 1;
@@ -67,6 +69,30 @@
             this.saveFileDialog.Filter = "Jpeg|*.jpeg";
             this.saveFileDialog.Title = "Save Chart";
             // 
+            // btnNonal
+            // 
+            this.btnNonal.BackColor = System.Drawing.Color.LightSkyBlue;
+            this.btnNonal.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnNonal.Location = new System.Drawing.Point(16, 5);
+            this.btnNonal.Name = "btnNonal";
+            this.btnNonal.Size = new System.Drawing.Size(30, 25);
+            this.btnNonal.TabIndex = 2;
+            this.btnNonal.Text = "N";
+            this.btnNonal.UseVisualStyleBackColor = false;
+            this.btnNonal.Click += new System.EventHandler(this.btnNonal_Click);
+            // 
+            // btnMoveLine
+            // 
+            this.btnMoveLine.BackColor = System.Drawing.Color.LightSkyBlue;
+            this.btnMoveLine.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMoveLine.Location = new System.Drawing.Point(52, 5);
+            this.btnMoveLine.Name = "btnMoveLine";
+            this.btnMoveLine.Size = new System.Drawing.Size(30, 25);
+            this.btnMoveLine.TabIndex = 3;
+            this.btnMoveLine.Text = "M";
+            this.btnMoveLine.UseVisualStyleBackColor = false;
+            this.btnMoveLine.Click += new System.EventHandler(this.btnMoveLine_Click);
+            // 
             // frmChart
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
@@ -74,13 +100,15 @@
             this.AutoSize = true;
             this.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.CausesValidation = false;
+            this.Controls.Add(this.btnMoveLine);
+            this.Controls.Add(this.btnNonal);
             this.Controls.Add(this.hScrollBar1);
             this.Controls.Add(this.chart1);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("新細明體", 9.75F);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "frmChart";
-            this.Size = new System.Drawing.Size(1346, 576);
+            this.Size = new System.Drawing.Size(1346, 599);
             this.Load += new System.EventHandler(this.frmChart_Load);
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.ResumeLayout(false);
@@ -92,5 +120,7 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private System.Windows.Forms.HScrollBar hScrollBar1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
+        private System.Windows.Forms.Button btnNonal;
+        private System.Windows.Forms.Button btnMoveLine;
     }
 }

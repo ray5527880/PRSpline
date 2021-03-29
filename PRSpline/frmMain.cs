@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Collections;
 using System.IO;
+using System.Threading.Tasks;
 
 using System.Text.RegularExpressions;
 
@@ -23,7 +24,7 @@ namespace PRSpline
 {
     public partial class frmMain : Form
     {
-        private enum SelectFile
+        public enum SelectFile
         {
             File_1 = 1,
             File_2 = 2,
@@ -40,9 +41,13 @@ namespace PRSpline
         private frmChart frmChartline;
         private CompressWinRAR mCompressWinRAR;
 
-        private Parser mParser_1;
-        private Parser mParser_2;
-        private Parser mParser_3;
+        public string strFileName1;
+        public string strFileName2;
+        public string strFileName3;
+
+        public Parser mParser_1;
+        public Parser mParser_2;
+        public Parser mParser_3;
 
         private FFTData mFFTData;
 
@@ -285,7 +290,7 @@ namespace PRSpline
                 (sender as Button).Enabled = true;
                 return;
             }
-
+            strFileName1 = openFileDialog1.SafeFileName;
             PData_1 = new List<double[]>();
             SData_1 = new List<double[]>();
             PUData_1 = new List<double[]>();
@@ -622,28 +627,60 @@ namespace PRSpline
         }
         private void btnSecond_Click(object sender, EventArgs e)
         {
-            if (this.openFileDialog1.ShowDialog() != DialogResult.OK)
-            {
-                (sender as Button).Enabled = true;
-                return;
-            }
-            if (ButtonName_2.Count == 0)
-            {
-                if (!LoadFile(SelectFile.File_2)) return;
+            var _frmSecondSelect = new frmSecondSelect(this);
+            _frmSecondSelect.ShowDialog();
 
-                //frmChartline.AddSecondFile(PData_2, 2, ButtonName_2);
-            }
-            else if (ButtonName_3.Count == 0)
-            {
-                if (!LoadFile(SelectFile.File_3)) return;
-            }
-            else return;
+            //if (this.openFileDialog1.ShowDialog() != DialogResult.OK)
+            //{
+            //    (sender as Button).Enabled = true;
+            //    return;
+            //}
+            
+
+            //if (ButtonName_2.Count == 0)
+            //{
+            //    if (!LoadFile(SelectFile.File_2)) return;
+
+                
+            //}
+            //else if (ButtonName_3.Count == 0)
+            //{
+            //    if (!LoadFile(SelectFile.File_3)) return;
+            //}
+            //else return;
 
             //frmChartline.AddSecondFile(PData_2, 2);
 
-            cbxitem.Enabled = true;
-            pnlDigital.Enabled = false;
+            //cbxitem.Enabled = true;
+            //pnlDigital.Enabled = false;
         }
+        public void OpenSeondFile(SelectFile _selectFile)
+        {
+            if (this.openFileDialog1.ShowDialog() != DialogResult.OK)
+            {
+                //(sender as Button).Enabled = true;
+                return;
+            }
+
+            //Task.Run(() =>
+            //{
+                if (_selectFile == SelectFile.File_2)
+                {
+                    if (!LoadFile(SelectFile.File_2)) return;
+
+                    //frmChartline.AddSecondFile(PData_2, 2, ButtonName_2);
+                }
+                else if (_selectFile == SelectFile.File_3)
+                {
+                    if (!LoadFile(SelectFile.File_3)) return;
+                }
+                else return;                
+
+                cbxitem.Enabled = true;
+                pnlDigital.Enabled = false;
+            //});
+        }
+
 
         private bool LoadFile(SelectFile selectFile)
         {

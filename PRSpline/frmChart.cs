@@ -31,6 +31,8 @@ namespace PRSpline
         private int[] FileChannelCount = new int[3];
         private List<double[]> mDatData;
 
+
+
         private Parser mParser;
         private double _startY;
         private double _endY;
@@ -47,6 +49,9 @@ namespace PRSpline
         private bool bMoveView = false;
         private bool bZoonIn = false;
         private bool bMoveCheck = false;
+
+        private bool IsNonal = false;
+        private bool IsMoveLine = false;
 
         private double dZoonInStratPixs_X, dZoonInStratPixs_Y;
         private double dZoonInStratPoint_X, dZoonInStratPoint_Y;
@@ -89,12 +94,10 @@ namespace PRSpline
             this.chart1.ChartAreas[1].Position = new ElementPosition(0, 85, 100, 13);
             this.chart1.ChartAreas[2].Position = new ElementPosition(0, 5, 100, 77);
 
-           
-
             BlockGroup_Line = new List<Annotation>();
             BlockGroup_Block = new List<Annotation>();
 
-            this.chart1.ChartAreas[2].AxisX.Title = "Time(ms)";
+            
 
             this.chart1.ChartAreas[1].BackColor = Color.White;
             this.chart1.ChartAreas[2].BackColor = Color.White;
@@ -110,6 +113,20 @@ namespace PRSpline
             chart1.Series[0].Points.AddXY(1, 1);
 
             Set_ChartStyle();
+            IsNonal = true;
+            btnNonal.Enabled = false;
+            var _tooltip_1 = new ToolTip();
+            _tooltip_1.InitialDelay = 200;
+            _tooltip_1.ReshowDelay = 200;
+            _tooltip_1.ShowAlways = true;
+            _tooltip_1.IsBalloon = true;
+            _tooltip_1.SetToolTip(this.btnNonal, "通常模式");
+            var _tooltip_2 = new ToolTip();
+            _tooltip_2.InitialDelay = 200;
+            _tooltip_2.ReshowDelay = 200;
+            _tooltip_2.ShowAlways = true;
+            _tooltip_2.IsBalloon = true;
+            _tooltip_2.SetToolTip(this.btnMoveLine, "線段移動");
         }
 
         #region SetBaseView
@@ -146,7 +163,8 @@ namespace PRSpline
                 BackColor = System.Drawing.Color.Transparent,
                 LegendStyle = LegendStyle.Row,
                 TableStyle = LegendTableStyle.Wide,
-                ForeColor = Color.White
+                ForeColor = Color.White,
+                 Position = new ElementPosition(10, 80, 80, 4)
             });
             this.chart1.Legends.Add(new Legend("A_3")
             {
@@ -155,7 +173,8 @@ namespace PRSpline
                 BackColor = System.Drawing.Color.Transparent,
                 LegendStyle = LegendStyle.Row,
                 TableStyle = LegendTableStyle.Wide,
-                ForeColor = Color.White
+                ForeColor = Color.White,
+                Position = new ElementPosition(10, 80, 80, 4)
             });
         }
         private void AddChartAreas()
@@ -298,6 +317,7 @@ namespace PRSpline
             {
                 foreach (var item in datas)
                 {
+                    if (item[1] > 60000) break;
                     for (int i = 0; i < item.Length - 2; i++)
                     {
                         chart1.Series[IndexBase + i].Points.AddXY(item[1], item[i + 2]);
@@ -357,11 +377,8 @@ namespace PRSpline
             this.chart1.ChartAreas[SecondNo + 1].AxisX.Maximum = this.chart1.ChartAreas[2].AxisX.Maximum;
             this.chart1.ChartAreas[SecondNo + 1].AxisX.Minimum = this.chart1.ChartAreas[2].AxisX.Minimum;
 
-
-
             Chart_Enable();
             Chart_AnnotationsLineEnable(this.chart1);
-            //this.chart1.Palette = ChartColorPalette.Fire;
         }
 
 
@@ -536,19 +553,23 @@ namespace PRSpline
 
             bpnlAEnable = false;
             Chart_Enable();
-            //foreach (var item in panel.Controls)
-            //{
-            //    if (item is Button)
-            //    {
-            //        if (((Button)item).BackColor == Color.LightSlateGray)
-            //            bpnlAEnable = true;
-            //    }
-            //}
+            int _index = -1;
+            foreach(var item in chart1.Series)
+            {
+                _index++;
+                if (_index < mParser.Schema.TotalDigitalChannels + 1) continue;
+                if (item.Enabled)
+                {
+                    bpnlAEnable = true;
+                    break;
+                }
+            }
+            MoveLineEnable();
         }
 
         public void Chart2_Enable(int index/*, Panel panel*/, string ButtonName)
         {
-            this.chart1.Series[index + 1].Enabled = !this.chart1.Series[index + mParser.Schema.TotalAnalogChannels].Enabled;
+            this.chart1.Series[index + 1].Enabled = !this.chart1.Series[index + 1].Enabled;
 
             Chart_Enable();
             AllButtonEnable();
@@ -622,18 +643,23 @@ namespace PRSpline
             {
                 this.chart1.ChartAreas[1].Visible = false;
                 this.chart1.ChartAreas[2].Position = new ElementPosition(0, 10, 100, 88);
+                
             }
             else
             {
                 this.chart1.ChartAreas[1].Visible = true;
                 this.chart1.ChartAreas[2].Position = new ElementPosition(0, 10, 100, 68);
             }
+            this.chart1.ChartAreas[2].AxisX.Title = "Time(ms)";
             if (SecondEnable_1)
             {
                 this.chart1.ChartAreas[3].Visible = true;                
 
                 this.chart1.ChartAreas[2].Position = new ElementPosition(0, 10, 100, 40);
                 this.chart1.ChartAreas[3].Position = new ElementPosition(0, 55, 100, 40);
+                this.chart1.Legends[3].Position = new ElementPosition(10, 50, 80, 4);
+                this.chart1.ChartAreas[2].AxisX.Title = "";
+                this.chart1.ChartAreas[3].AxisX.Title = "Time(ms)";
             }
             else
             {
@@ -646,11 +672,17 @@ namespace PRSpline
                 this.chart1.ChartAreas[2].Position = new ElementPosition(0, 10, 100, 25);
                 this.chart1.ChartAreas[3].Position = new ElementPosition(0, 40, 100, 25);
                 this.chart1.ChartAreas[4].Position = new ElementPosition(0, 70, 100, 25);
+                this.chart1.Legends[3].Position = new ElementPosition(10, 80, 80, 4);
+                this.chart1.Legends[4].Position = new ElementPosition(10, 80, 80, 4); 
+                this.chart1.ChartAreas[2].AxisX.Title = "";
+                this.chart1.ChartAreas[3].AxisX.Title = "";
+                this.chart1.ChartAreas[4].AxisX.Title = "Time(ms)";
             }
             else
             {
                 this.chart1.ChartAreas[4].Visible = false;
             }
+            MoveLineEnable();
         }
         #endregion 
         /*------------------------ChartEvent------------------------*/
@@ -705,17 +737,8 @@ namespace PRSpline
 
                         this.chart1.Annotations["MoveTextY"].Y = this.chart1.Annotations["MoveLineY"].Y * 1.01f;
                         ((TextAnnotation)(this.chart1.Annotations["MoveTextY"])).Text = "I=" + Math.Round(MoveLine_Y, 2).ToString();
-
-                        //if (!bpnlAEnable)
-                        //{
-                        //    this.chart1.Annotations["MoveLineY"].Visible = false;
-                        //    this.chart1.Annotations["MoveTextY"].Visible = false;
-                        //}
-                        //else
-                        //{
-                        //    this.chart1.Annotations["MoveLineY"].Visible = true;
-                        //    this.chart1.Annotations["MoveTextY"].Visible = true;
-                        //}
+                        
+                        MoveLineEnable();
 
                         this.chart1.Annotations["MoveLineX"].EndPlacement();
                         this.chart1.Annotations["MoveLineY"].EndPlacement();
@@ -728,25 +751,30 @@ namespace PRSpline
                 bMoveCheck = true;
             }
         }
-        //private void Mouse_MoveIn(object sender, EventArgs e)
-        //{
-        //    bMoveView = false;
-        //    this.Cursor = System.Windows.Forms.Cursors.Cross;
-        //}
-        //private void Mouse_MoveOut(object sender, EventArgs e)
-        //{
-        //    this.Cursor = System.Windows.Forms.Cursors.Default;
-        //    this.chart1.Annotations["MoveLineX"].Visible = false;
-        //    this.chart1.Annotations["MoveTextX"].Visible = false;
+       
+        private void MoveLineEnable()
+        {
 
-        //    this.chart1.Annotations["MoveLineY"].Visible = false;
-        //    this.chart1.Annotations["MoveTextY"].Visible = false;
-        //}
+            if (!bpnlAEnable)
+            {
+                this.chart1.Annotations["MoveLineX"].Visible = false;
+                this.chart1.Annotations["MoveTextX"].Visible = false;
+                this.chart1.Annotations["MoveLineY"].Visible = false;
+                this.chart1.Annotations["MoveTextY"].Visible = false;
+            }
+            else
+            {
+                this.chart1.Annotations["MoveLineX"].Visible = true;
+                this.chart1.Annotations["MoveTextX"].Visible = true;
+                this.chart1.Annotations["MoveLineY"].Visible = true;
+                this.chart1.Annotations["MoveTextY"].Visible = true;
+            }
+        }
         private void chart1_MouseDown(object sender, MouseEventArgs e)
         {
             this._startY = this.chart1.ChartAreas[2].AxisY.PixelPositionToValue(e.Y);
 
-            if (e.Button == MouseButtons.Left)
+            if (e.Button == MouseButtons.Left&& IsNonal)
             {
 
                 if (!bMoveView && bButtonEnable)
@@ -767,7 +795,6 @@ namespace PRSpline
                         LineWidth = 3,
                         LineDashStyle = ChartDashStyle.Dash,
                         Name = "ZoonInLineX",
-                        AllowMoving = true
                     });
                     chart1.Annotations.Add(new LineAnnotation()
                     {
@@ -781,7 +808,7 @@ namespace PRSpline
                         LineWidth = 3,
                         LineDashStyle = ChartDashStyle.Dash,
                         Name = "ZoonInLineY",
-                        AllowMoving = true
+                        //AllowMoving = true
                     });
                     bZoonIn = !bZoonIn;
                 }
@@ -793,7 +820,7 @@ namespace PRSpline
         }
         private void chart1_MouseUp(object sender, MouseEventArgs e)
         {
-            if (bZoonIn)
+            if (bZoonIn&&IsNonal)
             {
                 dZoonInEndPoint_X = this.chart1.ChartAreas[2].AxisX.PixelPositionToValue(e.X) < bar_OriginalRange ? this.chart1.ChartAreas[2].AxisX.PixelPositionToValue(e.X) : bar_OriginalRange;
                 dZoonInEndPoint_Y = this.chart1.ChartAreas[2].AxisY.PixelPositionToValue(e.Y);
@@ -884,20 +911,6 @@ namespace PRSpline
             {
                 if (blockLimit >= blockLine - 1)
                 {
-                    var _line = new VerticalLineAnnotation()
-                    {
-                        LineColor = Color.Yellow,
-                        AxisX = this.chart1.ChartAreas[2].AxisX,
-                        X = this.chart1.ChartAreas[2].AxisX.PixelPositionToValue(e.X),
-                        IsInfinitive = true,
-                        LineWidth = 2,
-                        LineDashStyle = ChartDashStyle.Dash,
-                        Name = "BlockLine" + blockLine,
-
-                        //AllowMoving = true
-                    };
-                    
-
                     chart1.Annotations.Add(new VerticalLineAnnotation()
                     {
                         LineColor = Color.Yellow,
@@ -907,13 +920,12 @@ namespace PRSpline
                         LineWidth = 2,
                         LineDashStyle = ChartDashStyle.Dash,
                         Name = "BlockLine" + blockLine,                       
-                        AllowMoving=true,
+                        AllowMoving=IsMoveLine,
 
                         
-                    });
-                    //chart1.UpdateAnnotations += dddddd;
+                    });                    
                     BlockGroup_Line.Add(chart1.Annotations["BlockLine" + blockLine]);
-                    //chart1.anno
+                    
                     blockLine++;
                 }
                 if (blockLine > 1)
@@ -921,11 +933,6 @@ namespace PRSpline
                     updataBlockText();
                 }
             }
-        }
-        private void dddddd(object sender, EventArgs annotationPositionChanged)
-        {
-            var dddd = 10;
-            MessageBox.Show("123");
         }
         #endregion
 
@@ -1231,7 +1238,7 @@ namespace PRSpline
                 this.chart1.Annotations.Add(new TextAnnotation()
                 {
                     AnchorX = 80,
-                    AnchorY = 8,
+                    AnchorY = 6,
                     LineWidth = 0,
                     Text = "Location：" + mParser.Schema.StationName + "  StartDate：" + mParser.Schema.StartTime.Value.ToString("yyyy/MM/dd") + "   StartTime：" + mParser.Schema.StartTime.Value.ToString("HH:mm:ss.fff") + "\n\n Device：" + mParser.Schema.DeviceID + "   TriggerDate：" + mParser.Schema.TriggerTime.Value.ToString("yyyy/MM/dd") + "   TriggerTime：" + mParser.Schema.TriggerTime.Value.ToString("HH:mm:ss.fff"),
                     Name = "Information",
@@ -1276,7 +1283,7 @@ namespace PRSpline
                     ForeColor = Color.Yellow,
                     AxisX = this.chart1.ChartAreas[2].AxisX,
                     LineWidth = 0,
-                    AnchorY = 11,
+                    AnchorY = 9,
                     X = Convert.ToDouble(Math.Round(arr_XValue[i + 1] + arr_XValue[i]) / 2),
                     Text = "dt=" + (Math.Round(arr_XValue[i + 1] - arr_XValue[i])).ToString() + " ms"
                 });
@@ -1284,6 +1291,34 @@ namespace PRSpline
             }
         }
 
+        private void btnNonal_Click(object sender, EventArgs e)
+        {
+            btnNonal.Enabled = false;
+            btnMoveLine.Enabled = true;
+            IsNonal = true;
+            IsMoveLine = false;
+            
+            BlockGroup_Block.Clear();
+            
+            for (int i = 0; i < BlockGroup_Line.Count; i++)
+            {
+                chart1.Annotations["BlockLine" + i].AllowMoving = IsMoveLine;
+            }
+
+
+        }
+
+        private void btnMoveLine_Click(object sender, EventArgs e)
+        {
+            btnNonal.Enabled = true;
+            btnMoveLine.Enabled = false;
+            IsNonal = false;
+            IsMoveLine = true;
+            for (int i = 0; i < BlockGroup_Line.Count; i++)
+            {
+                chart1.Annotations["BlockLine" + i].AllowMoving = IsMoveLine;
+            }
+        }
 
         public void ClearBlock()
         {

@@ -142,6 +142,12 @@
     <Compile Include="frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmSecondSelect.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmSecondSelect.Designer.cs">
+      <DependentUpon>frmSecondSelect.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmSetup.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -224,6 +230,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmSecondSelect.resx">
+      <DependentUpon>frmSecondSelect.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmSetup.resx">
       <DependentUpon>frmSetup.cs</DependentUpon>
