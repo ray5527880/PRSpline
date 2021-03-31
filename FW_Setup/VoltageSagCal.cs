@@ -226,7 +226,7 @@ namespace BF_FW
                     {
                         if (!stuVSag.vSagValues[ii].Is_Start && mFFTData.arrFFTData[i].Value[ii] / BaseVolateg > 0.95f)
                             stuVSag.vSagValues[ii].Is_Start = true;
-                        if (mFFTData.arrFFTData[i].Value[ii] / BaseVolateg < 0.95f && mFFTData.arrFFTData[i].Value[ii] / BaseVolateg > 0.10f && stuVSag.vSagValues[ii].Is_Start)
+                        if (mFFTData.arrFFTData[i].Value[ii] / BaseVolateg < 0.95f && mFFTData.arrFFTData[i].Value[ii] / BaseVolateg > 0 && stuVSag.vSagValues[ii].Is_Start)
                         {
                             stuVSag.vSagValues[ii].IsVSag = true;
                             stuVSag.douStartTime = PUData[i][1];

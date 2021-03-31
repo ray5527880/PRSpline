@@ -151,7 +151,7 @@ namespace AutoDownloading
                             vSDatas.Cycle = VolSagVal.VoltageSagDatas.cycle;
                             vSDatas.Type = GetType(100 - vSDatas.Down, vSDatas.DUR);
 
-                            if (vSDatas.V1 < 90 || vSDatas.V2 < 90 || vSDatas.V3 < 90)
+                            if (vSDatas.Type==3)
                                 tVSData.AddData(vSDatas, VSIED_Data.ID);
                         }
                     }
@@ -162,7 +162,7 @@ namespace AutoDownloading
         }
         public static int GetType(decimal _Value, decimal _Time)
         {
-            int reValue = 0;
+            int reValue = 3;
             if (_Time < 50)
             {
                 reValue = 1;
@@ -179,6 +179,7 @@ namespace AutoDownloading
                     reValue = 2;
                 else if (_Time >= 200 && _Value > 80)
                     reValue = 2;
+
 
             }
             return reValue;
