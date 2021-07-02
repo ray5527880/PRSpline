@@ -53,6 +53,7 @@ namespace BF_FW
             DBUser = GetXmlString("root/connectionAlarms/uid");
             DBPwd = GetXmlString("root/connectionAlarms/pwd");
             IsUserSQL = Convert.ToInt32(GetXmlString("root/IsUserSQL"));
+            GetVoltageSag();
             XmlDocument xmlDoc = new XmlDocument();
 
             xmlDoc.Load(strXmlFile);
@@ -100,6 +101,12 @@ namespace BF_FW
 
                 company.AppendChild(department);
                 company.AppendChild(UserSQL);
+
+                XmlElement UserVS = xmlDoc.CreateElement("VoltageSag");
+                UserVS.InnerText = VoltageSag.ToString();
+
+                company.AppendChild(department);
+                company.AppendChild(UserVS);
 
                 XmlElement connectionAlarms = xmlDoc.CreateElement("connectionAlarms");
                 XmlElement server = xmlDoc.CreateElement("server");

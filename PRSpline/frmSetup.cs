@@ -90,19 +90,19 @@ namespace PRSpline
                     FileSystem.RenameFile(Path.GetFullPath(strPath + @"\" + OldName + @"\" + OldName + ".xml"), txtName.Text + ".xml");
                     FileSystem.RenameDirectory(Path.GetFullPath(strPath + @"\" + OldName), txtName.Text);
                 }
-                var m_tVSIEDName = new tVSIEDName(ConnectionAlarms);
-                var VSIEDData = m_tVSIEDName.GetData(OldName);
+             //   var m_tVSIEDName = new tVSIEDName(ConnectionAlarms);
+               // var VSIEDData = m_tVSIEDName.GetData(OldName);
                 
                 string _Message = EditXml.SaveXml();
 
-                bool IsSuccess = m_tVSIEDName.UpDateData(VSIEDData, txtName.Text);
+              //  bool IsSuccess = m_tVSIEDName.UpDateData(VSIEDData, txtName.Text);
 
                 if (_Message == string.Empty)
                 {
-                    if (IsSuccess)
-                        MessageBox.Show("修改成功");
-                    else
-                        MessageBox.Show("修改失敗 資料庫錯誤");
+                    //if (IsSuccess)
+                    //    MessageBox.Show("修改成功");
+                    //else
+                    //    MessageBox.Show("修改失敗 資料庫錯誤");
                 }
                 else
                     MessageBox.Show("修改失敗 錯誤訊息：" + _Message);
@@ -131,15 +131,15 @@ namespace PRSpline
                     EditXml.mFTPData.Add(_FTPData);
                     string _Message = EditXml.SaveXml();
 
-                    var m_tVSIEDName = new tVSIEDName(ConnectionAlarms);
-                    bool IsSuccess = m_tVSIEDName.AddData(txtName.Text);
+                  //  var m_tVSIEDName = new tVSIEDName(ConnectionAlarms);
+                    //bool IsSuccess = m_tVSIEDName.AddData(txtName.Text);
 
                     if (_Message == string.Empty)
                     {
-                        if (IsSuccess)
-                            MessageBox.Show("新增成功");
-                        else
-                            MessageBox.Show("新增失敗 資料庫錯誤");
+                        //if (IsSuccess)
+                        //    MessageBox.Show("新增成功");
+                        //else
+                        //    MessageBox.Show("新增失敗 資料庫錯誤");
                     }
                     else
                         MessageBox.Show("新增失敗 錯誤訊息：" + _Message);
@@ -163,15 +163,15 @@ namespace PRSpline
 
                         string _Message = EditXml.SaveXml();
 
-                        var m_tVSIEDName = new tVSIEDName(ConnectionAlarms);
-                        bool IsSuccess = m_tVSIEDName.DeleteData(item.Cells[0].Value.ToString());
+                       // var m_tVSIEDName = new tVSIEDName(ConnectionAlarms);
+                        //bool IsSuccess = m_tVSIEDName.DeleteData(item.Cells[0].Value.ToString());
 
                         if (_Message == string.Empty)
                         {
-                            if (IsSuccess)
-                                MessageBox.Show("刪除成功");
-                            else
-                                MessageBox.Show("刪除失敗 資料庫錯誤");
+                            //if (IsSuccess)
+                            //    MessageBox.Show("刪除成功");
+                            //else
+                            //    MessageBox.Show("刪除失敗 資料庫錯誤");
                         }
                         else
                             MessageBox.Show("刪除失敗 錯誤訊息：" + _Message);
@@ -186,15 +186,15 @@ namespace PRSpline
                 EditXml.mFTPData.RemoveAt(selectNo);
                 string _Message = EditXml.SaveXml();
 
-                var m_tVSIEDName = new tVSIEDName(ConnectionAlarms);
-                bool IsSuccess = m_tVSIEDName.DeleteData(OldName);
+                //var m_tVSIEDName = new tVSIEDName(ConnectionAlarms);
+                //bool IsSuccess = m_tVSIEDName.DeleteData(OldName);
 
                 if (_Message == string.Empty)
                 {
-                    if (IsSuccess)
-                        MessageBox.Show("刪除成功");
-                    else
-                        MessageBox.Show("刪除失敗 資料庫錯誤");
+                    //if (IsSuccess)
+                    //    MessageBox.Show("刪除成功");
+                    //else
+                    //    MessageBox.Show("刪除失敗 資料庫錯誤");
                 }
                 else
                     MessageBox.Show("刪除失敗 錯誤訊息：" + _Message);

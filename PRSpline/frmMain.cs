@@ -28,30 +28,41 @@ namespace PRSpline
         {
             File_1 = 1,
             File_2 = 2,
-            File_3 = 3
+            File_3 = 3,
+            File_4 = 4,
+            File_5 = 5,
+            File_6 = 6
         };
+        public PRData PRData_1;
 
         private DateTime StartDateTime;
 
         private List<string> ButtonName_1 = new List<string>();
         private List<string> ButtonName_2 = new List<string>();
         private List<string> ButtonName_3 = new List<string>();
+        private List<string> ButtonName_4 = new List<string>();
+        private List<string> ButtonName_5 = new List<string>();
+        private List<string> ButtonName_6 = new List<string>();
         private List<string> ButtonName_D = new List<string>();
         private static Boolean bfrmVector = true;
         private frmChart frmChartline;
         private CompressWinRAR mCompressWinRAR;
 
-        public string strFileName1;
-        public string strFileName2;
-        public string strFileName3;
+        public string strFileName1 = "";
+        public string strFileName2 = "";
+        public string strFileName3 = "";
+        public string strFileName4 = "";
+        public string strFileName5 = "";
+        public string strFileName6 = "";
 
         public Parser mParser_1;
         public Parser mParser_2;
         public Parser mParser_3;
+        public Parser mParser_4;
+        public Parser mParser_5;
+        public Parser mParser_6;
 
         private FFTData mFFTData;
-
-        //private frmVector m_frmVector;
 
         int _Mode = 0;
 
@@ -70,6 +81,18 @@ namespace PRSpline
         public List<double[]> PData_3;
         public List<double[]> SData_3;
         public List<double[]> PUData_3;
+
+        public List<double[]> PData_4;
+        public List<double[]> SData_4;
+        public List<double[]> PUData_4;
+
+        public List<double[]> PData_5;
+        public List<double[]> SData_5;
+        public List<double[]> PUData_5;
+
+        public List<double[]> PData_6;
+        public List<double[]> SData_6;
+        public List<double[]> PUData_6;
 
         public int[] FFTIndex;
 
@@ -177,9 +200,11 @@ namespace PRSpline
         }
         private void NewButton_A_Click(object sender, EventArgs e)
         {
-            int baseValue = ButtonName_D.Count ;
-            if (selectFileValue == SelectFile.File_2) baseValue = ButtonName_1.Count + ButtonName_D.Count ;
-            if (selectFileValue == SelectFile.File_3) baseValue = ButtonName_1.Count + ButtonName_D.Count + ButtonName_2.Count + 1;
+            int baseValue = ButtonName_D.Count;
+            if (selectFileValue == SelectFile.File_2) baseValue = ButtonName_1.Count + ButtonName_D.Count;
+            if (selectFileValue == SelectFile.File_3) baseValue = ButtonName_1.Count + ButtonName_D.Count + ButtonName_2.Count ;
+            if (selectFileValue == SelectFile.File_4) baseValue = ButtonName_1.Count + ButtonName_D.Count + ButtonName_2.Count + ButtonName_3.Count ;
+            if (selectFileValue == SelectFile.File_5) baseValue = ButtonName_1.Count + ButtonName_D.Count + ButtonName_2.Count + ButtonName_3.Count + ButtonName_4.Count;
 
             if (((Button)sender).BackColor == Color.LightSteelBlue)
             {
@@ -291,6 +316,10 @@ namespace PRSpline
                 return;
             }
             strFileName1 = openFileDialog1.SafeFileName;
+            strFileName2 = string.Empty;
+            strFileName3 = string.Empty;
+            strFileName4 = string.Empty;
+            strFileName5 = string.Empty;
             PData_1 = new List<double[]>();
             SData_1 = new List<double[]>();
             PUData_1 = new List<double[]>();
@@ -302,6 +331,15 @@ namespace PRSpline
             PData_3 = new List<double[]>();
             SData_3 = new List<double[]>();
             PUData_3 = new List<double[]>();
+
+            PData_4 = new List<double[]>();
+            SData_4 = new List<double[]>();
+            PUData_4 = new List<double[]>();
+
+            PData_5 = new List<double[]>();
+            SData_5 = new List<double[]>();
+            PUData_5 = new List<double[]>();
+
             try
             {
                 if (!LoadFile(SelectFile.File_1)) return;
@@ -370,20 +408,38 @@ namespace PRSpline
         }
         private void cbxitem_SelectedIndexChanged(object sender, EventArgs e)
         {
+            int baseValue = ButtonName_D.Count;
+
             pnlAnagol.Controls.Clear();
+
+            int _index = 0;
 
             switch (cbxitem.SelectedIndex)
             {
                 case 0:
+                    selectFileValue = SelectFile.File_1;
                     for (int i = 0; i < ButtonName_1.Count; i++)
                     {
                         AddNewButton(ButtonName_1[i], i, 0);
                     }
-                    for (int i = 0; i < ButtonName_D.Count; i++)
+                    if (!(ButtonName_2.Count() > 0))
                     {
-                        AddNewButton(ButtonName_D[i], i, 1);
-                        selectFileValue = SelectFile.File_1;
+                        for (int i = 0; i < ButtonName_D.Count; i++)
+                        {
+                            AddNewButton(ButtonName_D[i], i, 1);
+                        }
                     }
+                    if (frmChartline != null)
+                    {
+                        _index = ButtonName_D.Count() + 1;
+                        foreach (var itme in pnlAnagol.Controls)
+                        {                           
+                            if (frmChartline.IsSeries(_index))
+                                ((Button)itme).BackColor = Color.LightSlateGray;
+                            _index++;
+                        }
+                    }
+
                     break;
                 case 1:
                     for (int i = 0; i < ButtonName_2.Count; i++)
@@ -391,13 +447,71 @@ namespace PRSpline
                         AddNewButton(ButtonName_2[i], i, 0);
                     }
                     selectFileValue = SelectFile.File_2;
+                    baseValue = ButtonName_1.Count + ButtonName_D.Count+1;
+                    if (frmChartline != null)
+                    {
+                        _index = baseValue ;
+                        foreach (var itme in pnlAnagol.Controls)
+                        {
+                            if (frmChartline.IsSeries(_index))
+                                ((Button)itme).BackColor = Color.LightSlateGray;
+                            _index++;
+                        }
+                    }
                     break;
                 case 2:
-                    for (int i = 0; i < ButtonName_3.Count + ButtonName_D.Count; i++)
+                    for (int i = 0; i < ButtonName_3.Count; i++)
                     {
                         AddNewButton(ButtonName_3[i], i, 0);
                     }
                     selectFileValue = SelectFile.File_3;
+                    baseValue = ButtonName_1.Count + ButtonName_D.Count + ButtonName_2.Count + 1;
+                    if (frmChartline != null)
+                    {
+                        _index = baseValue;
+                        foreach (var itme in pnlAnagol.Controls)
+                        {
+                            if (frmChartline.IsSeries(_index))
+                                ((Button)itme).BackColor = Color.LightSlateGray;
+                            _index++;
+                        }
+                    }
+                    break;
+                case 3:
+                    for (int i = 0; i < ButtonName_4.Count; i++)
+                    {
+                        AddNewButton(ButtonName_4[i], i, 0);
+                    }
+                    selectFileValue = SelectFile.File_4;
+                    baseValue = ButtonName_1.Count + ButtonName_D.Count + ButtonName_2.Count + ButtonName_3.Count + 1;
+                    if (frmChartline != null)
+                    {
+                        _index = baseValue;
+                        foreach (var itme in pnlAnagol.Controls)
+                        {
+                            if (frmChartline.IsSeries(_index))
+                                ((Button)itme).BackColor = Color.LightSlateGray;
+                            _index++;
+                        }
+                    }
+                    break;
+                case 4:
+                    for (int i = 0; i < ButtonName_5.Count; i++)
+                    {
+                        AddNewButton(ButtonName_5[i], i, 0);
+                    }
+                    selectFileValue = SelectFile.File_5;
+                    baseValue = ButtonName_1.Count + ButtonName_D.Count + ButtonName_2.Count + ButtonName_3.Count + ButtonName_4.Count + 1;
+                    if (frmChartline != null)
+                    {
+                        _index = baseValue;
+                        foreach (var itme in pnlAnagol.Controls)
+                        {
+                            if (frmChartline.IsSeries(_index))
+                                ((Button)itme).BackColor = Color.LightSlateGray;
+                            _index++;
+                        }
+                    }
                     break;
             }
         }
@@ -425,11 +539,13 @@ namespace PRSpline
                 BeginInvoke(new Action(() =>
                 {
                     panel1.Controls.Clear();
+                    //panel1.Dispose();
                     switch (_Mode)
                     {
                         case 1:
-                            frmChartline = new frmChart(mParser_1, PData_1);                            
-                                break;
+
+                            frmChartline = new frmChart(mParser_1, PData_1);
+                            break;
                         case 2:
                             frmChartline = new frmChart(mParser_1, SData_1);
                             break;
@@ -438,6 +554,43 @@ namespace PRSpline
                             break;
                     }
                     panel1.Controls.Add(frmChartline);
+
+
+                    switch (_Mode)
+                    {
+                        case 1:
+                            if (ButtonName_2.Count() > 0)
+                                frmChartline.AddSecondFile(PData_2, 2, mParser_2);
+                            if (ButtonName_3.Count() > 0)
+                                frmChartline.AddSecondFile(PData_3, 3, mParser_3);
+                            if (ButtonName_4.Count() > 0)
+                                frmChartline.AddSecondFile(PData_4, 4, mParser_4);
+                            if (ButtonName_5.Count() > 0)
+                                frmChartline.AddSecondFile(PData_5, 5, mParser_5);
+
+                                break;
+                        case 2:
+                            if (ButtonName_2.Count() > 0)
+                                frmChartline.AddSecondFile(SData_2, 2, mParser_2);
+                            if (ButtonName_3.Count() > 0)
+                                frmChartline.AddSecondFile(SData_3, 3, mParser_3);
+                            if (ButtonName_4.Count() > 0)
+                                frmChartline.AddSecondFile(SData_4, 4, mParser_4);
+                            if (ButtonName_5.Count() > 0)
+                                frmChartline.AddSecondFile(SData_5, 5, mParser_5);
+                                break;
+
+                        case 3:
+                            if (ButtonName_2.Count() > 0)
+                                frmChartline.AddSecondFile(PUData_2, 2, mParser_2);
+                            if (ButtonName_3.Count() > 0)
+                                frmChartline.AddSecondFile(PUData_3, 3, mParser_3);
+                            if (ButtonName_4.Count() > 0)
+                                frmChartline.AddSecondFile(PUData_4, 4, mParser_4);
+                            if (ButtonName_5.Count() > 0)
+                                frmChartline.AddSecondFile(PUData_5, 5, mParser_5);
+                                break;
+                    }
                     foreach (var item in pnlAnagol.Controls)
                     {
                         if (item is Button)
@@ -487,9 +640,14 @@ namespace PRSpline
             var value = new List<double[]>();
             var _mFFTData = new FFTData();
             var mfft = new FFTCal(_fftIndex.ToArray(), parser);
-
-            _mFFTData = mfft.GetFFTData(datas);
-
+            try
+            {
+                _mFFTData = mfft.GetFFTData(datas);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
             if (selectFiles == SelectFile.File_1) mFFTData = _mFFTData;
 
             for (int i = 0; i < datas.Count; i++)
@@ -507,7 +665,7 @@ namespace PRSpline
                     index++;
                 }
 
-                foreach (var item in mFFTData.arrFFTData[i].Value)
+                foreach (var item in _mFFTData.arrFFTData[i].Value)
                 {
                     _double.Add(item);
                 }
@@ -630,54 +788,42 @@ namespace PRSpline
             var _frmSecondSelect = new frmSecondSelect(this);
             _frmSecondSelect.ShowDialog();
 
-            //if (this.openFileDialog1.ShowDialog() != DialogResult.OK)
-            //{
-            //    (sender as Button).Enabled = true;
-            //    return;
-            //}
-            
-
-            //if (ButtonName_2.Count == 0)
-            //{
-            //    if (!LoadFile(SelectFile.File_2)) return;
-
-                
-            //}
-            //else if (ButtonName_3.Count == 0)
-            //{
-            //    if (!LoadFile(SelectFile.File_3)) return;
-            //}
-            //else return;
-
-            //frmChartline.AddSecondFile(PData_2, 2);
-
-            //cbxitem.Enabled = true;
-            //pnlDigital.Enabled = false;
         }
-        public void OpenSeondFile(SelectFile _selectFile)
+        public bool OpenSeondFile(SelectFile _selectFile)
         {
             if (this.openFileDialog1.ShowDialog() != DialogResult.OK)
             {
-                //(sender as Button).Enabled = true;
-                return;
+                return false;
             }
-
+            switch (_selectFile)
+            {
+                case SelectFile.File_2:
+                    //   PRData_1 = new PRData();
+                    break;
+            }
             //Task.Run(() =>
             //{
-                if (_selectFile == SelectFile.File_2)
-                {
-                    if (!LoadFile(SelectFile.File_2)) return;
+            if (_selectFile == SelectFile.File_2)
+            {
+                if (!LoadFile(SelectFile.File_2)) return true;
+            }
+            else if (_selectFile == SelectFile.File_3)
+            {
+                if (!LoadFile(SelectFile.File_3)) return true;
+            }
+            else if (_selectFile == SelectFile.File_4)
+            {
+                if (!LoadFile(SelectFile.File_4)) return true;
+            }
+            else if (_selectFile == SelectFile.File_5)
+            {
+                if (!LoadFile(SelectFile.File_5)) return true;
+            }
+            else return false;
 
-                    //frmChartline.AddSecondFile(PData_2, 2, ButtonName_2);
-                }
-                else if (_selectFile == SelectFile.File_3)
-                {
-                    if (!LoadFile(SelectFile.File_3)) return;
-                }
-                else return;                
-
-                cbxitem.Enabled = true;
-                pnlDigital.Enabled = false;
+            cbxitem.Enabled = true;
+            pnlDigital.Enabled = false;
+            return false;
             //});
         }
 
@@ -685,7 +831,7 @@ namespace PRSpline
         private bool LoadFile(SelectFile selectFile)
         {
             bool IsSuccess = false;
-            if (Directory.Exists("./CompressFile"))
+            if (Directory.Exists("./CompressFile") && SelectFile.File_1 == selectFile)
             {
                 Directory.Delete("./CompressFile", true);
             }
@@ -701,10 +847,14 @@ namespace PRSpline
             strtext2 += @"../";
 
             string strFile = this.openFileDialog1.FileName;
+
             string strRarPath = string.Empty;
             string strFileName = string.Empty;
+
             string strXmlFile = this.GetType().Assembly.Location;
             string strfilePath = strXmlFile = strXmlFile.Replace("PRSpline.exe", "CompressFile\\");
+            var opfileNames = this.openFileDialog1.SafeFileName.Split('.');
+            strfilePath = strXmlFile = strfilePath + opfileNames[0] + "\\";
             if (strFile.IndexOf(".cfg") > 0 || strFile.IndexOf(".CFG") > 0)
             {
                 if (File.Exists(strFile.Replace(".cfg", ".dat")) || File.Exists(strFile.Replace(".CFG", ".DAT")))
@@ -748,6 +898,11 @@ namespace PRSpline
                 {
                     if (!((DateTime)_mParser.Schema.StartTime.Value > StartDateTime && (DateTime)_mParser.Schema.StartTime.Value < StartDateTime.AddSeconds(60)))
                     {
+                        int StartTime_FFF = StartDateTime.Millisecond;
+                        var ddddd = (DateTime)_mParser.Schema.StartTime.Value;
+                        int FileStartTime_FFF = ((DateTime)_mParser.Schema.StartTime.Value).Millisecond;
+                        MessageBox.Show(StartTime_FFF.ToString() + "," + FileStartTime_FFF.ToString());
+
                         MessageBox.Show("副檔時間錯誤");
                         return IsSuccess;
                     }
@@ -765,14 +920,15 @@ namespace PRSpline
                     if (_mParser.Schema.AnalogChannels[i].Units == "V" || _mParser.Schema.AnalogChannels[i].Units == "A")
                         _fftIndex.Add(i);
                 }
-
-                
                 switch (selectFile)
                 {
                     case SelectFile.File_1:
                         ButtonName_1.Clear();
                         ButtonName_2.Clear();
                         ButtonName_3.Clear();
+                        ButtonName_4.Clear();
+                        ButtonName_5.Clear();
+                        ButtonName_6.Clear();
                         FFTIndex = _fftIndex.ToArray();
                         break;
                     case SelectFile.File_2:
@@ -780,6 +936,15 @@ namespace PRSpline
                         break;
                     case SelectFile.File_3:
                         ButtonName_3.Clear();
+                        break;
+                    case SelectFile.File_4:
+                        ButtonName_4.Clear();
+                        break;
+                    case SelectFile.File_5:
+                        ButtonName_5.Clear();
+                        break;
+                    case SelectFile.File_6:
+                        ButtonName_6.Clear();
                         break;
                 }
                 for (int i = 0; i < _mParser.Schema.TotalAnalogChannels; i++)
@@ -794,6 +959,15 @@ namespace PRSpline
                             break;
                         case SelectFile.File_3:
                             ButtonName_3.Add(_mParser.Schema.AnalogChannels[i].Name);
+                            break;
+                        case SelectFile.File_4:
+                            ButtonName_4.Add(_mParser.Schema.AnalogChannels[i].Name);
+                            break;
+                        case SelectFile.File_5:
+                            ButtonName_5.Add(_mParser.Schema.AnalogChannels[i].Name);
+                            break;
+                        case SelectFile.File_6:
+                            ButtonName_6.Add(_mParser.Schema.AnalogChannels[i].Name);
                             break;
                     }
                 }
@@ -819,21 +993,40 @@ namespace PRSpline
                         case SelectFile.File_3:
                             ButtonName_3.Add(_mParser.Schema.AnalogChannels[FFTIndex[i]].Name + "_FFT");
                             break;
+                        case SelectFile.File_4:
+                            ButtonName_4.Add(_mParser.Schema.AnalogChannels[FFTIndex[i]].Name + "_FFT");
+                            break;
+                        case SelectFile.File_5:
+                            ButtonName_5.Add(_mParser.Schema.AnalogChannels[FFTIndex[i]].Name + "_FFT");
+                            break;
+                        case SelectFile.File_6:
+                            ButtonName_6.Add(_mParser.Schema.AnalogChannels[FFTIndex[i]].Name + "_FFT");
+                            break;
                     }
                 }
                 cbxitem.Items.Clear();
                 switch (selectFile)
                 {
                     case SelectFile.File_1:
-                        PData_1 = GetAllData(_PData, _mParser, selectFile);
-                        SData_1 = GetAllData(_SData, _mParser, selectFile);
-                        PUData_1 = GetAllData(_PUData, _mParser, selectFile);
-                        mParser_1 = _mParser;
+                        try
+                        {
+                            PData_1 = GetAllData(_PData, _mParser, selectFile);
+                            SData_1 = GetAllData(_SData, _mParser, selectFile);
+                            PUData_1 = GetAllData(_PUData, _mParser, selectFile);
+                            mParser_1 = _mParser;
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                        }
                         break;
                     case SelectFile.File_2:
                         PData_2 = GetAllData(_PData, _mParser, selectFile);
                         SData_2 = GetAllData(_SData, _mParser, selectFile);
                         PUData_2 = GetAllData(_PUData, _mParser, selectFile);
+                        mParser_2 = _mParser;
+
+                        strFileName2 = openFileDialog1.SafeFileName;
 
                         var AddTimeValueTotel = ((DateTime)(_mParser.Schema.StartTime.Value - mParser_1.Schema.StartTime.Value));
                         var AddTimeValue = AddTimeValueTotel.Second * 1000 + AddTimeValueTotel.Millisecond;
@@ -862,22 +1055,127 @@ namespace PRSpline
                                 frmChartline.AddSecondFile(PUData_2, 2, _mParser);
                                 break;
                         }
-                       
-                        mParser_2 = _mParser;
                         break;
                     case SelectFile.File_3:
                         PData_3 = GetAllData(_PData, _mParser, selectFile);
                         SData_3 = GetAllData(_SData, _mParser, selectFile);
                         PUData_3 = GetAllData(_PUData, _mParser, selectFile);
                         mParser_3 = _mParser;
+
+                        strFileName3 = openFileDialog1.SafeFileName;
+
+                        var AddTimeValueTotel_2 = ((DateTime)(_mParser.Schema.StartTime.Value - mParser_1.Schema.StartTime.Value));
+                        var AddTimeValue_2 = AddTimeValueTotel_2.Second * 1000 + AddTimeValueTotel_2.Millisecond;
+                        foreach (var item in PData_3)
+                        {
+                            item[1] += AddTimeValue_2;
+                        }
+
+                        foreach (var item in SData_3)
+                        {
+                            item[1] += AddTimeValue_2;
+                        }
+                        foreach (var item in PUData_3)
+                        {
+                            item[1] += AddTimeValue_2;
+                        }
+                        switch (_Mode)
+                        {
+                            case 1:
+                                frmChartline.AddSecondFile(PData_3, 3, mParser_3);
+                                break;
+                            case 2:
+                                frmChartline.AddSecondFile(SData_3, 3, mParser_3);
+                                break;
+                            case 3:
+                                frmChartline.AddSecondFile(PUData_3, 3, mParser_3);
+                                break;
+                        }
+
+
+                        break;
+                    case SelectFile.File_4:
+                        PData_4 = GetAllData(_PData, _mParser, selectFile);
+                        SData_4 = GetAllData(_SData, _mParser, selectFile);
+                        PUData_4 = GetAllData(_PUData, _mParser, selectFile);
+                        mParser_4 = _mParser;
+
+                        strFileName4 = openFileDialog1.SafeFileName;
+
+                        var AddTimeValueTotel_3 = ((DateTime)(_mParser.Schema.StartTime.Value - mParser_1.Schema.StartTime.Value));
+                        var AddTimeValue_3 = AddTimeValueTotel_3.Second * 1000 + AddTimeValueTotel_3.Millisecond;
+                        foreach (var item in PData_4)
+                        {
+                            item[1] += AddTimeValue_3;
+                        }
+
+                        foreach (var item in SData_4)
+                        {
+                            item[1] += AddTimeValue_3;
+                        }
+                        foreach (var item in PUData_4)
+                        {
+                            item[1] += AddTimeValue_3;
+                        }
+                        switch (_Mode)
+                        {
+                            case 1:
+                                frmChartline.AddSecondFile(PData_4, 4, mParser_4);
+                                break;
+                            case 2:
+                                frmChartline.AddSecondFile(SData_4, 4, mParser_4);
+                                break;
+                            case 3:
+                                frmChartline.AddSecondFile(PUData_4, 4, mParser_4);
+                                break;
+                        }
+
+                        break;
+                    case SelectFile.File_5:
+                        PData_5 = GetAllData(_PData, _mParser, selectFile);
+                        SData_5 = GetAllData(_SData, _mParser, selectFile);
+                        PUData_5 = GetAllData(_PUData, _mParser, selectFile);
+                        mParser_5 = _mParser;
+
+                        strFileName5 = openFileDialog1.SafeFileName;
+
+                        var AddTimeValueTotel_4 = ((DateTime)(_mParser.Schema.StartTime.Value - mParser_1.Schema.StartTime.Value));
+                        var AddTimeValue_4 = AddTimeValueTotel_4.Second * 1000 + AddTimeValueTotel_4.Millisecond;
+                        foreach (var item in PData_5)
+                        {
+                            item[1] += AddTimeValue_4;
+                        }
+
+                        foreach (var item in SData_5)
+                        {
+                            item[1] += AddTimeValue_4;
+                        }
+                        foreach (var item in PUData_5)
+                        {
+                            item[1] += AddTimeValue_4;
+                        }
+                        switch (_Mode)
+                        {
+                            case 1:
+                                frmChartline.AddSecondFile(PData_5, 5, mParser_5);
+                                break;
+                            case 2:
+                                frmChartline.AddSecondFile(SData_5, 5, mParser_5);
+                                break;
+                            case 3:
+                                frmChartline.AddSecondFile(PUData_5, 5, mParser_5);
+                                break;
+                        }
+
                         break;
                 }
                 if (ButtonName_1.Count > 0) cbxitem.Items.Add("主檔");
                 if (ButtonName_2.Count > 0) cbxitem.Items.Add("副檔1");
                 if (ButtonName_3.Count > 0) cbxitem.Items.Add("副檔2");
+                if (ButtonName_4.Count > 0) cbxitem.Items.Add("副檔3");
+                if (ButtonName_5.Count > 0) cbxitem.Items.Add("副檔4");
+                if (ButtonName_6.Count > 0) cbxitem.Items.Add("副檔5");
                 cbxitem.SelectedIndex = 0;
-                
-
             }
             catch (ApplicationException message)
             {
@@ -890,6 +1188,44 @@ namespace PRSpline
             }
             IsSuccess = true;
             return IsSuccess;
+        }
+
+        private void AddSecondChart(SelectFile _selectFile)
+        {
+            switch (_Mode)
+            {
+                case 1:
+                    switch (_selectFile)
+                    {
+                        case SelectFile.File_2:
+                            frmChartline.AddSecondFile(PData_2, 2, mParser_2);
+                            break;
+                    }
+
+                    break;
+                case 2:
+                    switch (_selectFile)
+                    {
+                        case SelectFile.File_2:
+                            frmChartline.AddSecondFile(SData_2, 2, mParser_2);
+                            break;
+                    }
+
+                    break;
+                case 3:
+                    switch (_selectFile)
+                    {
+                        case SelectFile.File_2:
+                            frmChartline.AddSecondFile(PUData_2, 2, mParser_2);
+                            break;
+                    }
+
+                    break;
+            }
+        }
+        private void LoadSecondFile()
+        {
+
         }
 
         private void AddCbxItemItem()

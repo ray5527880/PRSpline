@@ -51,9 +51,25 @@ namespace PRSpline
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.button3 = new System.Windows.Forms.Button();
+            this.labFile4_Name = new System.Windows.Forms.Label();
+            this.labFile4_StartTime = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.button4 = new System.Windows.Forms.Button();
+            this.labFile5_Name = new System.Windows.Forms.Label();
+            this.labFile5_StartTime = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -66,7 +82,7 @@ namespace PRSpline
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(411, 126);
+            this.groupBox1.Size = new System.Drawing.Size(411, 90);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             // 
@@ -137,7 +153,7 @@ namespace PRSpline
             this.groupBox2.Controls.Add(this.label8);
             this.groupBox2.Controls.Add(this.label7);
             this.groupBox2.Controls.Add(this.label2);
-            this.groupBox2.Location = new System.Drawing.Point(12, 186);
+            this.groupBox2.Location = new System.Drawing.Point(12, 128);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(411, 129);
             this.groupBox2.TabIndex = 1;
@@ -149,7 +165,7 @@ namespace PRSpline
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 8;
-            this.button1.Text = "button1";
+            this.button1.Text = "載入一";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -207,7 +223,7 @@ namespace PRSpline
             // 
             this.label6.AutoSize = true;
             this.label6.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.label6.Location = new System.Drawing.Point(64, 158);
+            this.label6.Location = new System.Drawing.Point(64, 113);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(298, 13);
             this.label6.TabIndex = 3;
@@ -221,7 +237,7 @@ namespace PRSpline
             this.groupBox3.Controls.Add(this.label11);
             this.groupBox3.Controls.Add(this.label12);
             this.groupBox3.Controls.Add(this.label13);
-            this.groupBox3.Location = new System.Drawing.Point(12, 321);
+            this.groupBox3.Location = new System.Drawing.Point(12, 263);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(411, 133);
             this.groupBox3.TabIndex = 9;
@@ -233,7 +249,7 @@ namespace PRSpline
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 8;
-            this.button2.Text = "button2";
+            this.button2.Text = "載入二";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -287,12 +303,162 @@ namespace PRSpline
             this.label13.TabIndex = 0;
             this.label13.Text = "副檔案_2";
             // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.button3);
+            this.groupBox4.Controls.Add(this.labFile4_Name);
+            this.groupBox4.Controls.Add(this.labFile4_StartTime);
+            this.groupBox4.Controls.Add(this.label14);
+            this.groupBox4.Controls.Add(this.label15);
+            this.groupBox4.Controls.Add(this.label16);
+            this.groupBox4.Location = new System.Drawing.Point(12, 402);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(411, 133);
+            this.groupBox4.TabIndex = 10;
+            this.groupBox4.TabStop = false;
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(9, 94);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 8;
+            this.button3.Text = "載入三";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // labFile4_Name
+            // 
+            this.labFile4_Name.AutoSize = true;
+            this.labFile4_Name.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.labFile4_Name.Location = new System.Drawing.Point(79, 45);
+            this.labFile4_Name.Name = "labFile4_Name";
+            this.labFile4_Name.Size = new System.Drawing.Size(35, 13);
+            this.labFile4_Name.TabIndex = 7;
+            this.labFile4_Name.Text = "label5";
+            // 
+            // labFile4_StartTime
+            // 
+            this.labFile4_StartTime.AutoSize = true;
+            this.labFile4_StartTime.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.labFile4_StartTime.Location = new System.Drawing.Point(79, 67);
+            this.labFile4_StartTime.Name = "labFile4_StartTime";
+            this.labFile4_StartTime.Size = new System.Drawing.Size(35, 13);
+            this.labFile4_StartTime.TabIndex = 6;
+            this.labFile4_StartTime.Text = "label5";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.label14.Location = new System.Drawing.Point(6, 68);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(72, 13);
+            this.label14.TabIndex = 2;
+            this.label14.Text = "開始時間：";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.label15.Location = new System.Drawing.Point(6, 45);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(72, 13);
+            this.label15.TabIndex = 1;
+            this.label15.Text = "檔案名稱：";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.label16.Location = new System.Drawing.Point(6, 19);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(58, 13);
+            this.label16.TabIndex = 0;
+            this.label16.Text = "副檔案_3";
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.button4);
+            this.groupBox5.Controls.Add(this.labFile5_Name);
+            this.groupBox5.Controls.Add(this.labFile5_StartTime);
+            this.groupBox5.Controls.Add(this.label19);
+            this.groupBox5.Controls.Add(this.label20);
+            this.groupBox5.Controls.Add(this.label21);
+            this.groupBox5.Location = new System.Drawing.Point(12, 542);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(411, 133);
+            this.groupBox5.TabIndex = 11;
+            this.groupBox5.TabStop = false;
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(9, 94);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(75, 23);
+            this.button4.TabIndex = 8;
+            this.button4.Text = "載入四";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // labFile5_Name
+            // 
+            this.labFile5_Name.AutoSize = true;
+            this.labFile5_Name.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.labFile5_Name.Location = new System.Drawing.Point(79, 45);
+            this.labFile5_Name.Name = "labFile5_Name";
+            this.labFile5_Name.Size = new System.Drawing.Size(35, 13);
+            this.labFile5_Name.TabIndex = 7;
+            this.labFile5_Name.Text = "label5";
+            // 
+            // labFile5_StartTime
+            // 
+            this.labFile5_StartTime.AutoSize = true;
+            this.labFile5_StartTime.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.labFile5_StartTime.Location = new System.Drawing.Point(79, 67);
+            this.labFile5_StartTime.Name = "labFile5_StartTime";
+            this.labFile5_StartTime.Size = new System.Drawing.Size(35, 13);
+            this.labFile5_StartTime.TabIndex = 6;
+            this.labFile5_StartTime.Text = "label5";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.label19.Location = new System.Drawing.Point(6, 68);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(72, 13);
+            this.label19.TabIndex = 2;
+            this.label19.Text = "開始時間：";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.label20.Location = new System.Drawing.Point(6, 45);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(72, 13);
+            this.label20.TabIndex = 1;
+            this.label20.Text = "檔案名稱：";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.label21.Location = new System.Drawing.Point(6, 19);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(58, 13);
+            this.label21.TabIndex = 0;
+            this.label21.Text = "副檔案_4";
+            // 
             // frmSecondSelect
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.DimGray;
-            this.ClientSize = new System.Drawing.Size(438, 466);
+            this.ClientSize = new System.Drawing.Size(438, 687);
+            this.Controls.Add(this.groupBox5);
+            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.groupBox2);
@@ -310,6 +476,10 @@ namespace PRSpline
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -339,5 +509,19 @@ namespace PRSpline
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Label labFile4_Name;
+        private System.Windows.Forms.Label labFile4_StartTime;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Label labFile5_Name;
+        private System.Windows.Forms.Label labFile5_StartTime;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label label21;
     }
 }

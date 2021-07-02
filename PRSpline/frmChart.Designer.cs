@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.hScrollBar1 = new System.Windows.Forms.HScrollBar();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
@@ -44,8 +44,8 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.chart1.BackColor = System.Drawing.Color.DimGray;
             this.chart1.BorderlineColor = System.Drawing.SystemColors.HighlightText;
-            legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
+            legend2.Name = "Legend1";
+            this.chart1.Legends.Add(legend2);
             this.chart1.Location = new System.Drawing.Point(16, 5);
             this.chart1.Name = "chart1";
             this.chart1.Size = new System.Drawing.Size(1296, 561);

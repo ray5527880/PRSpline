@@ -6,6 +6,10 @@
     <RootNamespace>BF_FW</RootNamespace>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="Compress_WinRAR.cs" />
   </ItemGroup>

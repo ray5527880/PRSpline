@@ -87,8 +87,8 @@ namespace AutoDownloading
 
             foreach (var item in EditXml.mFTPData)
             {
-                var m_tVSIEDName = new tVSIEDName(ConnectionAlarms);
-                var VSIED_Data = m_tVSIEDName.GetData(item.strName);
+                //var m_tVSIEDName = new tVSIEDName(ConnectionAlarms);
+               // var VSIED_Data = m_tVSIEDName.GetData(item.strName);
 
                 if (!Directory.Exists(EditXml.strDownloadPath + item.strName + @"\"))
                     Directory.CreateDirectory(EditXml.strDownloadPath + item.strName + @"\");
@@ -109,53 +109,59 @@ namespace AutoDownloading
                 string[] FTPfiles = mFTP.GetFTPFileName(item.strIP, item.strUser, item.strPwd);
                 for (int i = 0; i < FTPfiles.Length; i++)
                 {
-                    string filePaht = EditXml.strDownloadPath + item.strName + @"\" + FTPfiles[i];
-                    mFTP.FTP_Download(filePaht, FTPfiles[i], item.strIP, item.strUser, item.strPwd);
-                    if (File.Exists(filePaht))
-                        mFTP.FTP_Delete(FTPfiles[i], item.strIP, item.strUser, item.strPwd);
-                    //if (EditXml.VoltageSag == 1)
-                    //{
-                    VoltageSagCal VolSagVal = new VoltageSagCal(filePaht, item.BaseValue);
-
-                    if (VolSagVal.VoltageSagDatas.duration != 0)
-                    {
-                        string _filePaht = string.Format(@"./downloadFile/{0}/{0}.xml", item.strName);
-                        var VSXml = new VoltageSagXml(_filePaht);
-                        VSXml.AddData(VolSagVal.VoltageSagDatas);
-
-                        if (EditXml.IsUserSQL == 1)
+                    try {
+                        string filePaht = EditXml.strDownloadPath + item.strName + @"\" + FTPfiles[i];
+                        mFTP.FTP_Download(filePaht, FTPfiles[i], item.strIP, item.strUser, item.strPwd);
+                        if (File.Exists(filePaht))
+                            mFTP.FTP_Delete(FTPfiles[i], item.strIP, item.strUser, item.strPwd);
+                        if (EditXml.VoltageSag == 1)
                         {
-                            tVSData.VSData vSDatas = new tVSData.VSData();
-                            vSDatas.Year = VolSagVal.VoltageSagDatas.treggerDateTime.Year;
-                            vSDatas.MD = VolSagVal.VoltageSagDatas.treggerDateTime.Month * 100 + VolSagVal.VoltageSagDatas.treggerDateTime.Day;
-                            vSDatas.HM = VolSagVal.VoltageSagDatas.treggerDateTime.Hour * 100 + VolSagVal.VoltageSagDatas.treggerDateTime.Minute;
-                            vSDatas.SS = VolSagVal.VoltageSagDatas.treggerDateTime.Second;
-                            vSDatas.DUR = VolSagVal.VoltageSagDatas.duration;
-                            vSDatas.V1 = VolSagVal.VoltageSagDatas.PValue * 100;
-                            vSDatas.V2 = VolSagVal.VoltageSagDatas.QValue * 100;
-                            vSDatas.V3 = VolSagVal.VoltageSagDatas.SValue * 100;
-                            if (vSDatas.V1 < vSDatas.V2)
-                            {
-                                if (vSDatas.V1 < vSDatas.V3)
-                                    vSDatas.Down = 100 - vSDatas.V1;
-                                else
-                                    vSDatas.Down = 100 - vSDatas.V3;
-                            }
-                            else
-                            {
-                                if (vSDatas.V2 < vSDatas.V3)
-                                    vSDatas.Down = 100 - vSDatas.V2;
-                                else
-                                    vSDatas.Down = 100 - vSDatas.V3;
-                            }
-                            vSDatas.Cycle = VolSagVal.VoltageSagDatas.cycle;
-                            vSDatas.Type = GetType(100 - vSDatas.Down, vSDatas.DUR);
+                            VoltageSagCal VolSagVal = new VoltageSagCal(filePaht, item.BaseValue);
 
-                            if (vSDatas.V1 < 90 || vSDatas.V2 < 90 || vSDatas.V3 < 90)
-                                tVSData.AddData(vSDatas, VSIED_Data.ID);
+                            if (VolSagVal.VoltageSagDatas.duration != 0)
+                            {
+                                string _filePaht = string.Format(@"./downloadFile/{0}/{0}.xml", item.strName);
+                                var VSXml = new VoltageSagXml(_filePaht);
+                                VSXml.AddData(VolSagVal.VoltageSagDatas);
+
+                                if (EditXml.IsUserSQL == 1)
+                                {
+                                    tVSData.VSData vSDatas = new tVSData.VSData();
+                                    vSDatas.Year = VolSagVal.VoltageSagDatas.treggerDateTime.Year;
+                                    vSDatas.MD = VolSagVal.VoltageSagDatas.treggerDateTime.Month * 100 + VolSagVal.VoltageSagDatas.treggerDateTime.Day;
+                                    vSDatas.HM = VolSagVal.VoltageSagDatas.treggerDateTime.Hour * 100 + VolSagVal.VoltageSagDatas.treggerDateTime.Minute;
+                                    vSDatas.SS = VolSagVal.VoltageSagDatas.treggerDateTime.Second;
+                                    vSDatas.DUR = VolSagVal.VoltageSagDatas.duration;
+                                    vSDatas.V1 = VolSagVal.VoltageSagDatas.PValue * 100;
+                                    vSDatas.V2 = VolSagVal.VoltageSagDatas.QValue * 100;
+                                    vSDatas.V3 = VolSagVal.VoltageSagDatas.SValue * 100;
+                                    if (vSDatas.V1 < vSDatas.V2)
+                                    {
+                                        if (vSDatas.V1 < vSDatas.V3)
+                                            vSDatas.Down = 100 - vSDatas.V1;
+                                        else
+                                            vSDatas.Down = 100 - vSDatas.V3;
+                                    }
+                                    else
+                                    {
+                                        if (vSDatas.V2 < vSDatas.V3)
+                                            vSDatas.Down = 100 - vSDatas.V2;
+                                        else
+                                            vSDatas.Down = 100 - vSDatas.V3;
+                                    }
+                                    vSDatas.Cycle = VolSagVal.VoltageSagDatas.cycle;
+                                    vSDatas.Type = GetType(100 - vSDatas.Down, vSDatas.DUR);
+
+                                 //   if (vSDatas.V1 < 90 || vSDatas.V2 < 90 || vSDatas.V3 < 90)
+                                    //    tVSData.AddData(vSDatas, VSIED_Data.ID);
+                                }
+                            }
                         }
+                    }catch(Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
                     }
-                }
+                    }
                 DelegateCentre.UpdatePrgBar(frm.m_PrgBar);
             }
             DelegateCentre.UpdateLabel((DateTime.Now - dtNow).ToString(@"mm\:ss"), frm.label5);

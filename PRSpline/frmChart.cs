@@ -28,10 +28,8 @@ namespace PRSpline
             Second_2 = 3
         }
 
-        private int[] FileChannelCount = new int[3];
+        private int[] FileChannelCount = new int[5];
         private List<double[]> mDatData;
-
-
 
         private Parser mParser;
         private double _startY;
@@ -52,6 +50,7 @@ namespace PRSpline
 
         private bool IsNonal = false;
         private bool IsMoveLine = false;
+        private bool IsSecondFileOpen = false;
 
         private double dZoonInStratPixs_X, dZoonInStratPixs_Y;
         private double dZoonInStratPoint_X, dZoonInStratPoint_Y;
@@ -176,6 +175,25 @@ namespace PRSpline
                 ForeColor = Color.White,
                 Position = new ElementPosition(10, 80, 80, 4)
             });
+            this.chart1.Legends.Add(new Legend("A_4")
+            {
+                Docking = Docking.Top,
+                Alignment = StringAlignment.Center,
+                BackColor = System.Drawing.Color.Transparent,
+                LegendStyle = LegendStyle.Row,
+                TableStyle = LegendTableStyle.Wide,
+                ForeColor = Color.White,
+                Position = new ElementPosition(10, 80, 80, 4)
+            }); this.chart1.Legends.Add(new Legend("A_5")
+            {
+                Docking = Docking.Top,
+                Alignment = StringAlignment.Center,
+                BackColor = System.Drawing.Color.Transparent,
+                LegendStyle = LegendStyle.Row,
+                TableStyle = LegendTableStyle.Wide,
+                ForeColor = Color.White,
+                Position = new ElementPosition(10, 80, 80, 4)
+            });
         }
         private void AddChartAreas()
         {
@@ -184,8 +202,14 @@ namespace PRSpline
             this.chart1.ChartAreas.Add(new ChartArea("A"));
             this.chart1.ChartAreas.Add(new ChartArea("A_2"));
             this.chart1.ChartAreas.Add(new ChartArea("A_3"));
+            this.chart1.ChartAreas.Add(new ChartArea("A_4"));
+            this.chart1.ChartAreas.Add(new ChartArea("A_5"));
             this.chart1.ChartAreas[3].Visible = false;
             this.chart1.ChartAreas[4].Visible = false;
+            this.chart1.ChartAreas[5].Visible = false;
+            this.chart1.ChartAreas[6].Visible = false;
+
+
         }
 
         private void AddSeries()
@@ -240,7 +264,6 @@ namespace PRSpline
         {
             try
             {
-
                 foreach (var item in mDatData)
                 {
                     for (int i = 0; i < mParser.Schema.TotalDigitalChannels; i++)
@@ -277,7 +300,7 @@ namespace PRSpline
         private void AddSecondSeries(int SecondNo, Parser _mParser)
         {
             string LegendName = "A_" + SecondNo;
-
+            IsSecondFileOpen = true;
             foreach (var item in _mParser.Schema.AnalogChannels)
             {
                 string LegendText = item.Units == "V" || item.Units == "A" ? item.Name + "(" + item.Units + ")" : item.Name;
@@ -297,7 +320,7 @@ namespace PRSpline
                 {
                     this.chart1.Series.Add(new Series()
                     {
-                        Legend = "A",
+                        Legend = LegendName,
                         LegendText = FFTItem.Name + "_FFT(" + FFTItem.Units + ")",
                         BorderWidth = 2,
                         ChartType = SeriesChartType.FastLine,
@@ -309,10 +332,27 @@ namespace PRSpline
         private void AddSecondChartPoint(List<double[]> datas, Parser _mParser, int SecondNo)
         {
             string LegendName = "A_" + SecondNo;
-            int IndexBase = SecondNo == 2 ? FileChannelCount[0] : FileChannelCount[0] + FileChannelCount[1];
-            IndexBase++;
-            if (SecondNo == 2) FileChannelCount[1] = datas[0].Length - 2;
-            if (SecondNo == 3) FileChannelCount[2] = datas[0].Length - 2;
+            int IndexBase = FileChannelCount[0];
+            switch (SecondNo)
+            {
+                case 2:
+                    IndexBase = FileChannelCount[0] +1;
+                    FileChannelCount[1] = datas[0].Length - 2;
+                    break;
+                case 3:
+                    IndexBase = FileChannelCount[0] + FileChannelCount[1] + 1;
+                    FileChannelCount[2] = datas[0].Length - 2;
+                    break;
+                case 4:
+                    IndexBase = FileChannelCount[0] + FileChannelCount[1] + FileChannelCount[2]+ 1;
+                    FileChannelCount[3] = datas[0].Length - 2;
+                    break;
+                case 5:
+                    IndexBase = FileChannelCount[0] + FileChannelCount[1] + FileChannelCount[2] + FileChannelCount[3] + 1;
+                    FileChannelCount[4] = datas[0].Length - 2;
+                    break;
+            }
+
             try
             {
                 foreach (var item in datas)
@@ -340,17 +380,18 @@ namespace PRSpline
             FileChannelCount[SecondNo - 1] = datas[0].Length - 2;
             this.chart1.ChartAreas[3].Position = new ElementPosition(0, 50, 100, 30);
             this.chart1.ChartAreas[4].Position = new ElementPosition(0, 85, 100, 13);
+            this.chart1.ChartAreas[5].Position = new ElementPosition(0, 85, 100, 13);
+            this.chart1.ChartAreas[6].Position = new ElementPosition(0, 85, 100, 13);
 
-            this.chart1.ChartAreas[3].BackColor = Color.White;
-            this.chart1.ChartAreas[4].BackColor = Color.White;
+            for(int i = 0; i < 4; i++)
+            {
+                this.chart1.ChartAreas[i+3].BackColor = Color.White;
+                this.chart1.ChartAreas[i + 3].AlignWithChartArea = "B";
+                this.chart1.ChartAreas[i + 3].Visible = false;
+            }
 
-            this.chart1.ChartAreas[3].AlignWithChartArea = "B";
-            this.chart1.ChartAreas[4].AlignWithChartArea = "B";
-
-            this.chart1.ChartAreas[3].Visible = false;
-            this.chart1.ChartAreas[4].Visible = false;
-
-            this.chart1.ChartAreas[1].Visible = false;
+            this.chart1.ChartAreas[1].Visible = true;
+            IsSecondFileOpen = true;
             //AddSecondLegends(SecondNo);
             AddSecondSeries(SecondNo, _mParser);
             AddSecondChartPoint(datas, _mParser, SecondNo);
@@ -625,6 +666,8 @@ namespace PRSpline
             bool bEnabl = false;
             bool SecondEnable_1 = false;
             bool SecondEnable_2 = false;
+            bool SecondEnable_3 = false;
+            bool SecondEnable_4 = false;
             int index = 0;
             foreach (var item in chart1.Series)
             {
@@ -632,7 +675,11 @@ namespace PRSpline
                     bEnabl = true;
                 if (item.Enabled && index > FileChannelCount[0])
                 {
-                    if (index > FileChannelCount[0] + FileChannelCount[1])
+                    if (index > FileChannelCount[0] + FileChannelCount[1] + FileChannelCount[2] + FileChannelCount[3])
+                        SecondEnable_4 = true;
+                    else if (index > FileChannelCount[0] + FileChannelCount[1] + FileChannelCount[2])
+                        SecondEnable_3 = true;
+                    else  if (index > FileChannelCount[0] + FileChannelCount[1])
                         SecondEnable_2 = true;
                     else SecondEnable_1 = true;
                 }
@@ -653,11 +700,16 @@ namespace PRSpline
             this.chart1.ChartAreas[2].AxisX.Title = "Time(ms)";
             if (SecondEnable_1)
             {
+                this.chart1.ChartAreas[2].Visible = true;
                 this.chart1.ChartAreas[3].Visible = true;                
 
                 this.chart1.ChartAreas[2].Position = new ElementPosition(0, 10, 100, 40);
-                this.chart1.ChartAreas[3].Position = new ElementPosition(0, 55, 100, 40);
+                this.chart1.ChartAreas[3].Position = new ElementPosition(0, 55, 100, 45);
                 this.chart1.Legends[3].Position = new ElementPosition(10, 50, 80, 4);
+
+                //this.chart1.ChartAreas[2].AxisX.Enabled = AxisEnabled.False;
+                //this.chart1.ChartAreas[3].AxisX.Enabled = AxisEnabled.Auto;
+
                 this.chart1.ChartAreas[2].AxisX.Title = "";
                 this.chart1.ChartAreas[3].AxisX.Title = "Time(ms)";
             }
@@ -671,9 +723,14 @@ namespace PRSpline
 
                 this.chart1.ChartAreas[2].Position = new ElementPosition(0, 10, 100, 25);
                 this.chart1.ChartAreas[3].Position = new ElementPosition(0, 40, 100, 25);
-                this.chart1.ChartAreas[4].Position = new ElementPosition(0, 70, 100, 25);
-                this.chart1.Legends[3].Position = new ElementPosition(10, 80, 80, 4);
-                this.chart1.Legends[4].Position = new ElementPosition(10, 80, 80, 4); 
+                this.chart1.ChartAreas[4].Position = new ElementPosition(0, 70, 100, 30);
+                this.chart1.Legends[3].Position = new ElementPosition(10, 35, 80, 4);
+                this.chart1.Legends[4].Position = new ElementPosition(10, 65, 80, 4);
+                
+                //this.chart1.ChartAreas[2].AxisX.Enabled = AxisEnabled.False;
+                //this.chart1.ChartAreas[3].AxisX.Enabled = AxisEnabled.False;
+                //this.chart1.ChartAreas[4].AxisX.Enabled = AxisEnabled.Auto;
+
                 this.chart1.ChartAreas[2].AxisX.Title = "";
                 this.chart1.ChartAreas[3].AxisX.Title = "";
                 this.chart1.ChartAreas[4].AxisX.Title = "Time(ms)";
@@ -682,6 +739,55 @@ namespace PRSpline
             {
                 this.chart1.ChartAreas[4].Visible = false;
             }
+
+            if (SecondEnable_3)
+            {
+                this.chart1.ChartAreas[5].Visible = true;
+
+                this.chart1.ChartAreas[2].Position = new ElementPosition(0, 10, 100, 17);
+                this.chart1.ChartAreas[3].Position = new ElementPosition(0, 32, 100, 17);
+                this.chart1.ChartAreas[4].Position = new ElementPosition(0, 54, 100, 17);
+                this.chart1.ChartAreas[5].Position = new ElementPosition(0, 76, 100, 22);
+                this.chart1.Legends[3].Position = new ElementPosition(10, 25, 80, 4);
+                this.chart1.Legends[4].Position = new ElementPosition(10, 45, 80, 4);
+                this.chart1.Legends[5].Position = new ElementPosition(10, 65, 80, 4);
+
+
+
+                this.chart1.ChartAreas[2].AxisX.Title = "";
+                this.chart1.ChartAreas[3].AxisX.Title = "";
+                this.chart1.ChartAreas[4].AxisX.Title = "";
+                this.chart1.ChartAreas[5].AxisX.Title = "Time(ms)";
+            }
+            else
+            {
+                this.chart1.ChartAreas[5].Visible = false;
+            }
+            if (SecondEnable_4)
+            {
+                this.chart1.ChartAreas[6].Visible = true;
+
+                this.chart1.ChartAreas[2].Position = new ElementPosition(0, 10, 100, 13);
+                this.chart1.ChartAreas[3].Position = new ElementPosition(0, 28, 100, 13);
+                this.chart1.ChartAreas[4].Position = new ElementPosition(0, 46, 100, 13);
+                this.chart1.ChartAreas[5].Position = new ElementPosition(0, 64, 100, 13);
+                this.chart1.ChartAreas[6].Position = new ElementPosition(0, 82, 100, 17);
+                this.chart1.Legends[3].Position = new ElementPosition(10, 22, 80, 4);
+                this.chart1.Legends[4].Position = new ElementPosition(10, 39, 80, 4);
+                this.chart1.Legends[5].Position = new ElementPosition(10, 56, 80, 4);
+                this.chart1.Legends[6].Position = new ElementPosition(10, 73, 80, 4);
+                this.chart1.ChartAreas[2].AxisX.Title = "";
+                this.chart1.ChartAreas[3].AxisX.Title = "";
+                this.chart1.ChartAreas[4].AxisX.Title = "";
+                this.chart1.ChartAreas[5].AxisX.Title = "";
+                this.chart1.ChartAreas[6].AxisX.Title = "Time(ms)";
+            }
+            else
+            {
+                this.chart1.ChartAreas[6].Visible = false;
+            }
+
+
             MoveLineEnable();
         }
         #endregion 
@@ -728,8 +834,10 @@ namespace PRSpline
 
                         this.chart1.Annotations["MoveLineX"].Visible = true;
                         this.chart1.Annotations["MoveLineX"].X = MoveLine_X;
-                        this.chart1.Annotations["MoveTextX"].Visible = true;
-                        this.chart1.Annotations["MoveTextX"].X = MoveLine_X;
+                      
+                            this.chart1.Annotations["MoveTextX"].Visible = true;
+                      
+                         this.chart1.Annotations["MoveTextX"].X = MoveLine_X;
                         ((TextAnnotation)(this.chart1.Annotations["MoveTextX"])).Text = "Time=" + Math.Round(MoveLine_X, 1).ToString() + "ms";
 
 
@@ -766,15 +874,18 @@ namespace PRSpline
             {
                 this.chart1.Annotations["MoveLineX"].Visible = true;
                 this.chart1.Annotations["MoveTextX"].Visible = true;
-                this.chart1.Annotations["MoveLineY"].Visible = true;
-                this.chart1.Annotations["MoveTextY"].Visible = true;
+                if (!IsSecondFileOpen)
+                {
+                    this.chart1.Annotations["MoveLineY"].Visible = true;
+                    this.chart1.Annotations["MoveTextY"].Visible = true;
+                }
             }
         }
         private void chart1_MouseDown(object sender, MouseEventArgs e)
         {
             this._startY = this.chart1.ChartAreas[2].AxisY.PixelPositionToValue(e.Y);
 
-            if (e.Button == MouseButtons.Left&& IsNonal)
+            if (e.Button == MouseButtons.Left&& IsNonal&&!IsSecondFileOpen)
             {
 
                 if (!bMoveView && bButtonEnable)
@@ -887,15 +998,18 @@ namespace PRSpline
         }
         private void chart1_MouseWheel(object sender, MouseEventArgs e)
         {
-            if (e.Delta > 0)
+            if (!IsSecondFileOpen)
             {
-                this.chart1.ChartAreas[2].AxisY.Maximum += this.chart1.ChartAreas[2].AxisY.Interval;
-                this.chart1.ChartAreas[2].AxisY.Minimum += this.chart1.ChartAreas[2].AxisY.Interval;
-            }
-            else if (e.Delta < 0)
-            {
-                this.chart1.ChartAreas[2].AxisY.Maximum -= this.chart1.ChartAreas[2].AxisY.Interval;
-                this.chart1.ChartAreas[2].AxisY.Minimum -= this.chart1.ChartAreas[2].AxisY.Interval;
+                if (e.Delta > 0)
+                {
+                    this.chart1.ChartAreas[2].AxisY.Maximum += this.chart1.ChartAreas[2].AxisY.Interval;
+                    this.chart1.ChartAreas[2].AxisY.Minimum += this.chart1.ChartAreas[2].AxisY.Interval;
+                }
+                else if (e.Delta < 0)
+                {
+                    this.chart1.ChartAreas[2].AxisY.Maximum -= this.chart1.ChartAreas[2].AxisY.Interval;
+                    this.chart1.ChartAreas[2].AxisY.Minimum -= this.chart1.ChartAreas[2].AxisY.Interval;
+                }
             }
         }
         private void chart_AnnotationsMoveIn(object sender,MouseEventArgs e)
@@ -944,11 +1058,15 @@ namespace PRSpline
 
             chart1.ChartAreas[2].AxisX.Minimum = hScrollBar1.Value;
             chart1.ChartAreas[2].AxisX.Maximum = chart1.ChartAreas[2].AxisX.Minimum + Bar_range;
-            if (chart1.ChartAreas[3].Visible)
+            for(int i=3;i< chart1.ChartAreas.Count(); i++)
             {
-                chart1.ChartAreas[3].AxisX.Minimum = hScrollBar1.Value;
-                chart1.ChartAreas[3].AxisX.Maximum = chart1.ChartAreas[3].AxisX.Minimum + Bar_range;
+                if (chart1.ChartAreas[i].Visible)
+                {
+                    chart1.ChartAreas[i].AxisX.Minimum = hScrollBar1.Value;
+                    chart1.ChartAreas[i].AxisX.Maximum = chart1.ChartAreas[i].AxisX.Minimum + Bar_range;
+                }
             }
+          
         }
         public void chart1_XAxisAdd()
         {
@@ -957,15 +1075,12 @@ namespace PRSpline
             {
                 this.hScrollBar1.LargeChange = Bar_range;
 
-                chart1.ChartAreas[1].AxisX.Maximum = chart1.ChartAreas[2].AxisX.Minimum + Bar_range;
-                this.chart1.ChartAreas[1].AxisX.Interval = Bar_range / 6;
+                for (int i = 1; i < chart1.ChartAreas.Count(); i++)
+                {
+                    chart1.ChartAreas[i].AxisX.Maximum = chart1.ChartAreas[2].AxisX.Minimum + Bar_range;
+                    this.chart1.ChartAreas[i].AxisX.Interval = Bar_range / 6;
+                }
 
-
-                chart1.ChartAreas[2].AxisX.Maximum = chart1.ChartAreas[2].AxisX.Minimum + Bar_range;
-                this.chart1.ChartAreas[2].AxisX.Interval = Bar_range / 6;
-
-                chart1.ChartAreas[3].AxisX.Maximum = chart1.ChartAreas[2].AxisX.Minimum + Bar_range;
-                this.chart1.ChartAreas[3].AxisX.Interval = Bar_range / 6;
             }
             else
                 Bar_range *= 2;
@@ -977,28 +1092,22 @@ namespace PRSpline
             {
                 this.hScrollBar1.LargeChange = Bar_range;
 
-                chart1.ChartAreas[1].AxisX.Maximum = chart1.ChartAreas[2].AxisX.Minimum + Bar_range;
-                this.chart1.ChartAreas[1].AxisX.Interval = Bar_range / 6;
-
-                chart1.ChartAreas[2].AxisX.Maximum = chart1.ChartAreas[2].AxisX.Minimum + Bar_range;
-                this.chart1.ChartAreas[2].AxisX.Interval = Bar_range / 6;
-
-                chart1.ChartAreas[3].AxisX.Maximum = chart1.ChartAreas[2].AxisX.Minimum + Bar_range;
-                this.chart1.ChartAreas[3].AxisX.Interval = Bar_range / 6;
+                for (int i = 1; i < chart1.ChartAreas.Count(); i++)
+                {
+                    chart1.ChartAreas[i].AxisX.Maximum = chart1.ChartAreas[2].AxisX.Minimum + Bar_range;
+                    this.chart1.ChartAreas[i].AxisX.Interval = Bar_range / 6;
+                }
+                
             }
             else
             {
                 Bar_range = bar_OriginalRange;
-
-                chart1.ChartAreas[1].AxisX.Maximum = bar_OriginalRange;
-                this.chart1.ChartAreas[1].AxisX.Interval = Bar_range / 6;
-
                 this.hScrollBar1.LargeChange = Bar_range;
-                chart1.ChartAreas[2].AxisX.Maximum = bar_OriginalRange;
-                this.chart1.ChartAreas[2].AxisX.Interval = Bar_range / 6;
-
-                chart1.ChartAreas[3].AxisX.Maximum = bar_OriginalRange;
-                this.chart1.ChartAreas[3].AxisX.Interval = Bar_range / 6;
+                for (int i=1;i < chart1.ChartAreas.Count(); i++)
+                {
+                    chart1.ChartAreas[i].AxisX.Maximum = bar_OriginalRange;
+                    this.chart1.ChartAreas[i].AxisX.Interval = Bar_range / 6;
+                }
             }
         }
         public void chart_YAxisAdd()
@@ -1111,14 +1220,14 @@ namespace PRSpline
                 }
                 if (Math.Abs(douMax - douMin) < 0.2)
                     return;
-                chart1.ChartAreas[2].AxisY.Maximum = douMax;
-                chart1.ChartAreas[2].AxisY.Minimum = douMin;
-                chart1.ChartAreas[3].AxisY.Maximum = douMax;
-                chart1.ChartAreas[3].AxisY.Minimum = douMin;
-                chart1.ChartAreas[2].AxisY.Maximum = douMax;
-                chart1.ChartAreas[2].AxisY.Minimum = douMin;
-                this.chart1.ChartAreas[2].AxisY.Interval = (douMax - douMin) / 6;
-                this.chart1.ChartAreas[3].AxisY.Interval = (douMax - douMin) / 6;
+
+                for(int i=2;i< chart1.ChartAreas.Count(); i++)
+                {
+                    chart1.ChartAreas[i].AxisY.Maximum = douMax;
+                    chart1.ChartAreas[i].AxisY.Minimum = douMin;
+                    chart1.ChartAreas[i].AxisY.Interval = (douMax - douMin) / 6;
+                }
+               
             }
         }
         private void Smooth_Y(double douMax, double douMin)
@@ -1213,12 +1322,15 @@ namespace PRSpline
                 chart1.ChartAreas[2].AxisY.Maximum = douMax;
                 chart1.ChartAreas[2].AxisY.Minimum = douMin;
                 chart1.ChartAreas[3].AxisY.Maximum = douMax;
-                chart1.ChartAreas[3].AxisY.Minimum = douMin;
+                chart1.ChartAreas[3].AxisY.Minimum = douMin; 
+                chart1.ChartAreas[4].AxisY.Maximum = douMax;
+                chart1.ChartAreas[4].AxisY.Minimum = douMin;
 
                 chart1.ChartAreas[2].AxisY.Maximum = douMax;
                 chart1.ChartAreas[2].AxisY.Minimum = douMin;
                 this.chart1.ChartAreas[2].AxisY.Interval = (douMax - douMin) / 6;
                 this.chart1.ChartAreas[3].AxisY.Interval = (douMax - douMin) / 6;
+                this.chart1.ChartAreas[4].AxisY.Interval = (douMax - douMin) / 6;
             }
         }
 
@@ -1338,30 +1450,30 @@ namespace PRSpline
         {
             Bar_range = bar_OriginalRange;
             this.hScrollBar1.LargeChange = Bar_range;
-            this.chart1.ChartAreas[2].AxisX.Maximum = Bar_range;
-            this.chart1.ChartAreas[2].AxisX.Minimum = 0;
-            this.chart1.ChartAreas[1].AxisX.Maximum = Bar_range;
-            this.chart1.ChartAreas[1].AxisX.Minimum = 0;
-            this.chart1.ChartAreas[3].AxisX.Maximum = Bar_range;
-            this.chart1.ChartAreas[3].AxisX.Minimum = 0;
 
-            this.chart1.ChartAreas[2].AxisX.Interval = Bar_range / 6;
-            this.chart1.ChartAreas[1].AxisX.Interval = Bar_range / 6;
-            this.chart1.ChartAreas[3].AxisX.Interval = Bar_range / 6;
+            for(int i=1;i< this.chart1.ChartAreas.Count(); i++)
+            {
+                this.chart1.ChartAreas[i].AxisX.Maximum = Bar_range;
+                this.chart1.ChartAreas[i].AxisX.Minimum = 0;
+                this.chart1.ChartAreas[i].AxisX.Interval = Bar_range / 6;
+                if (i > 1)
+                {
+                    this.chart1.ChartAreas[i].AxisY.Maximum = Math.Round(RE_Y_MaxValue * 1.1f);
+                    this.chart1.ChartAreas[i].AxisY.Minimum = Math.Round(RE_Y_MinValue * 1.1f);
+                    this.chart1.ChartAreas[i].AxisY.Interval = (RE_Y_MaxValue - RE_Y_MinValue) / 6;
+                }
+            }
 
-            this.chart1.ChartAreas[2].AxisY.Maximum = Math.Round(RE_Y_MaxValue * 1.1f);
-            this.chart1.ChartAreas[2].AxisY.Minimum = Math.Round(RE_Y_MinValue * 1.1f);
-            this.chart1.ChartAreas[2].AxisY.Interval = (RE_Y_MaxValue - RE_Y_MinValue) / 6;
 
-            this.chart1.ChartAreas[3].AxisY.Maximum = Math.Round(RE_Y_MaxValue * 1.1f);
-            this.chart1.ChartAreas[3].AxisY.Minimum = Math.Round(RE_Y_MinValue * 1.1f);
-            this.chart1.ChartAreas[3].AxisY.Interval = (RE_Y_MaxValue - RE_Y_MinValue) / 6;
         }
         public void Form_SizeChanged(int w, int h)
         {
             this.Size = new Size(w, h);
         }
-
+        public bool IsSeries(int  Chartindex)
+        {     
+            return this.chart1.Series[Chartindex].Enabled;
+        }
 
         private void chart1_AnnotationPositionChanged_1(object sender, EventArgs e)
         {
