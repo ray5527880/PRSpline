@@ -86,7 +86,7 @@ namespace PRSpline
             this.chart1.MouseDown += chart1_MouseDown;
             this.chart1.MouseUp += chart1_MouseUp;
             this.chart1.Legends.Clear();
-            AddLegends();
+              AddLegends();
             AddChartAreas();
 
             this.chart1.ChartAreas[0].Position = new ElementPosition(0, -10, 100, -10);
@@ -129,7 +129,7 @@ namespace PRSpline
         }
 
         #region SetBaseView
-        private void AddLegends()
+        private async void AddLegends()
         {
             this.chart1.Legends.Add(new Legend("A")
             {
@@ -194,6 +194,7 @@ namespace PRSpline
                 ForeColor = Color.White,
                 Position = new ElementPosition(10, 80, 80, 4)
             });
+            
         }
         private void AddChartAreas()
         {
