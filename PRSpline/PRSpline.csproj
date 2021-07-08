@@ -163,6 +163,18 @@
     <Compile Include="frmSecondSelect.Designer.cs">
       <DependentUpon>frmSecondSelect.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmSelectMorR.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmSelectMorR.Designer.cs">
+      <DependentUpon>frmSelectMorR.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmSelectView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmSelectView.Designer.cs">
+      <DependentUpon>frmSelectView.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmSetup.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -249,6 +261,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmSecondSelect.resx">
       <DependentUpon>frmSecondSelect.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmSelectMorR.resx">
+      <DependentUpon>frmSelectMorR.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmSelectView.resx">
+      <DependentUpon>frmSelectView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmSetup.resx">
       <DependentUpon>frmSetup.cs</DependentUpon>

@@ -80,13 +80,13 @@ namespace PRSpline
         }
 
 
-        private void frmChart_Load(object sender, EventArgs e)
+        private  void frmChart_Load(object sender, EventArgs e)
         {
             this.chart1.MouseDoubleClick += chart1_MouseDoubleClick;
             this.chart1.MouseDown += chart1_MouseDown;
             this.chart1.MouseUp += chart1_MouseUp;
             this.chart1.Legends.Clear();
-              AddLegends();
+            AddLegends();
             AddChartAreas();
 
             this.chart1.ChartAreas[0].Position = new ElementPosition(0, -10, 100, -10);
@@ -129,7 +129,7 @@ namespace PRSpline
         }
 
         #region SetBaseView
-        private async void AddLegends()
+        private void AddLegends()
         {
             this.chart1.Legends.Add(new Legend("A")
             {
@@ -213,7 +213,7 @@ namespace PRSpline
 
         }
 
-        private void AddSeries()
+        private  void AddSeries()
         {
             this.chart1.Series.Add(new Series()
             {
@@ -261,30 +261,36 @@ namespace PRSpline
                 }
             }
         }
-        private void AddChartPoint()
+        private void  AddChartPoint()
         {
             try
             {
+             
                 foreach (var item in mDatData)
                 {
-                    for (int i = 0; i < mParser.Schema.TotalDigitalChannels; i++)
-                    {
-                        chart1.Series[i + 1].Points.AddXY(item[1], item[i + mParser.Schema.TotalAnalogChannels + 2]);
-                    }
-                    for (int i = 0; i < mParser.Schema.TotalAnalogChannels; i++)
-                    {
-                        chart1.Series[i + mParser.Schema.TotalDigitalChannels + 1].Points.AddXY(item[1], item[i + 2]);
+                   
+                        for (int i = 0; i < mParser.Schema.TotalDigitalChannels; i++)
+                        {
+                            chart1.Series[i + 1].Points.AddXY(item[1], item[i + mParser.Schema.TotalAnalogChannels + 2]);
+                        }
+    
+                 
+                        for (int i = 0; i < mParser.Schema.TotalAnalogChannels; i++)
+                        {
+                            chart1.Series[i + mParser.Schema.TotalDigitalChannels + 1].Points.AddXY(item[1], item[i + 2]);
 
-                        if (Y_MinValue > item[i + 2])
-                            Y_MinValue = item[i + 2];
-                        if (Y_MaxValue < item[i + 2])
-                            Y_MaxValue = item[i + 2];
-                    }
-                    var _FFTLenght = item.Length - 2 - mParser.Schema.TotalChannels;
-                    for (int i = 0; i < _FFTLenght; i++)
-                    {
-                        chart1.Series[i + mParser.Schema.TotalChannels + 1].Points.AddXY(item[1], item[i + mParser.Schema.TotalChannels + 2]);
-                    }
+                            if (Y_MinValue > item[i + 2])
+                                Y_MinValue = item[i + 2];
+                            if (Y_MaxValue < item[i + 2])
+                                Y_MaxValue = item[i + 2];
+                        }
+                  
+                        var _FFTLenght = item.Length - 2 - mParser.Schema.TotalChannels;
+                        for (int i = 0; i < _FFTLenght; i++)
+                        {
+                            chart1.Series[i + mParser.Schema.TotalChannels + 1].Points.AddXY(item[1], item[i + mParser.Schema.TotalChannels + 2]);
+                        }
+                  
                 }
 
             }

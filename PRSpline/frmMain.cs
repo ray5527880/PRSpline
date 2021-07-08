@@ -24,6 +24,8 @@ namespace PRSpline
 {
     public partial class frmMain : Form
     {
+
+        public static bool IsOpenFlies=false;
         public enum SelectFile
         {
             File_1 = 1,
@@ -110,6 +112,8 @@ namespace PRSpline
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            EditXml mEditXml = new EditXml();
+            mEditXml.GetXmlData();
             set_Form();
             set_ButtonImage();
 
@@ -304,17 +308,21 @@ namespace PRSpline
         {
             frmChartline.ClearBlock();
         }
-        private void cbxPS_SelectedIndexChanged(object sender, EventArgs e)
+        private async void cbxPS_SelectedIndexChanged(object sender, EventArgs e)
         {
-            PSClick(cbxPS.SelectedItem.ToString());
+            await PSClick(cbxPS.SelectedItem.ToString());
         }
-        private void btnFileOpen_Click(object sender, EventArgs e)
+        private async void btnFileOpen_Click(object sender, EventArgs e)
         {
-            if (this.openFileDialog1.ShowDialog() != DialogResult.OK)
-            {
-                (sender as Button).Enabled = true;
-                return;
-            }
+            IsOpenFlies = false;
+            var frm = new frmSelectMorR(ref this.openFileDialog1);
+            frm.ShowDialog();
+            if (!IsOpenFlies) return;
+            //if (this.openFileDialog1.ShowDialog() != DialogResult.OK)
+            //{
+            //    (sender as Button).Enabled = true;
+            //    return;
+            //}
             strFileName1 = openFileDialog1.SafeFileName;
             strFileName2 = string.Empty;
             strFileName3 = string.Empty;
@@ -342,7 +350,8 @@ namespace PRSpline
 
             try
             {
-                if (!LoadFile(SelectFile.File_1)) return;
+                if (!await LoadFile(SelectFile.File_1)) return;
+                //if (!LoadFile(SelectFile.File_1)) return;
             }
             catch (Exception ex)
             {
@@ -519,7 +528,7 @@ namespace PRSpline
 
 
         #region Private Function
-        private void PSClick(string _strPS)
+        private async Task PSClick(string _strPS)
         {
             _Mode = 0;
             if (_strPS == "P")
@@ -536,6 +545,79 @@ namespace PRSpline
             }
             try
             {
+                //await Task.Run(new Action(() =>
+                // {
+                //     panel1.Controls.Clear();
+                //    //panel1.Dispose();
+                //    switch (_Mode)
+                //     {
+                //         case 1:
+
+                //             frmChartline = new frmChart(mParser_1, PData_1);
+                //             break;
+                //         case 2:
+                //             frmChartline = new frmChart(mParser_1, SData_1);
+                //             break;
+                //         case 3:
+                //             frmChartline = new frmChart(mParser_1, PUData_1);
+                //             break;
+                //     }
+                //     panel1.Controls.Add(frmChartline);
+
+
+                //     switch (_Mode)
+                //     {
+                //         case 1:
+                //             if (ButtonName_2.Count() > 0)
+                //                 frmChartline.AddSecondFile(PData_2, 2, mParser_2);
+                //             if (ButtonName_3.Count() > 0)
+                //                 frmChartline.AddSecondFile(PData_3, 3, mParser_3);
+                //             if (ButtonName_4.Count() > 0)
+                //                 frmChartline.AddSecondFile(PData_4, 4, mParser_4);
+                //             if (ButtonName_5.Count() > 0)
+                //                 frmChartline.AddSecondFile(PData_5, 5, mParser_5);
+
+                //             break;
+                //         case 2:
+                //             if (ButtonName_2.Count() > 0)
+                //                 frmChartline.AddSecondFile(SData_2, 2, mParser_2);
+                //             if (ButtonName_3.Count() > 0)
+                //                 frmChartline.AddSecondFile(SData_3, 3, mParser_3);
+                //             if (ButtonName_4.Count() > 0)
+                //                 frmChartline.AddSecondFile(SData_4, 4, mParser_4);
+                //             if (ButtonName_5.Count() > 0)
+                //                 frmChartline.AddSecondFile(SData_5, 5, mParser_5);
+                //             break;
+
+                //         case 3:
+                //             if (ButtonName_2.Count() > 0)
+                //                 frmChartline.AddSecondFile(PUData_2, 2, mParser_2);
+                //             if (ButtonName_3.Count() > 0)
+                //                 frmChartline.AddSecondFile(PUData_3, 3, mParser_3);
+                //             if (ButtonName_4.Count() > 0)
+                //                 frmChartline.AddSecondFile(PUData_4, 4, mParser_4);
+                //             if (ButtonName_5.Count() > 0)
+                //                 frmChartline.AddSecondFile(PUData_5, 5, mParser_5);
+                //             break;
+                //     }
+                //     foreach (var item in pnlAnagol.Controls)
+                //     {
+                //         if (item is Button)
+                //         {
+                //             ((Button)item).BackColor = Color.LightSteelBlue;
+                //         }
+                //     }
+                //     foreach (var item in pnlDigital.Controls)
+                //     {
+                //         if (item is Button)
+                //         {
+                //             ((Button)item).BackColor = Color.LightSteelBlue;
+                //         }
+                //     }
+
+                //     sizeChanged();
+                // }));
+
                 BeginInvoke(new Action(() =>
                 {
                     panel1.Controls.Clear();
@@ -568,7 +650,7 @@ namespace PRSpline
                             if (ButtonName_5.Count() > 0)
                                 frmChartline.AddSecondFile(PData_5, 5, mParser_5);
 
-                                break;
+                            break;
                         case 2:
                             if (ButtonName_2.Count() > 0)
                                 frmChartline.AddSecondFile(SData_2, 2, mParser_2);
@@ -578,7 +660,7 @@ namespace PRSpline
                                 frmChartline.AddSecondFile(SData_4, 4, mParser_4);
                             if (ButtonName_5.Count() > 0)
                                 frmChartline.AddSecondFile(SData_5, 5, mParser_5);
-                                break;
+                            break;
 
                         case 3:
                             if (ButtonName_2.Count() > 0)
@@ -589,7 +671,7 @@ namespace PRSpline
                                 frmChartline.AddSecondFile(PUData_4, 4, mParser_4);
                             if (ButtonName_5.Count() > 0)
                                 frmChartline.AddSecondFile(PUData_5, 5, mParser_5);
-                                break;
+                            break;
                     }
                     foreach (var item in pnlAnagol.Controls)
                     {
@@ -627,7 +709,7 @@ namespace PRSpline
             btnExtremum.Enabled = enable;
             cbxPS.Enabled = enable;
         }
-        private List<double[]> GetAllData(List<double[]> datas, Parser parser, SelectFile selectFiles)
+        private async Task<List<double[]>>  /*List<double[]>*/ GetAllData(List<double[]> datas, Parser parser, SelectFile selectFiles)
         {
             List<int> _fftIndex = new List<int>();
             for (int i = 0; i < parser.Schema.TotalAnalogChannels; i++)
@@ -640,37 +722,41 @@ namespace PRSpline
             var value = new List<double[]>();
             var _mFFTData = new FFTData();
             var mfft = new FFTCal(_fftIndex.ToArray(), parser);
-            try
+            await Task.Run(() => 
             {
-                _mFFTData = mfft.GetFFTData(datas);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            if (selectFiles == SelectFile.File_1) mFFTData = _mFFTData;
-
-            for (int i = 0; i < datas.Count; i++)
-            {
-                var _double = new List<double>();
-                int index = 0;
-                foreach (var item in datas[i])
+                try
                 {
-                    if (selectFiles != SelectFile.File_1)
+                    _mFFTData = mfft.GetFFTData(datas);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                if (selectFiles == SelectFile.File_1) mFFTData = _mFFTData;
+
+                for (int i = 0; i < datas.Count; i++)
+                {
+                    var _double = new List<double>();
+                    int index = 0;
+                    foreach (var item in datas[i])
                     {
-                        if (index == parser.Schema.TotalAnalogChannels + 2)
-                            break;
+                        if (selectFiles != SelectFile.File_1)
+                        {
+                            if (index == parser.Schema.TotalAnalogChannels + 2)
+                                break;
+                        }
+                        _double.Add(item);
+                        index++;
                     }
-                    _double.Add(item);
-                    index++;
-                }
 
-                foreach (var item in _mFFTData.arrFFTData[i].Value)
-                {
-                    _double.Add(item);
+                    foreach (var item in _mFFTData.arrFFTData[i].Value)
+                    {
+                        _double.Add(item);
+                    }
+                    value.Add(_double.ToArray());
                 }
-                value.Add(_double.ToArray());
-            }
+            });
+            
 
             return value;
         }
@@ -789,46 +875,49 @@ namespace PRSpline
             _frmSecondSelect.ShowDialog();
 
         }
-        public bool OpenSeondFile(SelectFile _selectFile)
+        public async Task< bool> OpenSeondFile(SelectFile _selectFile)
         {
+            bool IsSuccess = false;
             if (this.openFileDialog1.ShowDialog() != DialogResult.OK)
             {
                 return false;
             }
-            switch (_selectFile)
-            {
-                case SelectFile.File_2:
-                    //   PRData_1 = new PRData();
-                    break;
-            }
+            //switch (_selectFile)
+            //{
+            //    case SelectFile.File_2:
+            //        //   PRData_1 = new PRData();
+            //        break;
+            //}
             //Task.Run(() =>
             //{
             if (_selectFile == SelectFile.File_2)
             {
-                if (!LoadFile(SelectFile.File_2)) return true;
+                if (await LoadFile(SelectFile.File_2)) IsSuccess = true;
             }
             else if (_selectFile == SelectFile.File_3)
             {
-                if (!LoadFile(SelectFile.File_3)) return true;
+                if (await LoadFile(SelectFile.File_3)) IsSuccess = true;
             }
             else if (_selectFile == SelectFile.File_4)
             {
-                if (!LoadFile(SelectFile.File_4)) return true;
+                if (!await LoadFile(SelectFile.File_4)) IsSuccess = true;
             }
             else if (_selectFile == SelectFile.File_5)
             {
-                if (!LoadFile(SelectFile.File_5)) return true;
+                if (!await LoadFile(SelectFile.File_5)) IsSuccess = true;
             }
-            else return false;
-
-            cbxitem.Enabled = true;
-            pnlDigital.Enabled = false;
-            return false;
+            else IsSuccess = false;
+            if (IsSuccess)
+            {
+                cbxitem.Enabled = true;
+                pnlDigital.Enabled = false;
+            }
+            return IsSuccess;
             //});
         }
 
 
-        private bool LoadFile(SelectFile selectFile)
+        private async Task<bool>/*bool*/ LoadFile(SelectFile selectFile)
         {
             bool IsSuccess = false;
             if (Directory.Exists("./CompressFile") && SelectFile.File_1 == selectFile)
@@ -899,7 +988,7 @@ namespace PRSpline
                     if (!((DateTime)_mParser.Schema.StartTime.Value > StartDateTime && (DateTime)_mParser.Schema.StartTime.Value < StartDateTime.AddSeconds(60)))
                     {
                         int StartTime_FFF = StartDateTime.Millisecond;
-                        var ddddd = (DateTime)_mParser.Schema.StartTime.Value;
+
                         int FileStartTime_FFF = ((DateTime)_mParser.Schema.StartTime.Value).Millisecond;
                         MessageBox.Show(StartTime_FFF.ToString() + "," + FileStartTime_FFF.ToString());
 
@@ -1010,9 +1099,12 @@ namespace PRSpline
                     case SelectFile.File_1:
                         try
                         {
-                            PData_1 = GetAllData(_PData, _mParser, selectFile);
-                            SData_1 = GetAllData(_SData, _mParser, selectFile);
-                            PUData_1 = GetAllData(_PUData, _mParser, selectFile);
+                            //PData_1 = GetAllData(_PData, _mParser, selectFile);
+                            //SData_1=GetAllData(_SData, _mParser, selectFile);
+                            //PUData_1 = GetAllData(_PUData, _mParser, selectFile);
+                            PData_1 = await GetAllData(_PData, _mParser, selectFile);                            
+                            SData_1 = await GetAllData(_SData, _mParser, selectFile);                            
+                            PUData_1 = await GetAllData(_PUData, _mParser, selectFile);
                             mParser_1 = _mParser;
                         }
                         catch (Exception ex)
@@ -1021,9 +1113,9 @@ namespace PRSpline
                         }
                         break;
                     case SelectFile.File_2:
-                        PData_2 = GetAllData(_PData, _mParser, selectFile);
-                        SData_2 = GetAllData(_SData, _mParser, selectFile);
-                        PUData_2 = GetAllData(_PUData, _mParser, selectFile);
+                        PData_2 = await GetAllData(_PData, _mParser, selectFile);
+                        SData_2 = await GetAllData(_SData, _mParser, selectFile);
+                        PUData_2 = await GetAllData(_PUData, _mParser, selectFile);
                         mParser_2 = _mParser;
 
                         strFileName2 = openFileDialog1.SafeFileName;
@@ -1057,9 +1149,9 @@ namespace PRSpline
                         }
                         break;
                     case SelectFile.File_3:
-                        PData_3 = GetAllData(_PData, _mParser, selectFile);
-                        SData_3 = GetAllData(_SData, _mParser, selectFile);
-                        PUData_3 = GetAllData(_PUData, _mParser, selectFile);
+                        PData_3 = await GetAllData(_PData, _mParser, selectFile);
+                        SData_3 = await GetAllData(_SData, _mParser, selectFile);
+                        PUData_3 = await GetAllData(_PUData, _mParser, selectFile);
                         mParser_3 = _mParser;
 
                         strFileName3 = openFileDialog1.SafeFileName;
@@ -1095,9 +1187,9 @@ namespace PRSpline
 
                         break;
                     case SelectFile.File_4:
-                        PData_4 = GetAllData(_PData, _mParser, selectFile);
-                        SData_4 = GetAllData(_SData, _mParser, selectFile);
-                        PUData_4 = GetAllData(_PUData, _mParser, selectFile);
+                        PData_4 = await GetAllData(_PData, _mParser, selectFile);
+                        SData_4 = await GetAllData(_SData, _mParser, selectFile);
+                        PUData_4 = await GetAllData(_PUData, _mParser, selectFile);
                         mParser_4 = _mParser;
 
                         strFileName4 = openFileDialog1.SafeFileName;
@@ -1132,9 +1224,9 @@ namespace PRSpline
 
                         break;
                     case SelectFile.File_5:
-                        PData_5 = GetAllData(_PData, _mParser, selectFile);
-                        SData_5 = GetAllData(_SData, _mParser, selectFile);
-                        PUData_5 = GetAllData(_PUData, _mParser, selectFile);
+                        PData_5 = await GetAllData(_PData, _mParser, selectFile);
+                        SData_5 = await GetAllData(_SData, _mParser, selectFile);
+                        PUData_5 = await GetAllData(_PUData, _mParser, selectFile);
                         mParser_5 = _mParser;
 
                         strFileName5 = openFileDialog1.SafeFileName;
@@ -1235,5 +1327,14 @@ namespace PRSpline
 
         #endregion
 
+        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
+        {
+
+        }
+
+        private void groupBox2_Enter(object sender, EventArgs e)
+        {
+
+        }
     }
 }

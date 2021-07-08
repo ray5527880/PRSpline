@@ -410,6 +410,7 @@
             // openFileDialog1
             // 
             this.openFileDialog1.Filter = "DR-files(*.zip;*.cfg)|*.zip;*.cfg";
+            this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog1_FileOk);
             // 
             // btnSetup
             // 
@@ -446,6 +447,7 @@
             this.groupBox2.Size = new System.Drawing.Size(808, 91);
             this.groupBox2.TabIndex = 23;
             this.groupBox2.TabStop = false;
+            this.groupBox2.Enter += new System.EventHandler(this.groupBox2_Enter);
             // 
             // btnVS
             // 

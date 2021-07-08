@@ -68,44 +68,56 @@ namespace PRSpline
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
-            if (main.OpenSeondFile(frmMain.SelectFile.File_2))
+            button1.Enabled = false;
+            if (await main.OpenSeondFile(frmMain.SelectFile.File_2))
             {
-                this.Close();
-                //labFile2_Name.Text = main.strFileName2;
-               // labFile2_StartTime.Text = main.mParser_2.Schema.StartTime.Value.ToString("yyyy-MM-dd HH:mm:ss fff");
-               
+                labFile2_Name.Text = main.strFileName2;
+                labFile2_StartTime.Text = main.mParser_2.Schema.StartTime.Value.ToString("yyyy-MM-dd HH:mm:ss fff");
+                this.groupBox3.Enabled = true;
+                this.groupBox2.Enabled = false;
             }
+            else
+                button1.Enabled = true;
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private async void button2_Click(object sender, EventArgs e)
         {
-            if (main.OpenSeondFile(frmMain.SelectFile.File_3))
+            button2.Enabled = false;
+            if (await main.OpenSeondFile(frmMain.SelectFile.File_3))
             {
-                this.Close();
-                //labFile3_Name.Text = main.strFileName2;
-                //labFile3_StartTime.Text = main.mParser_2.Schema.StartTime.Value.ToString("yyyy-MM-dd HH:mm:ss fff");
+                labFile3_Name.Text = main.strFileName2;
+                labFile3_StartTime.Text = main.mParser_2.Schema.StartTime.Value.ToString("yyyy-MM-dd HH:mm:ss fff");
+                this.groupBox4.Enabled = true;
+                this.groupBox3.Enabled = false;
             }
+            else
+                button2.Enabled = true;
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private async void button3_Click(object sender, EventArgs e)
         {
-            if (main.OpenSeondFile(frmMain.SelectFile.File_4))
+            button3.Enabled = false;
+            if (await main.OpenSeondFile(frmMain.SelectFile.File_4))
             {
-                this.Close();
-                //labFile3_Name.Text = main.strFileName2;
-                //labFile3_StartTime.Text = main.mParser_2.Schema.StartTime.Value.ToString("yyyy-MM-dd HH:mm:ss fff");
+                labFile3_Name.Text = main.strFileName2;
+                labFile3_StartTime.Text = main.mParser_2.Schema.StartTime.Value.ToString("yyyy-MM-dd HH:mm:ss fff");
+                this.groupBox5.Enabled= true;
+                this.groupBox4.Enabled= false;
             }
+            else
+                button3.Enabled = true;
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private async void button4_Click(object sender, EventArgs e)
         {
-            if (main.OpenSeondFile(frmMain.SelectFile.File_5))
+            if (await main.OpenSeondFile(frmMain.SelectFile.File_5))
             {
-                this.Close();
-                //labFile3_Name.Text = main.strFileName2;
-                //labFile3_StartTime.Text = main.mParser_2.Schema.StartTime.Value.ToString("yyyy-MM-dd HH:mm:ss fff");
+                labFile3_Name.Text = main.strFileName2;
+                labFile3_StartTime.Text = main.mParser_2.Schema.StartTime.Value.ToString("yyyy-MM-dd HH:mm:ss fff");
+                this.groupBox5.Enabled = false;
+
             }
         }
     }

@@ -7,6 +7,9 @@ namespace BF_FW
 {
     public class EditXml
     {
+        public static string MeterFilePaht;
+        public static string RelayFilePaht;
+
         public static string DBPath;
         public static string DBName;
         public static string DBUser;
@@ -45,6 +48,11 @@ namespace BF_FW
         {
             VoltageSag = Convert.ToInt32(GetXmlString("root/VoltageSag"));
         }
+        public void GetMorRFilePaht()
+        {
+            MeterFilePaht = GetXmlString("root/MeterFilePaht");
+            RelayFilePaht = GetXmlString("root/RelayFilePaht");
+        }
         public void GetXmlData()
         {
             m_nTimes = Convert.ToInt32(GetXmlString("root/period/min"));
@@ -54,6 +62,7 @@ namespace BF_FW
             DBPwd = GetXmlString("root/connectionAlarms/pwd");
             IsUserSQL = Convert.ToInt32(GetXmlString("root/IsUserSQL"));
             GetVoltageSag();
+            GetMorRFilePaht();
             XmlDocument xmlDoc = new XmlDocument();
 
             xmlDoc.Load(strXmlFile);
@@ -107,6 +116,18 @@ namespace BF_FW
 
                 company.AppendChild(department);
                 company.AppendChild(UserVS);
+
+                XmlElement meterpath = xmlDoc.CreateElement("MeterFilePaht");
+                meterpath.InnerText = MeterFilePaht;
+
+                company.AppendChild(department);
+                company.AppendChild(meterpath);
+
+                XmlElement relayrpath = xmlDoc.CreateElement("RelayFilePaht");
+                relayrpath.InnerText = RelayFilePaht;
+
+                company.AppendChild(department);
+                company.AppendChild(relayrpath);
 
                 XmlElement connectionAlarms = xmlDoc.CreateElement("connectionAlarms");
                 XmlElement server = xmlDoc.CreateElement("server");

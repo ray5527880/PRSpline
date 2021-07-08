@@ -99,6 +99,7 @@ namespace PRSpline
 
                 if (_Message == string.Empty)
                 {
+                    MessageBox.Show("修改成功");
                     //if (IsSuccess)
                     //    MessageBox.Show("修改成功");
                     //else
@@ -136,6 +137,7 @@ namespace PRSpline
 
                     if (_Message == string.Empty)
                     {
+                        MessageBox.Show("新增成功");
                         //if (IsSuccess)
                         //    MessageBox.Show("新增成功");
                         //else
@@ -169,7 +171,7 @@ namespace PRSpline
                         if (_Message == string.Empty)
                         {
                             //if (IsSuccess)
-                            //    MessageBox.Show("刪除成功");
+                            MessageBox.Show("刪除成功");
                             //else
                             //    MessageBox.Show("刪除失敗 資料庫錯誤");
                         }
@@ -192,7 +194,7 @@ namespace PRSpline
                 if (_Message == string.Empty)
                 {
                     //if (IsSuccess)
-                    //    MessageBox.Show("刪除成功");
+                    MessageBox.Show("刪除成功");
                     //else
                     //    MessageBox.Show("刪除失敗 資料庫錯誤");
                 }

@@ -21,6 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FFTWSharp-master\FFTWSharp\FFTWSharp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="fftwlib">
       <HintPath>..\FFTWSharp-master\FFTWSharp\bin\Debug\fftwlib.dll</HintPath>
     </Reference>
