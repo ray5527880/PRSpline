@@ -19,7 +19,7 @@ namespace PRSpline
             Process[] myProcesses = Process.GetProcessesByName("PRSpline");
             if (!(myProcesses.Length > 1))
             {
-                Application.Run(new frmMain());
+                Application.Run(new frmSelectView());
             }
             else
             {
@@ -32,7 +32,7 @@ namespace PRSpline
                         myProcesses[ii].Kill();
                 }
 
-                Application.Run(new frmMain());
+                Application.Run(new frmSelectView());
             }
         }
     }

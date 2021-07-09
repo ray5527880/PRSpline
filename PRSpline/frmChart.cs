@@ -755,9 +755,9 @@ namespace PRSpline
                 this.chart1.ChartAreas[3].Position = new ElementPosition(0, 32, 100, 17);
                 this.chart1.ChartAreas[4].Position = new ElementPosition(0, 54, 100, 17);
                 this.chart1.ChartAreas[5].Position = new ElementPosition(0, 76, 100, 22);
-                this.chart1.Legends[3].Position = new ElementPosition(10, 25, 80, 4);
-                this.chart1.Legends[4].Position = new ElementPosition(10, 45, 80, 4);
-                this.chart1.Legends[5].Position = new ElementPosition(10, 65, 80, 4);
+                this.chart1.Legends[3].Position = new ElementPosition(10, 27, 80, 4);
+                this.chart1.Legends[4].Position = new ElementPosition(10, 49, 80, 4);
+                this.chart1.Legends[5].Position = new ElementPosition(10, 71, 80, 4);
 
 
 
@@ -779,10 +779,10 @@ namespace PRSpline
                 this.chart1.ChartAreas[4].Position = new ElementPosition(0, 46, 100, 13);
                 this.chart1.ChartAreas[5].Position = new ElementPosition(0, 64, 100, 13);
                 this.chart1.ChartAreas[6].Position = new ElementPosition(0, 82, 100, 17);
-                this.chart1.Legends[3].Position = new ElementPosition(10, 22, 80, 4);
-                this.chart1.Legends[4].Position = new ElementPosition(10, 39, 80, 4);
-                this.chart1.Legends[5].Position = new ElementPosition(10, 56, 80, 4);
-                this.chart1.Legends[6].Position = new ElementPosition(10, 73, 80, 4);
+                this.chart1.Legends[3].Position = new ElementPosition(10, 23, 80, 4);
+                this.chart1.Legends[4].Position = new ElementPosition(10, 41, 80, 4);
+                this.chart1.Legends[5].Position = new ElementPosition(10, 59, 80, 4);
+                this.chart1.Legends[6].Position = new ElementPosition(10, 77, 80, 4);
                 this.chart1.ChartAreas[2].AxisX.Title = "";
                 this.chart1.ChartAreas[3].AxisX.Title = "";
                 this.chart1.ChartAreas[4].AxisX.Title = "";

@@ -87,8 +87,8 @@ namespace PRSpline
             button2.Enabled = false;
             if (await main.OpenSeondFile(frmMain.SelectFile.File_3))
             {
-                labFile3_Name.Text = main.strFileName2;
-                labFile3_StartTime.Text = main.mParser_2.Schema.StartTime.Value.ToString("yyyy-MM-dd HH:mm:ss fff");
+                labFile3_Name.Text = main.strFileName3;
+                labFile3_StartTime.Text = main.mParser_3.Schema.StartTime.Value.ToString("yyyy-MM-dd HH:mm:ss fff");
                 this.groupBox4.Enabled = true;
                 this.groupBox3.Enabled = false;
             }
@@ -101,8 +101,8 @@ namespace PRSpline
             button3.Enabled = false;
             if (await main.OpenSeondFile(frmMain.SelectFile.File_4))
             {
-                labFile3_Name.Text = main.strFileName2;
-                labFile3_StartTime.Text = main.mParser_2.Schema.StartTime.Value.ToString("yyyy-MM-dd HH:mm:ss fff");
+                labFile4_Name.Text = main.strFileName4;
+                labFile4_StartTime.Text = main.mParser_4.Schema.StartTime.Value.ToString("yyyy-MM-dd HH:mm:ss fff");
                 this.groupBox5.Enabled= true;
                 this.groupBox4.Enabled= false;
             }
@@ -114,8 +114,8 @@ namespace PRSpline
         {
             if (await main.OpenSeondFile(frmMain.SelectFile.File_5))
             {
-                labFile3_Name.Text = main.strFileName2;
-                labFile3_StartTime.Text = main.mParser_2.Schema.StartTime.Value.ToString("yyyy-MM-dd HH:mm:ss fff");
+                labFile5_Name.Text = main.strFileName5;
+                labFile5_StartTime.Text = main.mParser_5.Schema.StartTime.Value.ToString("yyyy-MM-dd HH:mm:ss fff");
                 this.groupBox5.Enabled = false;
 
             }
