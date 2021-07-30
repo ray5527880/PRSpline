@@ -37,11 +37,12 @@ namespace PRSpline
             this.btnMultitude = new System.Windows.Forms.Button();
             this.btnVS = new System.Windows.Forms.Button();
             this.btnSetup = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnSingle
             // 
-            this.btnSingle.Location = new System.Drawing.Point(176, 216);
+            this.btnSingle.Location = new System.Drawing.Point(56, 211);
             this.btnSingle.Name = "btnSingle";
             this.btnSingle.Size = new System.Drawing.Size(75, 23);
             this.btnSingle.TabIndex = 0;
@@ -53,7 +54,8 @@ namespace PRSpline
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("標楷體", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label1.Location = new System.Drawing.Point(172, 283);
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(52, 278);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(89, 19);
             this.label1.TabIndex = 1;
@@ -63,7 +65,8 @@ namespace PRSpline
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("標楷體", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label2.Location = new System.Drawing.Point(306, 283);
+            this.label2.ForeColor = System.Drawing.Color.White;
+            this.label2.Location = new System.Drawing.Point(186, 278);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(89, 19);
             this.label2.TabIndex = 2;
@@ -73,7 +76,8 @@ namespace PRSpline
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("標楷體", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label3.Location = new System.Drawing.Point(420, 283);
+            this.label3.ForeColor = System.Drawing.Color.White;
+            this.label3.Location = new System.Drawing.Point(300, 278);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(89, 19);
             this.label3.TabIndex = 3;
@@ -83,7 +87,8 @@ namespace PRSpline
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("標楷體", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label4.Location = new System.Drawing.Point(555, 283);
+            this.label4.ForeColor = System.Drawing.Color.White;
+            this.label4.Location = new System.Drawing.Point(435, 278);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(49, 19);
             this.label4.TabIndex = 4;
@@ -91,7 +96,7 @@ namespace PRSpline
             // 
             // btnMultitude
             // 
-            this.btnMultitude.Location = new System.Drawing.Point(320, 216);
+            this.btnMultitude.Location = new System.Drawing.Point(200, 211);
             this.btnMultitude.Name = "btnMultitude";
             this.btnMultitude.Size = new System.Drawing.Size(75, 23);
             this.btnMultitude.TabIndex = 5;
@@ -101,7 +106,7 @@ namespace PRSpline
             // 
             // btnVS
             // 
-            this.btnVS.Location = new System.Drawing.Point(434, 216);
+            this.btnVS.Location = new System.Drawing.Point(314, 211);
             this.btnVS.Name = "btnVS";
             this.btnVS.Size = new System.Drawing.Size(75, 23);
             this.btnVS.TabIndex = 6;
@@ -111,7 +116,7 @@ namespace PRSpline
             // 
             // btnSetup
             // 
-            this.btnSetup.Location = new System.Drawing.Point(550, 216);
+            this.btnSetup.Location = new System.Drawing.Point(430, 211);
             this.btnSetup.Name = "btnSetup";
             this.btnSetup.Size = new System.Drawing.Size(75, 23);
             this.btnSetup.TabIndex = 7;
@@ -119,11 +124,23 @@ namespace PRSpline
             this.btnSetup.UseVisualStyleBackColor = true;
             this.btnSetup.Click += new System.EventHandler(this.btnSetup_Click);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(56, 382);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 8;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // frmSelectView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.BackColor = System.Drawing.Color.DimGray;
+            this.ClientSize = new System.Drawing.Size(553, 450);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.btnSetup);
             this.Controls.Add(this.btnVS);
             this.Controls.Add(this.btnMultitude);
@@ -132,8 +149,11 @@ namespace PRSpline
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnSingle);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "frmSelectView";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "frmSelectView";
+            this.Load += new System.EventHandler(this.frmSelectView_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -149,5 +169,6 @@ namespace PRSpline
         private System.Windows.Forms.Button btnMultitude;
         private System.Windows.Forms.Button btnVS;
         private System.Windows.Forms.Button btnSetup;
+        private System.Windows.Forms.Button button1;
     }
 }

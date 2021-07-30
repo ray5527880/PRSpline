@@ -8,6 +8,7 @@ namespace BF_FW
     public class GroupData
     {
         public  int No;
+        public DateTime dates;
         public string MainFileName;
         public string[] childFileName;
         public string Remarks;
@@ -22,14 +23,16 @@ namespace BF_FW
         public Group()
         {
             strXmlFile = this.GetType().Assembly.Location;
-            strXmlFile = strXmlFile.Replace("FWAutoDownloading.exe", "Group.xml");
-            strXmlFile = strXmlFile.Replace("fwsetup.dll", "Group.xml");
-            strXmlFile = strXmlFile.Replace("PRSpline.exe", "Group.xml");
+            strXmlFile = strXmlFile.Replace("FWAutoDownloading.exe", "\\Group\\Group.xml");
+            strXmlFile = strXmlFile.Replace("fwsetup.dll", "\\Group\\Group.xml");
+            strXmlFile = strXmlFile.Replace("PRSpline.exe", "\\Group\\Group.xml");
             GroupDatas = new List<GroupData>();
             GetGroupData();
         }
         public void GetGroupData()
         {
+            GroupDatas.Clear();
+
             XmlDocument xmlDoc = new XmlDocument();
 
             xmlDoc.Load(strXmlFile);
@@ -37,7 +40,8 @@ namespace BF_FW
             foreach (XmlNode item in xmlDoc.SelectNodes("root/Data"))
             {
                 var _GroupData = new GroupData();
-                _GroupData.No = _No;
+                _GroupData.No = Convert.ToInt32(item.SelectSingleNode("No").InnerText);
+                _GroupData.dates = Convert.ToDateTime(item.SelectSingleNode("dates").InnerText);
                 _GroupData.MainFileName = item.SelectSingleNode("MainFileName").InnerText;
                 _GroupData.Remarks = item.SelectSingleNode("Remarks").InnerText;
                 var _childlist = new List<string>();
@@ -70,6 +74,12 @@ namespace BF_FW
                 {
                     XmlElement _Data = xmlDoc.CreateElement("Data");
 
+                    XmlElement _No = xmlDoc.CreateElement("No");
+                    _No.InnerText = item.No.ToString();
+
+                    XmlElement _Dates = xmlDoc.CreateElement("dates");
+                    _Dates.InnerText = item.dates.ToString("yyyy-MM-dd");
+
                     XmlElement _MainFileName = xmlDoc.CreateElement("MainFileName");
                     _MainFileName.InnerText = item.MainFileName;
 
@@ -81,9 +91,11 @@ namespace BF_FW
                         XmlElement _FileName = xmlDoc.CreateElement("FilesName");
                         _FileName.InnerText = item_2;
                         _childFileName.AppendChild(_FileName);
-                    }            
+                    }
                     //加入至company節點底下
 
+                    _Data.AppendChild(_No);
+                    _Data.AppendChild(_Dates);
                     _Data.AppendChild(_MainFileName);
                     _Data.AppendChild(_Remarks);
                     _Data.AppendChild(_childFileName);

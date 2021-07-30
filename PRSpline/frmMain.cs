@@ -944,12 +944,12 @@ namespace PRSpline
 
                 if (selectFile != SelectFile.File_1)
                 {
-                    if (!((DateTime)_mParser.Schema.StartTime.Value > StartDateTime && (DateTime)_mParser.Schema.StartTime.Value < StartDateTime.AddSeconds(60)))
+                    if (!((DateTime)_mParser.Schema.StartTime.Value >= StartDateTime && (DateTime)_mParser.Schema.StartTime.Value < StartDateTime.AddSeconds(60)))
                     {
-                        int StartTime_FFF = StartDateTime.Millisecond;
+                      //  int StartTime_FFF = StartDateTime.Millisecond;
 
-                        int FileStartTime_FFF = ((DateTime)_mParser.Schema.StartTime.Value).Millisecond;
-                        MessageBox.Show(StartTime_FFF.ToString() + "," + FileStartTime_FFF.ToString());
+                        //int FileStartTime_FFF = ((DateTime)_mParser.Schema.StartTime.Value).Millisecond;
+                        //MessageBox.Show(StartTime_FFF.ToString() + "," + FileStartTime_FFF.ToString());
 
                         MessageBox.Show("副檔時間錯誤");
                         return IsSuccess;

@@ -38,10 +38,22 @@ namespace PRSpline
 
         private void btnSetup_Click(object sender, EventArgs e)
         {
-            EditXml mEditXml = new EditXml();
-            mEditXml.GetXmlData();
+            
             var frm = new frmSetup();
             frm.ShowDialog();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var frm = new frmSelectGroup();
+            frm.ShowDialog();
+        }
+
+        private void frmSelectView_Load(object sender, EventArgs e)
+        {
+            EditXml mEditXml = new EditXml();
+            mEditXml.GetXmlData();
+            Group groups = new Group();
         }
     }
 }
