@@ -32,13 +32,16 @@ namespace PRSpline
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmSelectGroup));
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.btnSelect = new System.Windows.Forms.Button();
             this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
             this.label8 = new System.Windows.Forms.Label();
-            this.btnSelect = new System.Windows.Forms.Button();
+            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.label7 = new System.Windows.Forms.Label();
             this.btnLoad = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btnDel = new System.Windows.Forms.Button();
+            this.btnUpdata = new System.Windows.Forms.Button();
+            this.btnAdd = new System.Windows.Forms.Button();
             this.labNo = new System.Windows.Forms.Label();
             this.labDate = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -47,9 +50,6 @@ namespace PRSpline
             this.labMainName = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.btnDel = new System.Windows.Forms.Button();
-            this.btnUpdata = new System.Windows.Forms.Button();
-            this.btnAdd = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -80,23 +80,15 @@ namespace PRSpline
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "篩選";
             // 
-            // label7
+            // btnSelect
             // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("標楷體", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label7.Location = new System.Drawing.Point(6, 28);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(109, 19);
-            this.label7.TabIndex = 0;
-            this.label7.Text = "起始日期：";
-            // 
-            // dateTimePicker1
-            // 
-            this.dateTimePicker1.CalendarFont = new System.Drawing.Font("標楷體", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.dateTimePicker1.Location = new System.Drawing.Point(115, 24);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(155, 23);
-            this.dateTimePicker1.TabIndex = 1;
+            this.btnSelect.Font = new System.Drawing.Font("標楷體", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.btnSelect.Location = new System.Drawing.Point(593, 22);
+            this.btnSelect.Name = "btnSelect";
+            this.btnSelect.Size = new System.Drawing.Size(90, 30);
+            this.btnSelect.TabIndex = 4;
+            this.btnSelect.Text = "篩選";
+            this.btnSelect.UseVisualStyleBackColor = false;
             // 
             // dateTimePicker2
             // 
@@ -117,15 +109,23 @@ namespace PRSpline
             this.label8.TabIndex = 2;
             this.label8.Text = "~結束日期：";
             // 
-            // btnSelect
+            // dateTimePicker1
             // 
-            this.btnSelect.Font = new System.Drawing.Font("標楷體", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.btnSelect.Location = new System.Drawing.Point(593, 22);
-            this.btnSelect.Name = "btnSelect";
-            this.btnSelect.Size = new System.Drawing.Size(90, 30);
-            this.btnSelect.TabIndex = 4;
-            this.btnSelect.Text = "篩選";
-            this.btnSelect.UseVisualStyleBackColor = false;
+            this.dateTimePicker1.CalendarFont = new System.Drawing.Font("標楷體", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.dateTimePicker1.Location = new System.Drawing.Point(115, 24);
+            this.dateTimePicker1.Name = "dateTimePicker1";
+            this.dateTimePicker1.Size = new System.Drawing.Size(155, 23);
+            this.dateTimePicker1.TabIndex = 1;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("標楷體", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label7.Location = new System.Drawing.Point(6, 28);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(109, 19);
+            this.label7.TabIndex = 0;
+            this.label7.Text = "起始日期：";
             // 
             // btnLoad
             // 
@@ -159,6 +159,42 @@ namespace PRSpline
             this.groupBox2.TabIndex = 14;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "群組資料";
+            // 
+            // btnDel
+            // 
+            this.btnDel.Font = new System.Drawing.Font("標楷體", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.btnDel.ForeColor = System.Drawing.Color.White;
+            this.btnDel.Location = new System.Drawing.Point(404, 135);
+            this.btnDel.Name = "btnDel";
+            this.btnDel.Size = new System.Drawing.Size(90, 30);
+            this.btnDel.TabIndex = 21;
+            this.btnDel.Text = "刪除";
+            this.btnDel.UseVisualStyleBackColor = false;
+            this.btnDel.Click += new System.EventHandler(this.btnDel_Click);
+            // 
+            // btnUpdata
+            // 
+            this.btnUpdata.Font = new System.Drawing.Font("標楷體", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.btnUpdata.ForeColor = System.Drawing.Color.White;
+            this.btnUpdata.Location = new System.Drawing.Point(207, 135);
+            this.btnUpdata.Name = "btnUpdata";
+            this.btnUpdata.Size = new System.Drawing.Size(90, 30);
+            this.btnUpdata.TabIndex = 20;
+            this.btnUpdata.Text = "修改";
+            this.btnUpdata.UseVisualStyleBackColor = false;
+            this.btnUpdata.Click += new System.EventHandler(this.btnUpdata_Click);
+            // 
+            // btnAdd
+            // 
+            this.btnAdd.Font = new System.Drawing.Font("標楷體", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.btnAdd.ForeColor = System.Drawing.Color.White;
+            this.btnAdd.Location = new System.Drawing.Point(10, 135);
+            this.btnAdd.Name = "btnAdd";
+            this.btnAdd.Size = new System.Drawing.Size(90, 30);
+            this.btnAdd.TabIndex = 19;
+            this.btnAdd.Text = "新增";
+            this.btnAdd.UseVisualStyleBackColor = false;
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
             // labNo
             // 
@@ -244,39 +280,6 @@ namespace PRSpline
             this.label1.Size = new System.Drawing.Size(39, 19);
             this.label1.TabIndex = 11;
             this.label1.Text = "No:";
-            // 
-            // btnDel
-            // 
-            this.btnDel.Font = new System.Drawing.Font("標楷體", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.btnDel.ForeColor = System.Drawing.Color.White;
-            this.btnDel.Location = new System.Drawing.Point(404, 135);
-            this.btnDel.Name = "btnDel";
-            this.btnDel.Size = new System.Drawing.Size(90, 30);
-            this.btnDel.TabIndex = 21;
-            this.btnDel.Text = "刪除";
-            this.btnDel.UseVisualStyleBackColor = false;
-            // 
-            // btnUpdata
-            // 
-            this.btnUpdata.Font = new System.Drawing.Font("標楷體", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.btnUpdata.ForeColor = System.Drawing.Color.White;
-            this.btnUpdata.Location = new System.Drawing.Point(207, 135);
-            this.btnUpdata.Name = "btnUpdata";
-            this.btnUpdata.Size = new System.Drawing.Size(90, 30);
-            this.btnUpdata.TabIndex = 20;
-            this.btnUpdata.Text = "修改";
-            this.btnUpdata.UseVisualStyleBackColor = false;
-            // 
-            // btnAdd
-            // 
-            this.btnAdd.Font = new System.Drawing.Font("標楷體", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.btnAdd.ForeColor = System.Drawing.Color.White;
-            this.btnAdd.Location = new System.Drawing.Point(10, 135);
-            this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(90, 30);
-            this.btnAdd.TabIndex = 19;
-            this.btnAdd.Text = "新增";
-            this.btnAdd.UseVisualStyleBackColor = false;
             // 
             // frmSelectGroup
             // 

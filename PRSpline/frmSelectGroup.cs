@@ -13,8 +13,14 @@ namespace PRSpline
 {
     public partial class frmSelectGroup : Form
     {
+        private GroupData _GroupData;
         public frmSelectGroup()
         {
+            InitializeComponent();
+        }
+        public frmSelectGroup(GroupData groupData)
+        {
+            _GroupData = groupData;
             InitializeComponent();
         }
 
@@ -65,8 +71,35 @@ namespace PRSpline
                 labDate.Text = (item.ToArray())[0].dates.ToString("yyyy-MM-dd");
                 labMainName.Text= (item.ToArray())[0].MainFileName;
                 textBox2.Text= (item.ToArray())[0].Remarks;
-                //labDate.Text=()
+                btnAdd.Enabled = false;
+                btnUpdata.Enabled = true;
+                btnDel.Enabled = true;
             }
+            else
+            {
+                labNo.Text = string.Empty;
+                labDate.Text = string.Empty;
+                labMainName.Text = string.Empty;
+                textBox2.Text = string.Empty;
+                btnAdd.Enabled = true;
+                btnUpdata.Enabled = false;
+                btnDel.Enabled = false;
+            }
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnUpdata_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnDel_Click(object sender, EventArgs e)
+        {
+            var _Group = new Group();
         }
     }
 }

@@ -19,7 +19,7 @@ namespace BF_FW
 
         public static List<GroupData> GroupDatas;
 
-        string strXmlFile;
+        static string strXmlFile;
         public Group()
         {
             strXmlFile = this.GetType().Assembly.Location;
@@ -29,7 +29,7 @@ namespace BF_FW
             GroupDatas = new List<GroupData>();
             GetGroupData();
         }
-        public void GetGroupData()
+        public static void GetGroupData()
         {
             GroupDatas.Clear();
 
@@ -45,7 +45,7 @@ namespace BF_FW
                 _GroupData.MainFileName = item.SelectSingleNode("MainFileName").InnerText;
                 _GroupData.Remarks = item.SelectSingleNode("Remarks").InnerText;
                 var _childlist = new List<string>();
-                foreach(XmlNode items in item.SelectNodes("childFileName"))
+                foreach (XmlNode items in item.SelectNodes("childFileName"))
                 {
                     _childlist.Add(items.SelectSingleNode("FilesName").InnerText);
                 }
@@ -54,7 +54,7 @@ namespace BF_FW
                 GroupDatas.Add(_GroupData);
             }
         }
-        public bool SaveXml()
+        public static bool SaveXml()
         {
             bool reValue = false;
             string reString = string.Empty;
@@ -69,7 +69,7 @@ namespace BF_FW
                 XmlElement company = xmlDoc.CreateElement("root");
                 xmlDoc.AppendChild(company);
                 //建立子節點
-            
+
                 foreach (var item in GroupDatas)
                 {
                     XmlElement _Data = xmlDoc.CreateElement("Data");
@@ -86,7 +86,7 @@ namespace BF_FW
                     XmlElement _Remarks = xmlDoc.CreateElement("Remarks");
                     _Remarks.InnerText = item.Remarks;
                     XmlElement _childFileName = xmlDoc.CreateElement("childFileName");
-                    foreach(var item_2 in item.childFileName)
+                    foreach (var item_2 in item.childFileName)
                     {
                         XmlElement _FileName = xmlDoc.CreateElement("FilesName");
                         _FileName.InnerText = item_2;
@@ -111,7 +111,64 @@ namespace BF_FW
             }
             return reValue;
         }
-        private string GetXmlString(string strNode)
+       public static bool UpData(int no, GroupData groupData)
+        {
+            bool reValue = false;
+            try
+            {
+                for (int i = 0; i < GroupDatas.Count; i++)
+                {
+                    if (GroupDatas[i].No == no)
+                    {
+                        GroupDatas[i] = groupData;
+                        reValue = SaveXml();
+                        break;
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                throw;
+            }
+            return reValue;
+        }
+        public static bool AddData(GroupData groupData)
+        {
+            bool reValue = false;
+            try
+            {
+                GroupDatas.Add(groupData);
+                reValue = SaveXml();
+            }catch(Exception ex)
+            {
+                throw;
+            }
+
+            return reValue;
+        }
+        public static bool DedData(int no)
+        {
+            bool reValue = false;
+            try
+            {
+                for(int i = 0; i < GroupDatas.Count; i++)
+                {
+                    if (GroupDatas[i].No == no)
+                    {
+                        GroupDatas.Remove(GroupDatas[i]);
+                        reValue = SaveXml();
+                        break;
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                throw;
+            }
+            return reValue;
+        }
+
+        private static string GetXmlString(string strNode)
         {
             //使用XmlDocument讀入XML格式資料
             XmlDocument xmlDoc = new XmlDocument();
