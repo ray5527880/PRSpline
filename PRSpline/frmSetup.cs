@@ -20,6 +20,8 @@ namespace PRSpline
 
         public string ConnectionAlarms;
 
+        private string strPahtName;
+
         public frmSetup()
         {
             InitializeComponent();
@@ -27,13 +29,14 @@ namespace PRSpline
 
         private void frmSetup_Load(object sender, EventArgs e)
         {
-            DGVSetup.ColumnCount = 6;
+            DGVSetup.ColumnCount = 7;
             DGVSetup.Columns[0].Name = "名稱";
             DGVSetup.Columns[1].Name = "IP位置";
             DGVSetup.Columns[2].Name = "帳號";
             DGVSetup.Columns[3].Name = "密碼";
             DGVSetup.Columns[4].Name = "基準電壓";
             DGVSetup.Columns[5].Name = "No";
+            DGVSetup.Columns[6].Name = "pathName";
 
             DGVSetup.Columns[0].Width = 175;
             DGVSetup.Columns[1].Width = 175;
@@ -41,6 +44,7 @@ namespace PRSpline
             DGVSetup.Columns[3].Width = 100;
             DGVSetup.Columns[4].Width = 100;
             DGVSetup.Columns[5].Visible = false;
+            DGVSetup.Columns[6].Visible = false;
 
             DGVSetup.ReadOnly = true;
             DGVSetup.Rows.Clear();
@@ -50,7 +54,7 @@ namespace PRSpline
             UpdataView();
         }
         private void UpdataView()
-        {            
+        {
             DGVSetup.Rows.Clear();
             int count = 0;
             m_nCount = EditXml.mFTPData.Count;
@@ -58,7 +62,7 @@ namespace PRSpline
             {
                 string[] arr = new string[]
                 {
-                    item.strName,item.strIP,item.strUser,item.strPwd,item.BaseValue.ToString(),count.ToString()
+                    item.strName,item.strIP,item.strUser,item.strPwd,item.BaseValue.ToString(),count.ToString(),item.strPathName
                 };
                 DGVSetup.Rows.Add(arr);
                 count++;
@@ -81,29 +85,24 @@ namespace PRSpline
                     strIP = txtIP.Text,
                     strUser = txtUser.Text,
                     strPwd = txtPwd.Text,
-                    BaseValue = Convert.ToInt32(txtBaseValue.Text)
+                    BaseValue = Convert.ToInt32(txtBaseValue.Text),
+                    strPathName = strPahtName
                 };
                 EditXml.mFTPData[selectNo] = _FTPData;
-                if (_FTPData.strName != OldName)
-                {
-                    var strPath = System.IO.Directory.GetCurrentDirectory() + @"\downloadFile\";
-                    FileSystem.RenameFile(Path.GetFullPath(strPath + @"\" + OldName + @"\" + OldName + ".xml"), txtName.Text + ".xml");
-                    FileSystem.RenameDirectory(Path.GetFullPath(strPath + @"\" + OldName), txtName.Text);
-                }
-             //   var m_tVSIEDName = new tVSIEDName(ConnectionAlarms);
-               // var VSIEDData = m_tVSIEDName.GetData(OldName);
-                
-                string _Message = EditXml.SaveXml();
+                //  if (_FTPData.strName != OldName)
+                //   {
+                //       var strPath = System.IO.Directory.GetCurrentDirectory() + @"\downloadFile\";
+                //        FileSystem.RenameFile(Path.GetFullPath(strPath + @"\" + OldName + @"\" + OldName + ".xml"), txtName.Text + ".xml");
+                //        FileSystem.RenameDirectory(Path.GetFullPath(strPath + @"\" + OldName), txtName.Text);
+                //     }
+                //   var m_tVSIEDName = new tVSIEDName(ConnectionAlarms);
+                // var VSIEDData = m_tVSIEDName.GetData(OldName);
 
-              //  bool IsSuccess = m_tVSIEDName.UpDateData(VSIEDData, txtName.Text);
+                string _Message = EditXml.SaveXml();
 
                 if (_Message == string.Empty)
                 {
                     MessageBox.Show("修改成功");
-                    //if (IsSuccess)
-                    //    MessageBox.Show("修改成功");
-                    //else
-                    //    MessageBox.Show("修改失敗 資料庫錯誤");
                 }
                 else
                     MessageBox.Show("修改失敗 錯誤訊息：" + _Message);
@@ -111,12 +110,18 @@ namespace PRSpline
             else
             {
                 var strPath = System.IO.Directory.GetCurrentDirectory() + @"\downloadFile\" + txtName.Text;
+                var strVSDataPath = System.IO.Directory.GetCurrentDirectory() + @"\VSData\";
 
                 if (!Directory.Exists(strPath))
                 {
                     Directory.CreateDirectory(strPath);
+                }  
+                
+                if (!Directory.Exists(strVSDataPath))
+                {
+                    Directory.CreateDirectory(strVSDataPath);
                 }
-                var VSXml = new VoltageSagXml(strPath + @"\" + txtName.Text + ".xml");
+                var VSXml = new VoltageSagXml(strVSDataPath + @"\" + txtName.Text + EditXml.mFTPData.Count().ToString() + ".xml");
 
                 bool isCreate = VSXml.CreateFile();
                 if (isCreate)
@@ -127,21 +132,15 @@ namespace PRSpline
                         strIP = txtIP.Text,
                         strUser = txtUser.Text,
                         strPwd = txtPwd.Text,
-                        BaseValue = Convert.ToInt32(txtBaseValue.Text)
+                        BaseValue = Convert.ToInt32(txtBaseValue.Text),
+                        strPathName = txtName.Text + EditXml.mFTPData.Count().ToString()
                     };
                     EditXml.mFTPData.Add(_FTPData);
                     string _Message = EditXml.SaveXml();
 
-                  //  var m_tVSIEDName = new tVSIEDName(ConnectionAlarms);
-                    //bool IsSuccess = m_tVSIEDName.AddData(txtName.Text);
-
                     if (_Message == string.Empty)
                     {
                         MessageBox.Show("新增成功");
-                        //if (IsSuccess)
-                        //    MessageBox.Show("新增成功");
-                        //else
-                        //    MessageBox.Show("新增失敗 資料庫錯誤");
                     }
                     else
                         MessageBox.Show("新增失敗 錯誤訊息：" + _Message);
@@ -165,15 +164,9 @@ namespace PRSpline
 
                         string _Message = EditXml.SaveXml();
 
-                       // var m_tVSIEDName = new tVSIEDName(ConnectionAlarms);
-                        //bool IsSuccess = m_tVSIEDName.DeleteData(item.Cells[0].Value.ToString());
-
                         if (_Message == string.Empty)
                         {
-                            //if (IsSuccess)
                             MessageBox.Show("刪除成功");
-                            //else
-                            //    MessageBox.Show("刪除失敗 資料庫錯誤");
                         }
                         else
                             MessageBox.Show("刪除失敗 錯誤訊息：" + _Message);
@@ -188,15 +181,9 @@ namespace PRSpline
                 EditXml.mFTPData.RemoveAt(selectNo);
                 string _Message = EditXml.SaveXml();
 
-                //var m_tVSIEDName = new tVSIEDName(ConnectionAlarms);
-                //bool IsSuccess = m_tVSIEDName.DeleteData(OldName);
-
                 if (_Message == string.Empty)
                 {
-                    //if (IsSuccess)
                     MessageBox.Show("刪除成功");
-                    //else
-                    //    MessageBox.Show("刪除失敗 資料庫錯誤");
                 }
                 else
                     MessageBox.Show("刪除失敗 錯誤訊息：" + _Message);
@@ -205,14 +192,13 @@ namespace PRSpline
         }
 
         private void btnSave_Click(object sender, EventArgs e)
-        {       
-            string _Message= EditXml.SaveXml();
+        {
+            string _Message = EditXml.SaveXml();
             if (_Message == string.Empty)
                 MessageBox.Show("儲存成功");
             else
                 MessageBox.Show("儲存失敗 錯誤訊息：" + _Message);
         }
-
         private void DGVSetup_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             m_nIndex = e.RowIndex;
@@ -230,6 +216,7 @@ namespace PRSpline
                 txtPwd.Text = DGVSetup.Rows[m_nIndex].Cells[3].Value.ToString();
                 txtBaseValue.Text = DGVSetup.Rows[m_nIndex].Cells[4].Value.ToString();
                 selectNo = Convert.ToInt32(DGVSetup.Rows[m_nIndex].Cells[5].Value);
+                strPahtName = DGVSetup.Rows[m_nIndex].Cells[6].Value.ToString();
             }
         }
     }

@@ -28,7 +28,22 @@ namespace BF_FW
         {
             _SqlConnectionAlarms = SqlConnectionAlarms;
         }
-        
+        public void AddData(string _message)
+        {
+            string strSQL = "Insert into [dbo].[VSData]"
+                      + "([message])"
+                      + " values(@V1)";
+            using (var sqlConn = new SqlConnection(_SqlConnectionAlarms))
+            {
+                sqlConn.Open();
+                using (SqlCommand sqlCmd = new SqlCommand(strSQL, sqlConn))
+                {
+                    sqlCmd.Parameters.AddWithValue("@V1", _message);                 
+
+                    sqlCmd.ExecuteNonQuery();
+                }
+            }
+        }
         public void AddData(VSData vSData,int IED_ID)
         {
             string strSQL = "Insert into [dbo].[VSData]"

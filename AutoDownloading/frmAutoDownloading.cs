@@ -120,41 +120,45 @@ namespace AutoDownloading
 
                             if (VolSagVal.VoltageSagDatas.duration != 0)
                             {
-                                string _filePaht = string.Format(@"./downloadFile/{0}/{0}.xml", item.strName);
+                                string _filePaht = string.Format(@"./VSData/{0}.xml", item.strPathName);
+                                VolSagVal.VoltageSagDatas.strPSValue = string.Empty;
                                 var VSXml = new VoltageSagXml(_filePaht);
                                 VSXml.AddData(VolSagVal.VoltageSagDatas);
+                                string str = VolSagVal.VoltageSagDatas.treggerDateTime.ToString("yyyy-MM-dd_HH-mm-ss") +"發生電驛："+ item.strPathName + " 持續時間：" + VolSagVal.VoltageSagDatas.duration + "ms 持續週期：" + VolSagVal.VoltageSagDatas.cycle
+                    + "cycle 電壓：R=" + VolSagVal.VoltageSagDatas.PValue + "pu S=" + VolSagVal.VoltageSagDatas.QValue + "pu T=" + VolSagVal.VoltageSagDatas.SValue + "pu";
+                                tVSData.AddData(str);
+                                
+                                //if (EditXml.IsUserSQL == 1)
+                                //{
+                                //    tVSData.VSData vSDatas = new tVSData.VSData();
+                                //    vSDatas.Year = VolSagVal.VoltageSagDatas.treggerDateTime.Year;
+                                //    vSDatas.MD = VolSagVal.VoltageSagDatas.treggerDateTime.Month * 100 + VolSagVal.VoltageSagDatas.treggerDateTime.Day;
+                                //    vSDatas.HM = VolSagVal.VoltageSagDatas.treggerDateTime.Hour * 100 + VolSagVal.VoltageSagDatas.treggerDateTime.Minute;
+                                //    vSDatas.SS = VolSagVal.VoltageSagDatas.treggerDateTime.Second;
+                                //    vSDatas.DUR = VolSagVal.VoltageSagDatas.duration;
+                                //    vSDatas.V1 = VolSagVal.VoltageSagDatas.PValue * 100;
+                                //    vSDatas.V2 = VolSagVal.VoltageSagDatas.QValue * 100;
+                                //    vSDatas.V3 = VolSagVal.VoltageSagDatas.SValue * 100;
+                                //    if (vSDatas.V1 < vSDatas.V2)
+                                //    {
+                                //        if (vSDatas.V1 < vSDatas.V3)
+                                //            vSDatas.Down = 100 - vSDatas.V1;
+                                //        else
+                                //            vSDatas.Down = 100 - vSDatas.V3;
+                                //    }
+                                //    else
+                                //    {
+                                //        if (vSDatas.V2 < vSDatas.V3)
+                                //            vSDatas.Down = 100 - vSDatas.V2;
+                                //        else
+                                //            vSDatas.Down = 100 - vSDatas.V3;
+                                //    }
+                                //    vSDatas.Cycle = VolSagVal.VoltageSagDatas.cycle;
+                                //    vSDatas.Type = GetType(100 - vSDatas.Down, vSDatas.DUR);
 
-                                if (EditXml.IsUserSQL == 1)
-                                {
-                                    tVSData.VSData vSDatas = new tVSData.VSData();
-                                    vSDatas.Year = VolSagVal.VoltageSagDatas.treggerDateTime.Year;
-                                    vSDatas.MD = VolSagVal.VoltageSagDatas.treggerDateTime.Month * 100 + VolSagVal.VoltageSagDatas.treggerDateTime.Day;
-                                    vSDatas.HM = VolSagVal.VoltageSagDatas.treggerDateTime.Hour * 100 + VolSagVal.VoltageSagDatas.treggerDateTime.Minute;
-                                    vSDatas.SS = VolSagVal.VoltageSagDatas.treggerDateTime.Second;
-                                    vSDatas.DUR = VolSagVal.VoltageSagDatas.duration;
-                                    vSDatas.V1 = VolSagVal.VoltageSagDatas.PValue * 100;
-                                    vSDatas.V2 = VolSagVal.VoltageSagDatas.QValue * 100;
-                                    vSDatas.V3 = VolSagVal.VoltageSagDatas.SValue * 100;
-                                    if (vSDatas.V1 < vSDatas.V2)
-                                    {
-                                        if (vSDatas.V1 < vSDatas.V3)
-                                            vSDatas.Down = 100 - vSDatas.V1;
-                                        else
-                                            vSDatas.Down = 100 - vSDatas.V3;
-                                    }
-                                    else
-                                    {
-                                        if (vSDatas.V2 < vSDatas.V3)
-                                            vSDatas.Down = 100 - vSDatas.V2;
-                                        else
-                                            vSDatas.Down = 100 - vSDatas.V3;
-                                    }
-                                    vSDatas.Cycle = VolSagVal.VoltageSagDatas.cycle;
-                                    vSDatas.Type = GetType(100 - vSDatas.Down, vSDatas.DUR);
-
-                                 //   if (vSDatas.V1 < 90 || vSDatas.V2 < 90 || vSDatas.V3 < 90)
-                                    //    tVSData.AddData(vSDatas, VSIED_Data.ID);
-                                }
+                                //    //   if (vSDatas.V1 < 90 || vSDatas.V2 < 90 || vSDatas.V3 < 90)
+                                //    tVSData.AddData(vSDatas, VSIED_Data.ID);
+                                //}
                             }
                         }
                     }catch(Exception ex)

@@ -16,6 +16,7 @@ namespace BF_FW.data
             public decimal PValue;
             public decimal QValue;
             public decimal SValue;
+            public string strPSValue;
         }
     }
 }

@@ -100,8 +100,8 @@ namespace BF_FW
             try
             {
                 VolSagCal();
-                if (stuVSag2.douEndTime == 0)
-                    VolSagCal_95();
+                //if (stuVSag2.douEndTime == 0)
+                  //  VolSagCal_95();
                 SetVolSagData();
                 mParser.CloseFiles();
                 mParser.Dispose();

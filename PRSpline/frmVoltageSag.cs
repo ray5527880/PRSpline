@@ -19,14 +19,18 @@ namespace PRSpline
         private VoltageSagChart frm;
         public VoltageSagData.voltageSagData SelectData;
         public VoltageSagData.voltageSagData[] voltageSagDatas;
+
+        public string strfilepath = string.Empty;
+
+        int[] baseVoltage;
+
         public frmVoltageSag()
         {
             InitializeComponent();
         }
-        int[] baseVoltage;
+
         private void frmVoltageSag_Load(object sender, EventArgs e)
         {
-
             EditXml mEditXml = new EditXml();
             mEditXml.GetXmlData();
             cbxRalay.Items.Clear();
@@ -44,8 +48,12 @@ namespace PRSpline
         private void btnConfirm_Click(object sender, EventArgs e)
         {
             panChart.Controls.Clear();
-            string filePaht = string.Format(@"./downloadFile/{0}/{0}.xml", cbxRalay.SelectedItem);
-            var VSData = new VoltageSagXml(filePaht);
+
+            var PathName = (from item in EditXml.mFTPData where item.strName == cbxRalay.SelectedItem.ToString() select item).First();
+
+            strfilepath = string.Format(@"./VSData/{0}.xml", PathName.strPathName);
+
+            var VSData = new VoltageSagXml(strfilepath);
 
             var data = VSData.GetXmlData();
 
@@ -69,29 +77,33 @@ namespace PRSpline
         {
             this.panel2.Location = new Point((this.Width - panel2.Width) / 2 + 12, this.panel2.Location.Y);
             this.panel3.Location = new Point((this.Width - panel3.Width) / 2 + 12, this.panel3.Location.Y);
-            if (panChart.Controls.Count != 0)
-            {
-                panChart.Controls.Clear();
-                string filePaht = string.Format(@"./downloadFile/{0}/{0}.xml", cbxRalay.SelectedItem);
-                var VSData = new VoltageSagXml(filePaht);
+           // if (panChart.Controls.Count != 0)
+           // {
+           //     panChart.Controls.Clear();
 
-                var data = VSData.GetXmlData();
+               // var PathName = (from item in EditXml.mFTPData where item.strName == cbxRalay.SelectedItem.ToString() select item).First();
 
-                var datas = new List<VoltageSagData.voltageSagData>();
-                foreach (var item in data)
-                {
-                    if (item.treggerDateTime >= dateTimePicker1.Value.AddDays(-1) && item.treggerDateTime < dateTimePicker2.Value)
-                    {
-                        datas.Add(item);
-                    }
-                }
-                voltageSagDatas = datas.ToArray();
-                UpdataCbxItem(datas.ToArray());
-                frm = new VoltageSagChart(datas.ToArray());
-                frm.Width = panChart.Width;
+                //string filePaht = string.Format(@"./VSData/{0}.xml", PathName.strPathName);
+
+           //     var VSData = new VoltageSagXml(strfilepath);
+
+             //   var data = VSData.GetXmlData();
+
+             //   var datas = new List<VoltageSagData.voltageSagData>();
+            //    foreach (var item in data)
+            //    {
+             ///       if (item.treggerDateTime >= dateTimePicker1.Value.AddDays(-1) && item.treggerDateTime < dateTimePicker2.Value)
+             //       {
+             //           datas.Add(item);
+              //      }
+              //  }
+              //  voltageSagDatas = datas.ToArray();
+              //  UpdataCbxItem(datas.ToArray());
+             //   frm = new VoltageSagChart(datas.ToArray());
+               frm.Width = panChart.Width;
                 frm.Height = panChart.Height;
-                panChart.Controls.Add(frm);
-            }
+           //     panChart.Controls.Add(frm);
+          //  }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -124,22 +136,21 @@ namespace PRSpline
         }
         private void UpdataCbxItem(VoltageSagData.voltageSagData[] datas)
         {
-            this.cbxItem.DataSource = null;
-            this.cbxItem.Items.Clear();
             ArrayList alData = new ArrayList();
             foreach (var item in datas)
             {
-                cbxItem.Items.Add("");
                 string str = item.treggerDateTime.ToString("yyyy-MM-dd_HH-mm-ss") + " 持續時間：" + item.duration + "ms 持續週期：" + item.cycle
                     + "cycle 電壓：R=" + item.PValue + "pu; S=" + item.QValue + "pu; T=" + item.SValue + "pu";
                 string strTime = item.treggerDateTime.ToString("yyyy-MM-dd_HH-mm-ss");
                 alData.Add(new DictionaryEntry(str, strTime));
             }
-            this.cbxItem.DisplayMember = "Key";
-            this.cbxItem.ValueMember = "Value";
             this.cbxItem.DataSource = alData;
+            
+           
             if (alData.Count > 0)
             {
+                this.cbxItem.DisplayMember = "Key";
+                this.cbxItem.ValueMember = "Value";
                 this.button1.Enabled = true;
                 this.cbxItem.Enabled = true;
                 this.cbxItem.SelectedIndex = 0;
@@ -148,12 +159,21 @@ namespace PRSpline
             {
                 this.button1.Enabled = false;
                 this.cbxItem.Enabled = false;
+                this.btnUpdata.Enabled = false;
+                this.txtPS.Text = string.Empty;
             }
         }
 
         private void cbxItem_SelectedIndexChanged(object sender, EventArgs e)
         {
-            SelectData = voltageSagDatas[this.cbxItem.SelectedIndex];
+            btnUpdata.Enabled = true;
+            var FileName = (dynamic)this.cbxItem.SelectedItem;
+
+            foreach (var item in voltageSagDatas)
+            {
+                if (item.treggerDateTime.ToString("yyyy-MM-dd_HH-mm-ss") == (string)FileName.Value)
+                    txtPS.Text = item.strPSValue;
+            }
         }
 
         private void btnVS_Click(object sender, EventArgs e)
@@ -165,6 +185,27 @@ namespace PRSpline
         private void panel2_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void btnUpdata_Click(object sender, EventArgs e)
+        {
+            var VSData = new VoltageSagXml(strfilepath);
+
+            var FileName = (dynamic)this.cbxItem.SelectedItem;
+            VSData.Updata((string)FileName.Value, txtPS.Text);
+
+            var data = VSData.GetXmlData();
+
+            var datas = new List<VoltageSagData.voltageSagData>();
+            foreach (var item in data)
+            {
+                if (item.treggerDateTime >= dateTimePicker1.Value.AddDays(-1) && item.treggerDateTime < dateTimePicker2.Value)
+                {
+                    datas.Add(item);
+                }
+            }
+            voltageSagDatas = datas.ToArray();
+            UpdataCbxItem(datas.ToArray());
         }
     }
 }

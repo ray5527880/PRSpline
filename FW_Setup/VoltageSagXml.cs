@@ -43,6 +43,32 @@ namespace BF_FW
             NewData.Add(data);
             SaveXml(NewData.ToArray());
         }
+        public void Updata(string  dateTime,string strPSvalue)
+        {
+            var OldData = GetXmlData();
+            var NewData = new List<VoltageSagData.voltageSagData>();
+            foreach (var item in OldData)
+            {
+                if (item.treggerDateTime.ToString("yyyy-MM-dd_HH-mm-ss") == dateTime)
+                {
+                    var _data = new VoltageSagData.voltageSagData
+                    {
+                        treggerDateTime=item.treggerDateTime,
+                        StartTime=item.StartTime,
+                        duration=item.duration,
+                        cycle=item.cycle,
+                        PValue=item.PValue,
+                        QValue=item.QValue,
+                        SValue=item.SValue,
+                        strPSValue=strPSvalue
+                    };
+                    NewData.Add(_data);
+                }
+                else
+                    NewData.Add(item);
+            }
+            SaveXml(NewData.ToArray());
+        }
         private string GetXmlString(string strNode)
         {
             //使用XmlDocument讀入XML格式資料
@@ -73,7 +99,8 @@ namespace BF_FW
                         cycle = Convert.ToDecimal(item.SelectSingleNode("Cycle").InnerText),
                         PValue = Convert.ToDecimal(item.SelectSingleNode("PerUnitValue/P").InnerText),
                         QValue = Convert.ToDecimal(item.SelectSingleNode("PerUnitValue/Q").InnerText),
-                        SValue = Convert.ToDecimal(item.SelectSingleNode("PerUnitValue/S").InnerText)
+                        SValue = Convert.ToDecimal(item.SelectSingleNode("PerUnitValue/S").InnerText),
+                        strPSValue = item.SelectSingleNode("PSValue").InnerText.ToString()
                     };
                     reData.Add(_data);
                 }
@@ -127,11 +154,15 @@ namespace BF_FW
                     _Value.AppendChild(_S);
                     //加入至company節點底下
 
+                    XmlElement _PSValue = xmlDoc.CreateElement("PSValue");
+                    _PSValue.InnerText = item.strPSValue;
+
                     _Data.AppendChild(_DateTime);
                     _Data.AppendChild(_Duration);
                     _Data.AppendChild(_StartTime);
                     _Data.AppendChild(_Cycle);
                     _Data.AppendChild(_Value);
+                    _Data.AppendChild(_PSValue);
 
                     company.AppendChild(_Data);
                 }

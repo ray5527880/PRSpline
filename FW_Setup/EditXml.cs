@@ -24,10 +24,13 @@ namespace BF_FW
             public string strIP;
             public string strUser;
             public string strPwd;
+            public string strPathName;
             public int BaseValue;
         }
 
         public static string strDownloadPath;
+
+        public static string strVSDataPaht;
 
         public static string strXmlFile;
 
@@ -42,6 +45,7 @@ namespace BF_FW
             strXmlFile = strXmlFile.Replace("fwsetup.dll", "PRSpline.xml");
             strXmlFile = strXmlFile.Replace("PRSpline.exe", "PRSpline.xml");
             strDownloadPath = strXmlFile.Replace("PRSpline.xml", @"downloadFile\");
+            strVSDataPaht = strXmlFile.Replace("PRSpline.xml", @"VSData\");
             mFTPData = new List<FTPData>();
         }
         public void GetVoltageSag()
@@ -79,8 +83,8 @@ namespace BF_FW
                     //BaseValue=Convert.ToInt32(item.SelectSingleNode("BaseValue").InnerText)
 
                 };
-                var x = item.SelectSingleNode("BaseValue").InnerText;
                 _FTPData.BaseValue = item.SelectSingleNode("BaseValue").InnerText != String.Empty ? Convert.ToInt32(item.SelectSingleNode("BaseValue").InnerText) : 0;
+                _FTPData.strPathName = item.SelectSingleNode("PathName").InnerText;
                 mFTPData.Add(_FTPData);
             }
         }
@@ -163,6 +167,8 @@ namespace BF_FW
                     _ftppwd.InnerText = item.strPwd;
                     XmlElement _baseValue = xmlDoc.CreateElement("BaseValue");
                     _baseValue.InnerText = item.BaseValue.ToString();
+                    XmlElement _PathName = xmlDoc.CreateElement("PathName");
+                    _PathName.InnerText = item.strPathName.ToString();
                     //加入至company節點底下
 
                     _Data.AppendChild(_Name);
@@ -170,6 +176,7 @@ namespace BF_FW
                     _Data.AppendChild(_ftpuser);
                     _Data.AppendChild(_ftppwd);
                     _Data.AppendChild(_baseValue);
+                    _Data.AppendChild(_PathName);
 
                     company.AppendChild(_Data);
                 }
