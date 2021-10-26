@@ -14,7 +14,6 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 
 using System.Runtime.InteropServices;
-using FFTWSharp;
 using System.Numerics;
 using BF_FW.data;
 using BF_FW;
