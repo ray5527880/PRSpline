@@ -327,8 +327,20 @@ namespace PRSpline
         private async void btnFileOpen_Click(object sender, EventArgs e)
         {
             IsOpenFlies = false;
-            var frm = new frmSelectMorR(ref this.openFileDialog1);
-            frm.ShowDialog();
+            if (EditXml.MeterFilePaht == string.Empty)
+            {
+                this.openFileDialog1.InitialDirectory = EditXml.RelayFilePaht;
+                if (this.openFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    frmMain.IsOpenFlies = true;
+                    this.Close();
+                }
+            }
+            else
+            {
+                var frm = new frmSelectMorR(ref this.openFileDialog1);
+                frm.ShowDialog(); 
+            }
             if (!IsOpenFlies) return;
             //if (this.openFileDialog1.ShowDialog() != DialogResult.OK)
             //{
