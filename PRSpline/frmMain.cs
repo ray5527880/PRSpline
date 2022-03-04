@@ -333,7 +333,7 @@ namespace PRSpline
                 if (this.openFileDialog1.ShowDialog() == DialogResult.OK)
                 {
                     frmMain.IsOpenFlies = true;
-                    this.Close();
+                    //this.Close();
                 }
             }
             else
