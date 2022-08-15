@@ -55,8 +55,8 @@ namespace PRSpline
                         {
                             string filePaht = EditXml.strDownloadPath + item.strName + @"\" + FTPfiles[i];
                             mFTP.FTP_Download(filePaht, FTPfiles[i], item.strIP, item.strUser, item.strPwd);
-                            if (File.Exists(filePaht))
-                                mFTP.FTP_Delete(FTPfiles[i], item.strIP, item.strUser, item.strPwd);
+                            //if (File.Exists(filePaht))
+                                //mFTP.FTP_Delete(FTPfiles[i], item.strIP, item.strUser, item.strPwd);
                         }
                         this.colorProgressBar1.PerformStep();
                     }
@@ -84,8 +84,8 @@ namespace PRSpline
 
                         string filePaht = EditXml.strDownloadPath + EditXml.mFTPData[index - 1].strName + @"\" + FTPfiles[i];
                         mFTP.FTP_Download(filePaht, FTPfiles[i], EditXml.mFTPData[index - 1].strIP, EditXml.mFTPData[index - 1].strUser, EditXml.mFTPData[index - 1].strPwd);
-                        if (File.Exists(filePaht))
-                            mFTP.FTP_Delete(FTPfiles[i], EditXml.mFTPData[index - 1].strIP, EditXml.mFTPData[index - 1].strUser, EditXml.mFTPData[index - 1].strPwd);
+                        //if (File.Exists(filePaht))
+                           // mFTP.FTP_Delete(FTPfiles[i], EditXml.mFTPData[index - 1].strIP, EditXml.mFTPData[index - 1].strUser, EditXml.mFTPData[index - 1].strPwd);
                     }
                     this.colorProgressBar1.PerformStep();
                 }

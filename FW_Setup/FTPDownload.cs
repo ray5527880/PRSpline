@@ -15,7 +15,7 @@ namespace BF_FW
             FtpWebRequest request;
             try
             {
-                request = (FtpWebRequest)FtpWebRequest.Create(new Uri("ftp://" + path + "/ftp/records/"));
+                request = (FtpWebRequest)FtpWebRequest.Create(new Uri("ftp://" + path + "/_LD/PROT/COMTRADE/"));
                 request.Method = WebRequestMethods.Ftp.ListDirectory;
                 request.KeepAlive = true;
                 request.Credentials = new NetworkCredential(user, pwd);
@@ -37,7 +37,7 @@ namespace BF_FW
         public string[] GetFTPFileName(string path, string user, string pwd)
         {
             List<string> strList = new List<string>();
-            FtpWebRequest f = (FtpWebRequest)WebRequest.Create(new Uri("ftp://" + path + "/ftp/records/"));
+            FtpWebRequest f = (FtpWebRequest)WebRequest.Create(new Uri("ftp://" + path + "/_LD/PROT/COMTRADE/"));
             f.Method = WebRequestMethods.Ftp.ListDirectory;
             f.UseBinary = true;
             f.AuthenticationLevel = System.Net.Security.AuthenticationLevel.MutualAuthRequested;
@@ -74,7 +74,7 @@ namespace BF_FW
         {
             //連接+指定檔案
             //ftp://++/ftp/
-            FtpWebRequest requestFileDownload = (FtpWebRequest)WebRequest.Create("ftp://" + Path + "/ftp/records/" + fileName);
+            FtpWebRequest requestFileDownload = (FtpWebRequest)WebRequest.Create("ftp://" + Path + "/_LD/PROT/COMTRADE/" + fileName);
             //登入
             requestFileDownload.Credentials = new NetworkCredential(User, Pwd);
             requestFileDownload.Method = WebRequestMethods.Ftp.DownloadFile;

@@ -113,7 +113,7 @@ namespace AutoDownloading
                         string filePaht = EditXml.strDownloadPath + item.strName + @"\" + FTPfiles[i];
                         mFTP.FTP_Download(filePaht, FTPfiles[i], item.strIP, item.strUser, item.strPwd);
                         if (File.Exists(filePaht))
-                            mFTP.FTP_Delete(FTPfiles[i], item.strIP, item.strUser, item.strPwd);
+                            //mFTP.FTP_Delete(FTPfiles[i], item.strIP, item.strUser, item.strPwd);
                         if (EditXml.VoltageSag == 1)
                         {
                             VoltageSagCal VolSagVal = new VoltageSagCal(filePaht, item.BaseValue);
