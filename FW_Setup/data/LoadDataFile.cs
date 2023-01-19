@@ -5,6 +5,9 @@ using System.IO;
 using GSF;
 using GSF.COMTRADE;
 
+
+
+
 namespace BF_FW.data
 {
     public class LoadDataFile
@@ -12,10 +15,17 @@ namespace BF_FW.data
         public static void GetCFGData(string filePath,ref Parser parser)
         {
             parser = new Parser();
-            parser.Schema = new Schema(filePath);
+            try
+            {
+                parser.Schema = new Schema(filePath);
 
-            parser.InferTimeFromSampleRates = true;
-            parser.OpenFiles();
+                parser.InferTimeFromSampleRates = true;
+                parser.OpenFiles();
+            }
+            catch(Exception ex)
+            {
+
+            }
             //return parser;
         }
       
